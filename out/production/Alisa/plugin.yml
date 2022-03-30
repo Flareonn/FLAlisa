@@ -1,0 +1,9 @@
+name: Alisa # Имя плагина
+main: org.rb.alisa.Main # Путь к главному классу (тому, который наследует JavaPlugin)
+author: Flareon # Автор плагина
+version: 0.1 # Версия плагина
+description: The best in the world plugin # Описание плагина
+commands:
+  colors:
+    description: Colors list
+    usage: /colors
