@@ -54,9 +54,9 @@ public class Main extends JavaPlugin {
     }
 
     public void registerEvents() {
-        PluginManager pm = Bukkit.getServer().getPluginManager();
-        pm.registerEvents(new JoinEvent(), this);
-        pm.registerEvents(new ChatEvent(), this);
+//        PluginManager pm = Bukkit.getServer().getPluginManager();
+//        pm.registerEvents(new JoinEvent(), this);
+//        pm.registerEvents(new ChatEvent(), this);
     }
 
     public void say(String words) {
