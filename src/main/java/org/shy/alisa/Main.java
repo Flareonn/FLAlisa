@@ -5,10 +5,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.shy.alisa.listeners.ChatEvent;
-import org.shy.alisa.listeners.JoinEvent;
 
 public class Main extends JavaPlugin {
     private final static String ALISA_TAG =  ChatColor.AQUA + "\u00A7l["+ChatColor.LIGHT_PURPLE+"\u00A7lАлиса" + ChatColor.AQUA + "\u00A7l]\u00A7r " + ChatColor.YELLOW;
