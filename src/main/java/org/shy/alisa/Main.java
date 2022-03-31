@@ -20,6 +20,9 @@ public class Main extends JavaPlugin {
         instance = this;
 
         Bukkit.getLogger().info("Enabled " + this.getName());
+
+        this.getCommand("alisa").setExecutor(new AlisaCommandBot());
+
         this.getCommand("colors").setExecutor(new AlisaCommandColors());
         this.getCommand("votesun").setExecutor(new AlisaCommandVotesun());
         this.getCommand("voteday").setExecutor(new AlisaCommandVoteday());
