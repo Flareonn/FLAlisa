@@ -20,6 +20,9 @@ commands:
   'no':
     description: Vote no
     usage: "/no"
+  alisa:
+    description: all alisa commands
+    usage: "/alisa <command>"
 #  'ahelp':
 #    description: All commands for Alisa
 #    usage: "/ahelp"
