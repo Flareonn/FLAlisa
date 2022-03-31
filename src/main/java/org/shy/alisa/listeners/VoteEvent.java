@@ -82,9 +82,21 @@ public class VoteEvent implements Listener {
     }
 
     private static boolean isWin() {
-        int sumVotes = voteNo + voteYes;
-        double voteYesInPercent = voteYes / (1.0 * sumVotes);
-        return voteYesInPercent > ALISA.getConfig().getDouble("success-ratio") && voteYes - voteNo > ALISA.getConfig().getInt("success-advantage");
+        final int sumVotes = voteNo + voteYes;
+        final int advantage = voteYes - voteNo;
+
+        final double voteYesInPercent = voteYes / (1.0 * sumVotes);
+
+        final boolean isWinRatio = voteYesInPercent > ALISA.getConfig().getDouble("success-ratio");
+        final boolean isWinAdvantage =  advantage > ALISA.getConfig().getInt("success-advantage");
+
+        if (isWinRatio && isWinAdvantage) {
+            Bukkit.getLogger().info("The vote win. Number of those who voted: Yes(" + voteYes + ") | No(" + voteNo + ")\nPercentage advantage: " + voteYesInPercent + ". Absolute advantage: " + advantage);
+        } else {
+            Bukkit.getLogger().info("The vote failed. Number of those who voted: Yes(" + voteYes + ") | No(" + voteNo + ")\nPercentage advantage: " + voteYesInPercent + ". Absolute advantage: " + advantage);
+        }
+
+        return isWinRatio && isWinAdvantage;
     }
 
     public static void setVote(boolean yesOrNo, Player player) {
