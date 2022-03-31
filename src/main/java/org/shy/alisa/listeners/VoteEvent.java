@@ -16,12 +16,15 @@ import static java.lang.String.format;
 public class VoteEvent implements Listener {
     private static final Main ALISA = Main.getInstance();
 
-    private static ArrayList<Player> playersVotes = new ArrayList<>();
+    // Список проголосовавших
+    private static ArrayList<String> playersVotes = new ArrayList<>();
+
     private static boolean active = false;
     private static int voteYes = 0;
     private static int voteNo = 0;
     private static TypeVote typeVote = null;
     private World world;
+
 
     private static final HashMap<TypeVote, String> sayStartVoting = new HashMap<TypeVote, String>() {{
         put(TypeVote.SUN, format("Началось голосование за смену погоды! Проголосуйте, введя '%s\u00A7l/yes\u00A7r%s' или '%s\u00A7l/no\u00A7r%s'", ChatColor.GREEN, ChatColor.YELLOW, ChatColor.RED, ChatColor.YELLOW));
@@ -39,7 +42,7 @@ public class VoteEvent implements Listener {
     }};
 
     // Таблица инициаторов, не путать с массивом голосующих
-    private static final HashMap<Player, ArrayList<TypeVote>> canPlayerVote = new HashMap<>();
+    private static final HashMap<String, ArrayList<TypeVote>> canPlayerVote = new HashMap<>();
 
     private static final HashMap<TypeVote, Boolean> canGlobalVote = new HashMap<TypeVote, Boolean>() {{
         put(TypeVote.SUN, true);
@@ -66,10 +69,12 @@ public class VoteEvent implements Listener {
         } else if(checkCooldowns(player, type)) {
             new VoteEvent(type);
             // Таймер до следующего использования персонально. Сложение здесь - потому что начинается в самом начале работы голосования
-            ArrayList<TypeVote> cooldownsIniciator = canPlayerVote.get(player);
+
+            final String playerName = player.getName();
+            ArrayList<TypeVote> cooldownsIniciator = canPlayerVote.get(playerName);
             cooldownsIniciator.add(type);
-            canPlayerVote.put(player, cooldownsIniciator);
-            ALISA.getServer().getScheduler().scheduleSyncDelayedTask(ALISA, () -> canPlayerVote.get(player).remove(type), cooldownsPlayerDuration.get(type) + ALISA.getConfig().getLong("duration"));
+            canPlayerVote.put(playerName, cooldownsIniciator);
+            ALISA.getServer().getScheduler().scheduleSyncDelayedTask(ALISA, () -> canPlayerVote.get(playerName).remove(type), cooldownsPlayerDuration.get(type) + ALISA.getConfig().getLong("duration"));
         }
     }
 
@@ -105,7 +110,7 @@ public class VoteEvent implements Listener {
         } else if(isVoted(player)) {
             ALISA.say("Вы уже голосовали!", player);
         } else {
-            playersVotes.add(player);
+            playersVotes.add(player.getName());
             if (yesOrNo) {
                 voteYes++;
                 ALISA.say(format("Вы проголосовали %s\u00A7lза%s!", ChatColor.GREEN, ChatColor.YELLOW), player);
@@ -117,7 +122,7 @@ public class VoteEvent implements Listener {
     }
 
     public static boolean isVoted(Player player) {
-        return playersVotes.contains(player);
+        return playersVotes.contains(player.getName());
     }
 
     private void unregisterEvent(Listener listener) {
@@ -150,10 +155,12 @@ public class VoteEvent implements Listener {
 
     public static boolean checkCooldowns(Player player, TypeVote type) {
         // Добавить инициатора в таблицу, если его там еще нет.
-        if(!canPlayerVote.containsKey(player)) {
-            canPlayerVote.put(player, new ArrayList<>());
+        final String playerName = player.getName();
+        if(!canPlayerVote.containsKey(playerName)) {
+            canPlayerVote.put(playerName, new ArrayList<>());
         }
-        boolean isCanVote = canGlobalVote.get(type) && !canPlayerVote.get(player).contains(type);
+
+        boolean isCanVote = canGlobalVote.get(type) && !canPlayerVote.get(playerName).contains(type);
         if(!isCanVote) {
             ALISA.say("Вы не можете так часто использовать голосование!", player);
         }
