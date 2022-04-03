@@ -5,24 +5,51 @@ version: 0.1 # Версия плагина
 api-version: '1.16'
 description: The best in the world plugin # Описание плагина
 commands:
+  ahelp:
+    description: Список доступных комманд
+    usage: "/ahelp"
   colors:
-    description: Colors list
+    description: Список доступных цветов в чате
     usage: "/colors"
   votesun:
-    description: Voting for a change of weather
+    description: Голосование за отключение дождя
     usage: "/votesun"
   voteday:
-    description: Voting for a change of daytime
+    description: Голосование за смену дня
     usage: "/voteday"
   'yes':
-    description: Vote yes
+    description: Проголосовать "Да"
     usage: "/yes"
   'no':
-    description: Vote no
+    description: Проголосовать "Нет"
     usage: "/no"
   alisa:
-    description: all alisa commands
+    description: Все комманды администратора
     usage: "/alisa <command>"
+    default: op
+  alisa read:
+      description: Посмотреть значение в конфиге
+      usage: "/alisa read <Ключ>"
+      default: op
+  alisa set:
+      description: Изменить значение в конфиге
+      usage: "/alisa set <ключ> <значение>"
+      default: op
+  alisa reloadconfig:
+      description: Перезагрузка конфига
+      usage: "/alisa reloadconfig"
+      default: op
+  alisa getname:
+      description: Получить Ник игрока по UUID
+      usage: "/alisa reloadconfig"
+      default: op
+  alisa getuuid:
+      description: Получить UUID игрока по Нику
+      usage: "/alisa reloadconfig"
+      default: op
+  inf:
+    description: Информация по пунктам правил
+    usage: "/inf <point rule>"
 #  'ahelp':
 #    description: All commands for Alisa
 #    usage: "/ahelp"
