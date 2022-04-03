@@ -1,28 +1,39 @@
 package org.shy.alisa;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.shy.alisa.utils.ColorUtil;
+
+import java.io.File;
 
 public class Main extends JavaPlugin {
-    private final static String ALISA_TAG =  ChatColor.AQUA + "\u00A7l["+ChatColor.LIGHT_PURPLE+"\u00A7lАлиса" + ChatColor.AQUA + "\u00A7l]\u00A7r " + ChatColor.YELLOW;
     private static Main instance;
+    private static File rulesFile;
 
     public static Main getInstance() {
         return instance;
     }
+    public static File getRulesFile() {return rulesFile;}
     @Override
     public void onEnable() {
         saveDefaultConfig();
+        rulesFile = new File(getDataFolder(), "rules.json");
+        if(!rulesFile.exists()) {
+            saveResource(rulesFile.getName(), true);
+        }
         instance = this;
+        // Initialize Utils
+        new ColorUtil(getConfig());
 
-        Bukkit.getLogger().info("Enabled " + this.getName());
+        Bukkit.getLogger().info("Plugin " + this.getName() + " is enabled right now!");
 
         this.getCommand("alisa").setExecutor(new AlisaCommandBot());
+        this.getCommand("ahelp").setExecutor(new AlisaCommandHelp());
 
+        this.getCommand("inf").setExecutor(new AlisaCommandRules());
         this.getCommand("colors").setExecutor(new AlisaCommandColors());
         this.getCommand("votesun").setExecutor(new AlisaCommandVotesun());
         this.getCommand("voteday").setExecutor(new AlisaCommandVoteday());
@@ -53,6 +64,12 @@ public class Main extends JavaPlugin {
         registerEvents();
     }
 
+    @Override
+    public void reloadConfig() {
+        super.reloadConfig();
+        new ColorUtil(getConfig());
+    }
+
     public void registerEvents() {
 //        PluginManager pm = Bukkit.getServer().getPluginManager();
 //        pm.registerEvents(new JoinEvent(), this);
@@ -60,10 +77,18 @@ public class Main extends JavaPlugin {
     }
 
     public void say(String words) {
-        Bukkit.broadcastMessage(ALISA_TAG + words);
+        Bukkit.broadcastMessage(ColorUtil.getAlisaTag() + words);
     }
 
     public void say(String words, Player player) {
-        player.sendMessage(ALISA_TAG + words);
+        player.sendMessage(ColorUtil.getAlisaTag() + words);
+    }
+
+    public void say(String words, CommandSender commandSender) {
+        commandSender.sendMessage(ColorUtil.getAlisaTag() + words);
+    }
+
+    public void sayUnknownCommand(String words, CommandSender commandSender) {
+        say(String.format("Используй команду правильно!%s ", words), commandSender);
     }
 }
