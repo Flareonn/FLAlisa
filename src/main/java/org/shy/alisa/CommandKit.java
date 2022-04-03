@@ -1,49 +1,86 @@
 package org.shy.alisa;
 
+import com.google.gson.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
+import org.bukkit.command.*;
+import org.bukkit.configuration.MemorySection;
 import org.bukkit.entity.Player;
+import org.bukkit.help.HelpTopic;
+import org.bukkit.util.ChatPaginator;
 import org.shy.alisa.listeners.VoteEvent;
+import org.shy.alisa.utils.ColorUtil;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.lang.reflect.Field;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import static java.lang.String.format;
 
-class AlisaCommandBot implements CommandExecutor {
-    public static final Main ALISA = Main.getInstance();
-    public static Player iniciator;
+class AlisaCommandHelp implements CommandExecutor {
+    private static final Main ALISA = Main.getInstance();
+
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
-        if(commandSender instanceof Player) {
-            iniciator = (Player) commandSender;
+        final boolean isPlayerOp = commandSender.isOp();
+
+        ALISA.say("------------Мои команды------------", commandSender);
+        if(isPlayerOp) {
+            ALISA.getDescription().getCommands().forEach((k, v)-> {
+                commandSender.sendMessage(format("%s: %s", ChatColor.GOLD + k, ChatColor.WHITE + "" + v.get("description")));
+            });
+        } else {
+            ALISA.getDescription().getCommands().forEach((k, v)-> {
+                if(!String.valueOf(v.get("default")).equals("op")) {
+                    commandSender.sendMessage(format("%s: %s", ChatColor.GOLD + k, ChatColor.WHITE + "" + v.get("description")));
+                }
+            });
         }
+
+        return true;
+    }
+}
+
+class AlisaCommandBot implements CommandExecutor, TabCompleter {
+    private static final Main ALISA = Main.getInstance();
+    private static final ArrayList<String> subCommands = new ArrayList<String>() {{
+        add("read");
+        add("set");
+        add("reloadconfig");
+//        add("getuuid");
+//        add("getname");
+//        add("tospawn");
+    }};
+
+    @Override
+    public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
         if(strings.length == 0) {
             commandSender.sendMessage(
                     format("%s--------- %s[ADMIN]%s: %sАЛИСА%s -----------\n", ChatColor.YELLOW, ChatColor.DARK_RED, ChatColor.YELLOW, ChatColor.AQUA, ChatColor.YELLOW) +
-                        format("%s/alisa:%s Все комманды администратора\n", ChatColor.GOLD, ChatColor.WHITE) +
-                        format("%s/alisa read:%s Посмотреть значение в конфиге\n", ChatColor.GOLD, ChatColor.WHITE) +
-                        format("%s/alisa set:%s Изменить значение в конфиге\n", ChatColor.GOLD, ChatColor.WHITE) +
-                        format("%s/alisa reloadconfig:%s Перезагрузка конфига\n", ChatColor.GOLD, ChatColor.WHITE) +
-                        format("%s/alisa getname:%s Получить Ник игрока по UUID\n", ChatColor.GOLD, ChatColor.WHITE) +
-                        format("%s/alisa getuuid:%s Получить UUID игрока по Нику\n", ChatColor.GOLD, ChatColor.WHITE)
-                    );
+                            format("%s/alisa: %s\n", ChatColor.GOLD, ChatColor.WHITE + ALISA.getCommand("alisa").getDescription()) +
+                            format("%s/alisa read: %s\n", ChatColor.GOLD, ChatColor.WHITE + ALISA.getCommand("alisa read").getDescription()) +
+                            format("%s/alisa set: %s\n", ChatColor.GOLD, ChatColor.WHITE + ALISA.getCommand("alisa set").getDescription()) +
+                            format("%s/alisa reloadconfig: %s\n", ChatColor.GOLD, ChatColor.WHITE + ALISA.getCommand("alisa reloadconfig").getDescription()) +
+                            format("%s/alisa getname: %s\n", ChatColor.GOLD, ChatColor.WHITE + ALISA.getCommand("alisa getname").getDescription()) +
+                            format("%s/alisa getuuid: %s\n", ChatColor.GOLD, ChatColor.WHITE + ALISA.getCommand("alisa getuuid").getDescription())
+            );
         } else {
             Player player;
             switch (strings[0]) {
                 case "read":
-                    ALISA.say(format("Значение в конфиге поля '%s': %s", ChatColor.LIGHT_PURPLE + strings[1] + ChatColor.YELLOW, ChatColor.GREEN + "\u00A7l" + ALISA.getConfig().getString(strings[1])), iniciator);
+                    commandRead(strings, commandSender);
                     break;
                 case "set":
-                    String configValue = strings[2];
-                    ALISA.getConfig().set(strings[1], isDigit(configValue) ? Integer.parseInt(configValue) : configValue);
-                    ALISA.saveConfig();
-                    ALISA.say(format("Вы установили поле '%s' со значением: %s", ChatColor.LIGHT_PURPLE + strings[1] + ChatColor.YELLOW, ChatColor.DARK_PURPLE + "\u00A7l" + configValue), iniciator);
+                    commandSet(strings, commandSender);
                     break;
                 case "reloadconfig":
                     ALISA.reloadConfig();
+                    ALISA.say("Конфиг перезагружен!", commandSender);
                     break;
                 case "getuuid":
                 case "getname":
@@ -56,10 +93,10 @@ class AlisaCommandBot implements CommandExecutor {
                     }
 
                     if(player != null) {
-                        ALISA.say(format("Ник игрока: %s", player.getName()), iniciator);
-                        ALISA.say(format("UUID: %s", player.getUniqueId()), iniciator);
+                        ALISA.say(format("Ник игрока: %s", player.getName()), commandSender);
+                        ALISA.say(format("UUID: %s", player.getUniqueId()), commandSender);
                     } else {
-                        ALISA.say("Игрок с таким именем не найден", iniciator);
+                        ALISA.say("Игрок с таким именем не найден", commandSender);
                     }
 
                     break;
@@ -68,17 +105,56 @@ class AlisaCommandBot implements CommandExecutor {
                     player = Bukkit.getPlayer(strings[1]);
                     if(player != null) {
                         Bukkit.getServer().dispatchCommand(player, "spawn");
-                        ALISA.say("Игрок будет отправлен на спавн", iniciator);
+                        ALISA.say("Игрок будет отправлен на спавн", commandSender);
                     } else {
-                        ALISA.say("Игрок с таким именем не найден", iniciator);
+                        ALISA.say("Игрок с таким именем не найден", commandSender);
                     }
                     break;
                 default:
-                    ALISA.say("Такой команды не существует. Список моих возможностей: -> /alisa", iniciator);
+                    ALISA.say("Такой команды не существует. Список моих возможностей: -> /alisa", commandSender);
                     break;
             }
         }
         return true;
+    }
+
+    private static void commandRead(String[] strings, CommandSender commandSender) {
+        if(strings.length > 1) {
+            String configKey = strings[1];
+            Object configValue = ALISA.getConfig().get(configKey);
+            if(configValue instanceof MemorySection) {
+                configValue = ((MemorySection) configValue).getKeys(false);
+            }
+
+            if(configValue != null) {
+                ALISA.say(format("Значение в конфиге поля '%s': %s", ColorUtil.wrap(configKey, ChatColor.LIGHT_PURPLE), ColorUtil.success(configValue.toString())), commandSender);
+            } else {
+                ALISA.say(format("Поле с таким именем %s", ColorUtil.fail("не найдено")), commandSender);
+            }
+        } else {
+            ALISA.sayUnknownCommand("\n" + ALISA.getCommand("alisa " + strings[0]).getUsage() , commandSender);
+        }
+    }
+
+    private static void commandSet(String[] strings, CommandSender commandSender) {
+        switch (strings.length) {
+            case 1:
+                ALISA.say("Введите имя поля, значение которому вы хотите указать!", commandSender);
+                break;
+            case 2:
+                ALISA.say("Введите значение поля!", commandSender);
+                break;
+            case 3:
+                String configKey = strings[1];
+                String configValue = strings[2];
+                ALISA.getConfig().set(configKey, isDigit(configValue) ? Integer.parseInt(configValue) : configValue);
+                ALISA.saveConfig();
+                ALISA.say(format("Вы установили поле '%s' со значением: %s", ColorUtil.wrap(configKey, ChatColor.LIGHT_PURPLE), ColorUtil.wrap(configValue, ChatColor.DARK_PURPLE, ChatColor.BOLD)), commandSender);
+                break;
+            default:
+                ALISA.sayUnknownCommand("\n" + ALISA.getCommand("alisa " + strings[0]).getUsage() , commandSender);
+                break;
+        }
     }
 
     private static boolean isDigit(String s) throws NumberFormatException {
@@ -89,10 +165,31 @@ class AlisaCommandBot implements CommandExecutor {
             return false;
         }
     }
+
+    @Override
+    public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings) {
+        List<String> result = new ArrayList<>();
+        switch(strings.length) {
+            case 1:
+                subCommands.forEach(w->{if(w.startsWith(strings[0])) result.add(w);});
+                return result;
+            case 2:
+                if(strings[0].equals("read") || strings[0].equals("set")) {
+                    ALISA.getConfig().getKeys(false).forEach(w -> {
+                        if (w.startsWith(strings[1])) result.add(w);
+                    });
+                    return result;
+                }
+                break;
+            default:
+                break;
+        }
+        return null;
+    }
 }
 
 class AlisaCommandColors implements CommandExecutor {
-    public static final Main ALISA = Main.getInstance();
+    private static final Main ALISA = Main.getInstance();
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
         if (commandSender instanceof Player) {
@@ -112,7 +209,7 @@ class AlisaCommandColors implements CommandExecutor {
 }
 
 class AlisaCommandVotesun implements CommandExecutor {
-    public static final Main ALISA = Main.getInstance();
+    private static final Main ALISA = Main.getInstance();
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
         if(!Bukkit.getWorld("world").isClearWeather()) {
@@ -123,14 +220,14 @@ class AlisaCommandVotesun implements CommandExecutor {
             }
         }
         else {
-            ALISA.say("Сейчас ясная погода!", (Player) commandSender);
+            ALISA.say("Сейчас ясная погода!", commandSender);
         }
         return true;
     }
 }
 
 class AlisaCommandVoteday implements CommandExecutor {
-    public static final Main ALISA = Main.getInstance();
+    private static final Main ALISA = Main.getInstance();
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
@@ -142,7 +239,7 @@ class AlisaCommandVoteday implements CommandExecutor {
             }
         }
         else {
-            ALISA.say("Сейчас день!", (Player) commandSender);
+            ALISA.say("Сейчас день!", commandSender);
         }
         return true;
     }
@@ -150,6 +247,68 @@ class AlisaCommandVoteday implements CommandExecutor {
     private boolean isDay() {
         long time = Bukkit.getServer().getWorld("world").getTime();
         return time < 12300 || time > 23850;
+    }
+}
+
+class AlisaCommandRules implements CommandExecutor, TabCompleter {
+    private static final Main ALISA = Main.getInstance();
+    private static final ArrayList<String> rulesInPoints = new ArrayList<>();
+    private static JsonObject rules;
+
+    {
+        try {
+            rules = new JsonParser().parse(new FileReader(Main.getRulesFile())).getAsJsonObject().getAsJsonObject("rules");
+            rules.getAsJsonObject().entrySet().forEach(w -> rulesInPoints.add(w.getKey()));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
+        if(strings.length != 0) {
+            String pointRule = strings[0];
+            JsonObject rule = rules.getAsJsonObject(pointRule);
+
+            if (rule == null) {
+                ALISA.say("Такого правила нет в сводках", commandSender);
+            } else {
+                String punishment = safelyGetFromJson("punishment", rule);
+                String content = safelyGetFromJson("content", rule);
+                ALISA.say(
+                        format("%s\n%s\n" +
+                                        (!punishment.equals("") ? ChatColor.RED + "" + ChatColor.UNDERLINE + "Наказание:" + ChatColor.RESET + "" + ChatColor.RED + " %s" : ""),
+                                "----------------" + pointRule + "----------------",
+                                content,
+                                punishment
+                        ),
+                        commandSender);
+            }
+        } else {
+            ALISA.sayUnknownCommand("\n" + ALISA.getCommand("inf").getUsage(), commandSender);
+        }
+        return true;
+    }
+
+    private String safelyGetFromJson(String memberName, JsonObject jsonObject) {
+        JsonElement member = jsonObject.get(memberName);
+        if(member != null) {
+            return new String(member.getAsString().getBytes(), StandardCharsets.UTF_8);
+        } else {
+            return "";
+        }
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings) {
+        if(strings.length == 1) {
+            List<String> result = new ArrayList<>();
+            rulesInPoints.forEach(w -> {
+                if (w.toLowerCase().startsWith(strings[0])) result.add(w);
+            });
+            return result;
+        }
+        return null;
     }
 }
 
