@@ -6,7 +6,9 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
+import org.bukkit.scheduler.BukkitScheduler;
 import org.shy.alisa.Main;
+import org.shy.alisa.utils.ColorUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,8 +29,8 @@ public class VoteEvent implements Listener {
 
 
     private static final HashMap<TypeVote, String> sayStartVoting = new HashMap<TypeVote, String>() {{
-        put(TypeVote.SUN, format("Началось голосование за смену погоды! Проголосуйте, введя '%s\u00A7l/yes\u00A7r%s' или '%s\u00A7l/no\u00A7r%s'", ChatColor.GREEN, ChatColor.YELLOW, ChatColor.RED, ChatColor.YELLOW));
-        put(TypeVote.DAY, format("Началось голосование за смену времени суток! Проголосуйте, введя '%s\u00A7l/yes\u00A7r%s' или '%s\u00A7l/no\u00A7r%s'", ChatColor.GREEN, ChatColor.YELLOW, ChatColor.RED, ChatColor.YELLOW));
+        put(TypeVote.SUN, format("Началось голосование за смену погоды! Проголосуйте, введя '%s' или '%s'", ColorUtil.success("/yes"), ColorUtil.fail("/no")));
+        put(TypeVote.DAY, format("Началось голосование за смену времени суток! Проголосуйте, введя '%s' или '%s'", ColorUtil.success("/yes"), ColorUtil.fail("/no")));
     }};
 
     private static final HashMap<TypeVote, Long> cooldownsGlobalDuration = new HashMap<TypeVote, Long>() {{
@@ -43,6 +45,7 @@ public class VoteEvent implements Listener {
 
     // Таблица инициаторов, не путать с массивом голосующих
     private static final HashMap<String, ArrayList<TypeVote>> canPlayerVote = new HashMap<>();
+    private static final HashMap<String, Long> cooldownPlayers = new HashMap<>();
 
     private static final HashMap<TypeVote, Boolean> canGlobalVote = new HashMap<TypeVote, Boolean>() {{
         put(TypeVote.SUN, true);
@@ -53,6 +56,8 @@ public class VoteEvent implements Listener {
         SUN,
         DAY,
     }
+
+    private static final BukkitScheduler scheduler = Main.getInstance().getServer().getScheduler();
 
     public VoteEvent(TypeVote type) {
         voteNo = 0;
@@ -70,11 +75,18 @@ public class VoteEvent implements Listener {
             new VoteEvent(type);
             // Таймер до следующего использования персонально. Сложение здесь - потому что начинается в самом начале работы голосования
 
+            final long cooldownPlayerDuration = cooldownsPlayerDuration.get(type) + ALISA.getConfig().getLong("duration");
             final String playerName = player.getName();
             ArrayList<TypeVote> cooldownsIniciator = canPlayerVote.get(playerName);
             cooldownsIniciator.add(type);
+
             canPlayerVote.put(playerName, cooldownsIniciator);
-            ALISA.getServer().getScheduler().scheduleSyncDelayedTask(ALISA, () -> canPlayerVote.get(playerName).remove(type), cooldownsPlayerDuration.get(type) + ALISA.getConfig().getLong("duration"));
+            cooldownPlayers.put(playerName, System.currentTimeMillis());
+
+            scheduler.runTaskLater(ALISA, () -> {
+                canPlayerVote.get(playerName).remove(type);
+                cooldownPlayers.remove(playerName);
+            }, 20L * cooldownPlayerDuration);
         }
     }
 
@@ -83,7 +95,7 @@ public class VoteEvent implements Listener {
         ALISA.getServer().getPluginManager().registerEvents(listener, ALISA);
         ALISA.say(sayStartVoting.get(typeVote));
         // Длительность голосования
-        ALISA.getServer().getScheduler().scheduleSyncDelayedTask(ALISA, () -> unregisterEvent(listener), ALISA.getConfig().getLong("duration"));
+        scheduler.runTaskLater(ALISA, () -> unregisterEvent(listener), 20L * ALISA.getConfig().getLong("duration"));
     }
 
     private static boolean isWin() {
@@ -93,7 +105,7 @@ public class VoteEvent implements Listener {
         final double voteYesInPercent = voteYes / (1.0 * sumVotes);
 
         final boolean isWinRatio = voteYesInPercent > ALISA.getConfig().getDouble("success-ratio");
-        final boolean isWinAdvantage =  advantage > ALISA.getConfig().getInt("success-advantage");
+        final boolean isWinAdvantage = advantage > ALISA.getConfig().getInt("success-advantage");
 
         if (isWinRatio && isWinAdvantage) {
             Bukkit.getLogger().info("The vote win. Number of those who voted: Yes(" + voteYes + ") | No(" + voteNo + ")\nPercentage advantage: " + voteYesInPercent + ". Absolute advantage: " + advantage);
@@ -113,10 +125,10 @@ public class VoteEvent implements Listener {
             playersVotes.add(player.getName());
             if (yesOrNo) {
                 voteYes++;
-                ALISA.say(format("Вы проголосовали %s\u00A7lза%s!", ChatColor.GREEN, ChatColor.YELLOW), player);
+                ALISA.say(format("Вы проголосовали %s!", ColorUtil.success("за")), player);
             } else {
                 voteNo++;
-                ALISA.say(format("Вы проголосовали %s\u00A7lпротив%s!", ChatColor.RED, ChatColor.YELLOW), player);
+                ALISA.say(format("Вы проголосовали %s!", ColorUtil.fail("против")), player);
             }
         }
     }
@@ -130,7 +142,7 @@ public class VoteEvent implements Listener {
         HandlerList.unregisterAll(listener);
 
         if(isWin()) {
-            ALISA.say(format("Голосование увенчалось %s\u00A7lуспехом\u00A7r%s, смена...", ChatColor.GREEN, ChatColor.YELLOW));
+            ALISA.say(format("Голосование увенчалось %s, смена...", ColorUtil.success("успехом")));
             switch (typeVote) {
                 case SUN:
                     world.setStorm(false);
@@ -141,10 +153,10 @@ public class VoteEvent implements Listener {
                     break;
             }
         } else {
-            ALISA.say(format("Голосование %s\u00A7lпровалено\u00A7r%s, попробуйте позже", ChatColor.RED, ChatColor.YELLOW));
+            ALISA.say(format("Голосование %s, попробуйте позже", ColorUtil.fail("провалено")));
         }
         // Таймер, который со временем разрешит снова голосовать всем
-        ALISA.getServer().getScheduler().scheduleSyncDelayedTask(ALISA, () -> canGlobalVote.put(typeVote, true), cooldownsGlobalDuration.get(typeVote));
+        scheduler.runTaskLater(ALISA, () -> canGlobalVote.put(typeVote, true), 20L * cooldownsGlobalDuration.get(typeVote));
         // Запрет на голосование глобально
         canGlobalVote.put(typeVote, false);
     }
@@ -159,11 +171,18 @@ public class VoteEvent implements Listener {
         if(!canPlayerVote.containsKey(playerName)) {
             canPlayerVote.put(playerName, new ArrayList<>());
         }
+        if(cooldownPlayers.containsKey(playerName)) {
+            long currentCooldown = 0;
+            if(canPlayerVote.get(playerName).contains(type)) {
+                currentCooldown = cooldownsPlayerDuration.get(type) - (System.currentTimeMillis() - cooldownPlayers.get(playerName)) / (20L * 60L);
+            }
+            else if(canGlobalVote.get(type)) {
+                currentCooldown = cooldownsGlobalDuration.get(type) - (System.currentTimeMillis() - cooldownPlayers.get(playerName)) / (20L * 60L);
+            }
 
-        boolean isCanVote = canGlobalVote.get(type) && !canPlayerVote.get(playerName).contains(type);
-        if(!isCanVote) {
-            ALISA.say("Вы не можете так часто использовать голосование!", player);
+            ALISA.say(format("Вы сможете запустить голосование через %sс.", currentCooldown), player);
         }
-        return isCanVote;
+
+        return canGlobalVote.get(type) && !canPlayerVote.get(playerName).contains(type);
     }
 }
