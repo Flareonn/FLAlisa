@@ -6,47 +6,36 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.*;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.entity.Player;
-import org.bukkit.help.HelpTopic;
 import org.bukkit.util.ChatPaginator;
 import org.shy.alisa.listeners.VoteEvent;
 import org.shy.alisa.utils.ColorUtil;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 import static java.lang.String.format;
 
-class AlisaCommandHelp implements CommandExecutor {
+class AlisaCommandHelp extends ChatPaginator implements CommandExecutor {
     private static final Main ALISA = Main.getInstance();
-
+    private static String listCommands = null;
+    public AlisaCommandHelp(String listCommands) {
+        AlisaCommandHelp.listCommands = listCommands;
+    }
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
-        final boolean isPlayerOp = commandSender.isOp();
-
-        ALISA.say("------------Мои команды------------", commandSender);
-        if(isPlayerOp) {
-            ALISA.getDescription().getCommands().forEach((k, v)-> {
-                commandSender.sendMessage(format("%s: %s", ChatColor.GOLD + k, ChatColor.WHITE + "" + v.get("description")));
-            });
-        } else {
-            ALISA.getDescription().getCommands().forEach((k, v)-> {
-                if(!String.valueOf(v.get("default")).equals("op")) {
-                    commandSender.sendMessage(format("%s: %s", ChatColor.GOLD + k, ChatColor.WHITE + "" + v.get("description")));
-                }
-            });
+        int pageNumber = strings.length == 1 ? Integer.parseInt(strings[0]) : 1;
+        ChatPaginator.ChatPage chatPage = ChatPaginator.paginate(listCommands, pageNumber);
+        ALISA.say("-----------Команды-("+ chatPage.getPageNumber() +" из "+ chatPage.getTotalPages() +")----------", commandSender);
+        for (String line : chatPage.getLines() ) {
+            commandSender.sendMessage(line);
         }
-
         return true;
     }
 }
 
-class AlisaCommandBot implements CommandExecutor, TabCompleter {
+class AlisaCommandBot extends ChatPaginator implements CommandExecutor, TabCompleter {
     private static final Main ALISA = Main.getInstance();
     private static final ArrayList<String> subCommands = new ArrayList<String>() {{
         add("read");
@@ -56,21 +45,21 @@ class AlisaCommandBot implements CommandExecutor, TabCompleter {
 //        add("getname");
 //        add("tospawn");
     }};
+    private static String listCommands = null;
+    public AlisaCommandBot(String listCommands) {
+        AlisaCommandBot.listCommands = listCommands;
+    }
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
         if(strings.length == 0) {
-            commandSender.sendMessage(
-                    format("%s--------- %s[ADMIN]%s: %sАЛИСА%s -----------\n", ChatColor.YELLOW, ChatColor.DARK_RED, ChatColor.YELLOW, ChatColor.AQUA, ChatColor.YELLOW) +
-                            format("%s/alisa: %s\n", ChatColor.GOLD, ChatColor.WHITE + ALISA.getCommand("alisa").getDescription()) +
-                            format("%s/alisa read: %s\n", ChatColor.GOLD, ChatColor.WHITE + ALISA.getCommand("alisa read").getDescription()) +
-                            format("%s/alisa set: %s\n", ChatColor.GOLD, ChatColor.WHITE + ALISA.getCommand("alisa set").getDescription()) +
-                            format("%s/alisa reloadconfig: %s\n", ChatColor.GOLD, ChatColor.WHITE + ALISA.getCommand("alisa reloadconfig").getDescription()) +
-                            format("%s/alisa getname: %s\n", ChatColor.GOLD, ChatColor.WHITE + ALISA.getCommand("alisa getname").getDescription()) +
-                            format("%s/alisa getuuid: %s\n", ChatColor.GOLD, ChatColor.WHITE + ALISA.getCommand("alisa getuuid").getDescription())
-            );
+            paginate(1, commandSender);
         } else {
             Player player;
+            if(isDigit(strings[0])) {
+                paginate(Integer.parseInt(strings[0]), commandSender);
+                return true;
+            }
             switch (strings[0]) {
                 case "read":
                     commandRead(strings, commandSender);
@@ -116,6 +105,14 @@ class AlisaCommandBot implements CommandExecutor, TabCompleter {
             }
         }
         return true;
+    }
+
+    private static void paginate(int pageNumber, CommandSender commandSender) {
+        ChatPaginator.ChatPage chatPage = ChatPaginator.paginate(listCommands, pageNumber);
+        ALISA.say("-----------Команды-("+ chatPage.getPageNumber() +" из "+ chatPage.getTotalPages() +")----------", commandSender);
+        for (String line : chatPage.getLines() ) {
+            commandSender.sendMessage(line);
+        }
     }
 
     private static void commandRead(String[] strings, CommandSender commandSender) {

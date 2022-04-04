@@ -1,6 +1,7 @@
 package org.shy.alisa;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -8,6 +9,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.shy.alisa.utils.ColorUtil;
 
 import java.io.File;
+import java.util.Map;
+
+import static java.lang.String.format;
 
 public class Main extends JavaPlugin {
     private static Main instance;
@@ -30,8 +34,8 @@ public class Main extends JavaPlugin {
 
         Bukkit.getLogger().info("Plugin " + this.getName() + " is enabled right now!");
 
-        this.getCommand("alisa").setExecutor(new AlisaCommandBot());
-        this.getCommand("ahelp").setExecutor(new AlisaCommandHelp());
+        this.getCommand("alisa").setExecutor(new AlisaCommandBot(initListCommands(true)));
+        this.getCommand("ahelp").setExecutor(new AlisaCommandHelp(initListCommands(false)));
 
         this.getCommand("inf").setExecutor(new AlisaCommandRules());
         this.getCommand("colors").setExecutor(new AlisaCommandColors());
@@ -74,6 +78,21 @@ public class Main extends JavaPlugin {
 //        PluginManager pm = Bukkit.getServer().getPluginManager();
 //        pm.registerEvents(new JoinEvent(), this);
 //        pm.registerEvents(new ChatEvent(), this);
+    }
+
+    private String initListCommands(boolean isOp) {
+        StringBuilder sb = new StringBuilder();
+        for(Map.Entry<String, Map<String, Object>> mapEntry : getDescription().getCommands().entrySet()) {
+            final boolean isCommandOp = (mapEntry.getValue().get("default")).equals("op");
+            final String command = format("%s: %s\n", ChatColor.GOLD + "/" + mapEntry.getKey(), ChatColor.WHITE + "" + mapEntry.getValue().get("description"));
+
+            if(isOp && isCommandOp) {
+                sb.append(command);
+            } else if(!isOp && !isCommandOp) {
+                sb.append(command);
+            }
+        }
+        return String.valueOf(sb);
     }
 
     public void say(String words) {
