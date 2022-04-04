@@ -53,57 +53,61 @@ class AlisaCommandBot extends ChatPaginator implements CommandExecutor, TabCompl
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
-        if(strings.length == 0) {
-            paginate(1, commandSender);
-        } else {
-            Player player;
-            if(isDigit(strings[0])) {
-                paginate(Integer.parseInt(strings[0]), commandSender);
-                return true;
-            }
-            switch (strings[0]) {
-                case "read":
-                    commandRead(strings, commandSender);
-                    break;
-                case "set":
-                    commandSet(strings, commandSender);
-                    break;
-                case "reloadconfig":
-                    ALISA.reloadConfig();
-                    ALISA.say("Конфиг перезагружен!", commandSender);
-                    break;
-                case "getuuid":
-                case "getname":
-                    // WIP
-                    final UUID uuid = UUID.fromString(strings[1]);
-                    if(uuid != null) {
-                        player = Bukkit.getPlayer(uuid);
-                    } else {
+        if(commandSender.isOp()) {
+            if (strings.length == 0) {
+                paginate(1, commandSender);
+            } else {
+                Player player;
+                if (isDigit(strings[0])) {
+                    paginate(Integer.parseInt(strings[0]), commandSender);
+                    return true;
+                }
+                switch (strings[0]) {
+                    case "read":
+                        commandRead(strings, commandSender);
+                        break;
+                    case "set":
+                        commandSet(strings, commandSender);
+                        break;
+                    case "reloadconfig":
+                        ALISA.reloadConfig();
+                        ALISA.say("Конфиг перезагружен!", commandSender);
+                        break;
+                    case "getuuid":
+                    case "getname":
+                        // WIP
+                        final UUID uuid = UUID.fromString(strings[1]);
+                        if (uuid != null) {
+                            player = Bukkit.getPlayer(uuid);
+                        } else {
+                            player = Bukkit.getPlayer(strings[1]);
+                        }
+
+                        if (player != null) {
+                            ALISA.say(format("Ник игрока: %s", player.getName()), commandSender);
+                            ALISA.say(format("UUID: %s", player.getUniqueId()), commandSender);
+                        } else {
+                            ALISA.say("Игрок с таким именем не найден", commandSender);
+                        }
+
+                        break;
+                    case "tospawn":
+                        // WIP
                         player = Bukkit.getPlayer(strings[1]);
-                    }
-
-                    if(player != null) {
-                        ALISA.say(format("Ник игрока: %s", player.getName()), commandSender);
-                        ALISA.say(format("UUID: %s", player.getUniqueId()), commandSender);
-                    } else {
-                        ALISA.say("Игрок с таким именем не найден", commandSender);
-                    }
-
-                    break;
-                case "tospawn":
-                    // WIP
-                    player = Bukkit.getPlayer(strings[1]);
-                    if(player != null) {
-                        Bukkit.getServer().dispatchCommand(player, "spawn");
-                        ALISA.say("Игрок будет отправлен на спавн", commandSender);
-                    } else {
-                        ALISA.say("Игрок с таким именем не найден", commandSender);
-                    }
-                    break;
-                default:
-                    ALISA.say("Такой команды не существует. Список моих возможностей: -> /alisa", commandSender);
-                    break;
+                        if (player != null) {
+                            Bukkit.getServer().dispatchCommand(player, "spawn");
+                            ALISA.say("Игрок будет отправлен на спавн", commandSender);
+                        } else {
+                            ALISA.say("Игрок с таким именем не найден", commandSender);
+                        }
+                        break;
+                    default:
+                        ALISA.say("Такой команды не существует. Список моих возможностей: -> /alisa", commandSender);
+                        break;
+                }
             }
+        } else {
+            ALISA.say(format("%s Вы не обладаете правами администратора!", ColorUtil.fail("[Ошибка доступа]")), commandSender);
         }
         return true;
     }
@@ -166,21 +170,23 @@ class AlisaCommandBot extends ChatPaginator implements CommandExecutor, TabCompl
 
     @Override
     public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings) {
-        List<String> result = new ArrayList<>();
-        switch(strings.length) {
-            case 1:
-                subCommands.forEach(w->{if(w.startsWith(strings[0])) result.add(w);});
-                return result;
-            case 2:
-                if(strings[0].equals("read") || strings[0].equals("set")) {
-                    ALISA.getConfig().getKeys(false).forEach(w -> {
-                        if (w.startsWith(strings[1])) result.add(w);
+        if (commandSender.isOp()) {
+            List<String> result = new ArrayList<>();
+            switch (strings.length) {
+                case 1:
+                    subCommands.forEach(w -> {
+                        if (w.startsWith(strings[0])) result.add(w);
                     });
                     return result;
-                }
-                break;
-            default:
-                break;
+                case 2:
+                    if (strings[0].equals("read") || strings[0].equals("set")) {
+                        ALISA.getConfig().getKeys(false).forEach(w -> {
+                            if (w.startsWith(strings[1])) result.add(w);
+                        });
+                        return result;
+                    }
+                    break;
+            }
         }
         return null;
     }
