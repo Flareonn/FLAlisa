@@ -41,29 +41,8 @@ public class Main extends JavaPlugin {
         this.getCommand("colors").setExecutor(new AlisaCommandColors());
         this.getCommand("votesun").setExecutor(new AlisaCommandVotesun());
         this.getCommand("voteday").setExecutor(new AlisaCommandVoteday());
-        this.getCommand("yes").setExecutor(new VoteCommand() {
-
-            @Override
-            public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
-                if(!(commandSender instanceof Player)) {
-                    commandSender.sendMessage("Only players can run this command !");
-                    return false;
-                }
-                this.voteUp(true, (Player) commandSender);
-                return true;
-            }
-        });
-        this.getCommand("no").setExecutor(new VoteCommand() {
-            @Override
-            public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
-                if(!(commandSender instanceof Player)) {
-                    commandSender.sendMessage("Only players can run this command !");
-                    return false;
-                }
-                this.voteUp(false, (Player) commandSender);
-                return true;
-            }
-        });
+        this.getCommand("yes").setExecutor(new VoteCommand(true));
+        this.getCommand("no").setExecutor(new VoteCommand(false));
 
         registerEvents();
     }

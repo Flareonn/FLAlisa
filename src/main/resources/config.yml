@@ -1,11 +1,11 @@
 #Длительность голосования (В секундах)
-duration: 45
+duration: 2
 #Глобальный кулдаун на голосование (В секундах)
-votesun-global: 600
-voteday-global: 2400
+votesun-global: 15
+voteday-global: 20
 #Персональный кулдаун на голосование (В секундах)
-votesun-personal: 900
-voteday-personal: 3600
+votesun-personal: 10
+voteday-personal: 15
 #Какой нужен перевес голосов "за" для того, чтобы голосование прошло.
 success-ratio: 0.6
 #Какой должен быть абсолютный перевес голосов "за" чтобы голосование прошло

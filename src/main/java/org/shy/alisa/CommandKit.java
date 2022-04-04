@@ -6,6 +6,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.*;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.util.ChatPaginator;
 import org.shy.alisa.listeners.VoteEvent;
 import org.shy.alisa.utils.ColorUtil;
@@ -210,11 +211,7 @@ class AlisaCommandVotesun implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
         if(!Bukkit.getWorld("world").isClearWeather()) {
-            if(commandSender instanceof Player) {
-                new VoteEvent(VoteEvent.TypeVote.SUN, (Player) commandSender);
-            } else {
-                new VoteEvent(VoteEvent.TypeVote.SUN);
-            }
+            new VoteEvent(VoteEvent.TypeVote.SUN, commandSender);
         }
         else {
             ALISA.say("Сейчас ясная погода!", commandSender);
@@ -228,15 +225,11 @@ class AlisaCommandVoteday implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
-        if(!isDay()) {
-            if(commandSender instanceof Player) {
-                new VoteEvent(VoteEvent.TypeVote.DAY, (Player) commandSender);
-            } else {
-                new VoteEvent(VoteEvent.TypeVote.DAY);
-            }
+        if(isDay()) {
+            ALISA.say("Сейчас день!", commandSender);
         }
         else {
-            ALISA.say("Сейчас день!", commandSender);
+            new VoteEvent(VoteEvent.TypeVote.DAY, commandSender);
         }
         return true;
     }
@@ -309,8 +302,20 @@ class AlisaCommandRules implements CommandExecutor, TabCompleter {
     }
 }
 
-abstract class VoteCommand implements CommandExecutor {
-    protected void voteUp(boolean isYes, Player player) {
-        VoteEvent.setVote(isYes, player);
+class VoteCommand implements CommandExecutor {
+    private final boolean isYes;
+    public VoteCommand(boolean isYes) {
+        this.isYes = isYes;
+    }
+
+    @Override
+    public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
+        if(!(commandSender instanceof Player)) {
+            commandSender.sendMessage("Only players can run this command !");
+            return false;
+        }
+
+        VoteEvent.setVote(isYes, commandSender);
+        return true;
     }
 }
