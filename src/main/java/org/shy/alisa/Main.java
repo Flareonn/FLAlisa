@@ -1,5 +1,6 @@
 package org.shy.alisa;
 
+import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -84,6 +85,10 @@ public class Main extends JavaPlugin {
 
     public void say(String words, CommandSender commandSender) {
         commandSender.sendMessage(ColorUtil.getAlisaTag() + words);
+    }
+
+    public void say(BaseComponent[] component) {
+        Bukkit.spigot().broadcast(component);
     }
 
     public void sayUnknownCommand(String words, CommandSender commandSender) {

@@ -1,5 +1,6 @@
 package org.shy.alisa.listeners;
 
+import net.md_5.bungee.api.chat.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
@@ -25,12 +26,6 @@ public class VoteEvent implements Listener {
     private static int voteYes = 0;
     private static int voteNo = 0;
     private World world;
-
-
-    private static final HashMap<TypeVote, String> sayStartVoting = new HashMap<TypeVote, String>() {{
-        put(TypeVote.SUN, format("Началось голосование за смену погоды! Проголосуйте, введя '%s' или '%s'", ColorUtil.success("/yes"), ColorUtil.fail("/no")));
-        put(TypeVote.DAY, format("Началось голосование за смену времени суток! Проголосуйте, введя '%s' или '%s'", ColorUtil.success("/yes"), ColorUtil.fail("/no")));
-    }};
 
     private static final HashMap<TypeVote, Long> cooldownsGlobalDuration = new HashMap<TypeVote, Long>() {{
         put(TypeVote.SUN, ALISA.getConfig().getLong("votesun-global"));
@@ -78,7 +73,37 @@ public class VoteEvent implements Listener {
     private void registerEvent(Listener listener, String playerName, TypeVote type) {
         active = true;
         ALISA.getServer().getPluginManager().registerEvents(listener, ALISA);
-        ALISA.say(sayStartVoting.get(type));
+        final TextComponent yesMessage = new TextComponent("/yes");
+        final TextComponent noMessage = new TextComponent("/no");
+        yesMessage.setColor(ChatColor.GREEN.asBungee());
+        noMessage.setColor(ChatColor.RED.asBungee());
+        yesMessage.setBold(true);
+        noMessage.setBold(true);
+        yesMessage.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/yes"));
+        noMessage.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/no"));
+
+        switch (type) {
+            case SUN: {
+                final BaseComponent[] message = new ComponentBuilder("[").color(ChatColor.GRAY.asBungee())
+                        .append("Помощница").color(ChatColor.RED.asBungee())
+                        .append("] ").color(ChatColor.GRAY.asBungee())
+                        .append("Алиса: ").color(ChatColor.LIGHT_PURPLE.asBungee())
+                        .append("Началось голосование за смену времени суток! Проголосуйте, введя '").color(ChatColor.YELLOW.asBungee())
+                        .append(yesMessage).append("'").bold(false).color(ChatColor.YELLOW.asBungee()).append(" или '").append(noMessage).append("'").color(ChatColor.YELLOW.asBungee()).bold(false)
+                        .create();
+                ALISA.say(message);
+            }
+            case DAY: {
+                final BaseComponent[] message = new ComponentBuilder("[").color(ChatColor.GRAY.asBungee())
+                        .append("Помощница").color(ChatColor.RED.asBungee())
+                        .append("] ").color(ChatColor.GRAY.asBungee())
+                        .append("Алиса: ").color(ChatColor.LIGHT_PURPLE.asBungee())
+                        .append("Началось голосование за смену погоды! Проголосуйте, введя '").color(ChatColor.YELLOW.asBungee())
+                        .append(yesMessage).append("'").bold(false).color(ChatColor.YELLOW.asBungee()).append(" или '").append(noMessage).append("'").color(ChatColor.YELLOW.asBungee()).bold(false)
+                        .create();
+                ALISA.say(message);
+            }
+        }
         // Длительность голосования
         scheduler.runTaskLater(ALISA, () -> unregisterEvent(listener, playerName, type), 20L * voteDuration);
     }

@@ -1,12 +1,12 @@
 package org.shy.alisa;
 
 import com.google.gson.*;
+import net.md_5.bungee.api.chat.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.*;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.util.ChatPaginator;
 import org.shy.alisa.listeners.VoteEvent;
 import org.shy.alisa.utils.ColorUtil;
@@ -196,6 +196,12 @@ class AlisaCommandColors implements CommandExecutor {
     private static final Main ALISA = Main.getInstance();
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
+        TextComponent message = new TextComponent("/yes");
+        message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/yes"));
+
+        BaseComponent component = message;
+        commandSender.spigot().sendMessage(component);
+
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
             ALISA.say("Вы можете наблюдать доступные цвета и модификаторы:\n"
