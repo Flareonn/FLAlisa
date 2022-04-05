@@ -3,20 +3,26 @@ package org.shy.alisa.utils;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 
+import java.util.HashMap;
+
 public class ColorUtil {
-    private static String prefixColor;
-    private static String nameColor;
-    private static String textColor;
-    private static String bracketColor;
+    public static String prefix;
+    public static String name;
+    public static String text;
+    public static String bracket;
+
     private static String ALISA_TAG;
 
-
     public ColorUtil(FileConfiguration fileConfiguration) {
-        prefixColor = translateColorCode(fileConfiguration.getString("chat-colors.prefix-color"));
-        nameColor = translateColorCode(fileConfiguration.getString("chat-colors.name-color"));
-        textColor = translateColorCode(fileConfiguration.getString("chat-colors.text-color"));
-        bracketColor = translateColorCode(fileConfiguration.getString("chat-colors.bracket-color"));
-        ALISA_TAG = String.format("%s[%sПомощница%s]%s Алиса:%s ", bracketColor, prefixColor, bracketColor, nameColor, textColor);
+        registerColorConfig(fileConfiguration);
+        ALISA_TAG = String.format("%s[%sПомощница%s]%s Алиса:%s ", bracket, prefix, bracket, name, text);
+    }
+
+    private static void registerColorConfig(FileConfiguration fileConfiguration) {
+        prefix = translateColorCode(fileConfiguration.getString("chat-colors.prefix-color"));
+        name = translateColorCode(fileConfiguration.getString("chat-colors.name-color"));
+        text = translateColorCode(fileConfiguration.getString("chat-colors.text-color"));
+        bracket = translateColorCode(fileConfiguration.getString("chat-colors.bracket-color"));
     }
 
     public static String getAlisaTag() {
@@ -25,22 +31,6 @@ public class ColorUtil {
 
     private static String translateColorCode(String color) {
         return ChatColor.translateAlternateColorCodes('&', "&" + color);
-    }
-
-    public static String getBracketColor() {
-        return bracketColor;
-    }
-
-    public static String getNameColor() {
-        return nameColor;
-    }
-
-    public static String getPrefixColor() {
-        return prefixColor;
-    }
-
-    public static String getTextColor() {
-        return textColor;
     }
 
     public static String success(String word) {
@@ -52,10 +42,10 @@ public class ColorUtil {
     }
 
     public static String wrap(String word, ChatColor color) {
-        return color + word + ChatColor.RESET + getTextColor();
+        return color + word + ChatColor.RESET + text;
     }
 
     public static String wrap(String word, ChatColor color, ChatColor modifiers) {
-        return color + "" + modifiers + word + ChatColor.RESET + getTextColor();
+        return color + "" + modifiers + word + ChatColor.RESET + text;
     }
 }

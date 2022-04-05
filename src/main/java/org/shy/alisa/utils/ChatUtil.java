@@ -1,0 +1,71 @@
+package org.shy.alisa.utils;
+
+import net.md_5.bungee.api.chat.*;
+import net.md_5.bungee.api.ChatColor;
+import org.bukkit.configuration.file.FileConfiguration;
+
+import java.util.HashMap;
+
+public class ChatUtil {
+    public static TextComponent ALISA_TAG;
+    public static TextComponent YES;
+    public static TextComponent NO;
+    public static BaseComponent[] YES_NO;
+
+    private static final TextComponent cleaner = text("");
+    public static final HashMap<String, String> hexColor = new HashMap<String, String>() {{
+        put("0", "#000000"); put("1", "#0000AA"); put("2", "#00AA00"); put("3", "#00AAAA");
+        put("4", "#AA0000"); put("5", "#AA00AA"); put("6", "#FFAA00"); put("7", "#AAAAAA");
+        put("8", "#3F3F3F"); put("9", "#5555FF"); put("a", "#55FF55"); put("b", "#55FFFF");
+        put("c", "#FF5555"); put("d", "#FF55FF"); put("e", "#FFFF55"); put("f", "#FFFFFF");
+        put("g", "#DDD605");
+    }};
+    private static ChatColor prefixColor;
+    private static ChatColor nameColor;
+    private static ChatColor textColor;
+    private static ChatColor bracketColor;
+
+    public ChatUtil(FileConfiguration fileConfiguration) {
+        registerColorConfig(fileConfiguration);
+
+        ALISA_TAG = text("[", bracketColor);
+        ALISA_TAG.addExtra(text("Помощница", prefixColor));
+        ALISA_TAG.addExtra(text("]", bracketColor));
+        ALISA_TAG.addExtra(text(" Алиса: ", nameColor));
+
+        YES = textCommand(text("'Да'", ChatColor.GREEN), "/yes");
+        YES.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Проголосовать 'За'").color(YES.getColor()).create()));
+        NO = textCommand(text("'Нет'", ChatColor.RED), "/no");
+        NO.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Проголосовать 'Против'").color(NO.getColor()).create()));
+
+        YES_NO = new ComponentBuilder(YES).append(" ").append(NO).create();
+    }
+
+    private static void registerColorConfig(FileConfiguration fileConfiguration) {
+        prefixColor = toHex(fileConfiguration.getString("chat-colors.prefix-color"));
+        nameColor = toHex(fileConfiguration.getString("chat-colors.name-color"));
+        textColor = toHex(fileConfiguration.getString("chat-colors.text-color"));
+        bracketColor = toHex(fileConfiguration.getString("chat-colors.bracket-color"));
+    }
+
+    public static ChatColor toHex(String legacyColorCode) {
+        return ChatColor.of(hexColor.get(legacyColorCode));
+    }
+
+    public static TextComponent text(String text) {
+        final TextComponent textComponent = new TextComponent(text);
+        textComponent.setColor(textColor);
+        textComponent.setBold(false);
+        return textComponent;
+    }
+    public static TextComponent text(String text, ChatColor chatColor) {
+        final TextComponent textComponent = new TextComponent(text);
+        textComponent.setColor(chatColor);
+        return textComponent;
+    }
+    public static TextComponent textCommand(TextComponent textComponent, String command) {
+        textComponent.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, command));
+        textComponent.addExtra(cleaner);
+        return textComponent;
+    }
+}

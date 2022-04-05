@@ -9,10 +9,10 @@ commands:
     description: Список доступных комманд
     usage: "/ahelp"
     default: true
-  colors:
-    description: Список доступных цветов в чате
-    usage: "/colors"
-    default: true
+#  colors:
+#    description: Список доступных цветов в чате
+#    usage: "/colors"
+#    default: true
   votesun:
     description: Голосование за отключение дождя
     usage: "/votesun"
@@ -57,6 +57,3 @@ commands:
       description: Получить UUID игрока по Нику
       usage: "/alisa reloadconfig"
       default: op
-#  'ahelp':
-#    description: All commands for Alisa
-#    usage: "/ahelp"

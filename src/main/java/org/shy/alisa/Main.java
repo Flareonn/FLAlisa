@@ -5,8 +5,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.shy.alisa.utils.ChatUtil;
 import org.shy.alisa.utils.ColorUtil;
 
 import java.io.File;
@@ -30,8 +32,8 @@ public class Main extends JavaPlugin {
             saveResource(rulesFile.getName(), true);
         }
         instance = this;
-        // Initialize Utils
-        new ColorUtil(getConfig());
+        initUtils();
+
 
         Bukkit.getLogger().info("Plugin " + this.getName() + " is enabled right now!");
 
@@ -39,7 +41,7 @@ public class Main extends JavaPlugin {
         this.getCommand("ahelp").setExecutor(new AlisaCommandHelp(initListCommands(false)));
 
         this.getCommand("inf").setExecutor(new AlisaCommandRules());
-        this.getCommand("colors").setExecutor(new AlisaCommandColors());
+//        this.getCommand("colors").setExecutor(new AlisaCommandColors());
         this.getCommand("votesun").setExecutor(new AlisaCommandVotesun());
         this.getCommand("voteday").setExecutor(new AlisaCommandVoteday());
         this.getCommand("yes").setExecutor(new VoteCommand(true));
@@ -51,7 +53,7 @@ public class Main extends JavaPlugin {
     @Override
     public void reloadConfig() {
         super.reloadConfig();
-        new ColorUtil(getConfig());
+        initUtils();
     }
 
     public void registerEvents() {
@@ -73,6 +75,10 @@ public class Main extends JavaPlugin {
             }
         }
         return String.valueOf(sb);
+    }
+    private void initUtils() {
+        new ColorUtil(getConfig());
+        new ChatUtil(getConfig());
     }
 
     public void say(String words) {
