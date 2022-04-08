@@ -3,7 +3,6 @@ package org.shy.alisa;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -12,6 +11,7 @@ import org.shy.alisa.utils.ChatUtil;
 import org.shy.alisa.utils.ColorUtil;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.Map;
 
 import static java.lang.String.format;
@@ -37,13 +37,13 @@ public class Main extends JavaPlugin {
 
         Bukkit.getLogger().info("Plugin " + this.getName() + " is enabled right now!");
 
-        this.getCommand("alisa").setExecutor(new AlisaCommandBot(initListCommands(true)));
-        this.getCommand("ahelp").setExecutor(new AlisaCommandHelp(initListCommands(false)));
+        this.getCommand("alisa").setExecutor(new CommandBot(initListCommands(true)));
+        this.getCommand("ahelp").setExecutor(new CommandHelp(initListCommands(false)));
 
-        this.getCommand("inf").setExecutor(new AlisaCommandRules());
-//        this.getCommand("colors").setExecutor(new AlisaCommandColors());
-        this.getCommand("votesun").setExecutor(new AlisaCommandVotesun());
-        this.getCommand("voteday").setExecutor(new AlisaCommandVoteday());
+        this.getCommand("inf").setExecutor(new CommandRules());
+//        this.getCommand("colors").setExecutor(new CommandColors());
+        this.getCommand("votesun").setExecutor(new CommandVotesun());
+        this.getCommand("voteday").setExecutor(new CommandVoteday());
         this.getCommand("yes").setExecutor(new VoteCommand(true));
         this.getCommand("no").setExecutor(new VoteCommand(false));
 
@@ -77,8 +77,16 @@ public class Main extends JavaPlugin {
         return String.valueOf(sb);
     }
     private void initUtils() {
-        new ColorUtil(getConfig());
-        new ChatUtil(getConfig());
+        FileConfiguration fileConfiguration = getConfig();
+        final HashMap<String, String> colorsConfig = new HashMap<String, String>() {{
+            put("bracket-color", fileConfiguration.getString("chat-colors.bracket"));
+            put("name-color", fileConfiguration.getString("chat-colors.name"));
+            put("text-color", fileConfiguration.getString("chat-colors.text"));
+            put("prefix-color", fileConfiguration.getString("chat-colors.prefix"));
+        }};
+
+        new ColorUtil(colorsConfig);
+        new ChatUtil(colorsConfig);
     }
 
     public void say(String words) {
