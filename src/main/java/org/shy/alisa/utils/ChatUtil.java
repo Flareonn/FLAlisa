@@ -3,16 +3,18 @@ package org.shy.alisa.utils;
 import net.md_5.bungee.api.chat.*;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.shy.alisa.Config;
+import org.shy.alisa.FLAlisa;
 
 import java.util.HashMap;
 
 public class ChatUtil {
+    private static final TextComponent cleaner = text("");
     public static TextComponent ALISA_TAG;
     public static TextComponent YES;
     public static TextComponent NO;
     public static BaseComponent[] YES_NO;
 
-    private static final TextComponent cleaner = text("");
     public static final HashMap<String, String> hexColor = new HashMap<String, String>() {{
         put("0", "#000000"); put("1", "#0000AA"); put("2", "#00AA00"); put("3", "#00AAAA");
         put("4", "#AA0000"); put("5", "#AA00AA"); put("6", "#FFAA00"); put("7", "#AAAAAA");
@@ -25,8 +27,8 @@ public class ChatUtil {
     private static ChatColor textColor;
     private static ChatColor bracketColor;
 
-    public ChatUtil(FileConfiguration fileConfiguration) {
-        registerColorConfig(fileConfiguration);
+    public ChatUtil(final Config config) {
+        registerColorConfig(config);
 
         ALISA_TAG = text("[", bracketColor);
         ALISA_TAG.addExtra(text("Помощница", prefixColor));
@@ -41,11 +43,11 @@ public class ChatUtil {
         YES_NO = new ComponentBuilder(YES).append(" ").append(NO).create();
     }
 
-    private static void registerColorConfig(FileConfiguration fileConfiguration) {
-        prefixColor = toHex(fileConfiguration.getString("chat-colors.prefix-color"));
-        nameColor = toHex(fileConfiguration.getString("chat-colors.name-color"));
-        textColor = toHex(fileConfiguration.getString("chat-colors.text-color"));
-        bracketColor = toHex(fileConfiguration.getString("chat-colors.bracket-color"));
+    private static void registerColorConfig(Config config) {
+        prefixColor = toHex(config.getString("chat-colors.prefix"));
+        nameColor = toHex(config.getString("chat-colors.name"));
+        textColor = toHex(config.getString("chat-colors.text"));
+        bracketColor = toHex(config.getString("chat-colors.bracket"));
     }
 
     public static ChatColor toHex(String legacyColorCode) {

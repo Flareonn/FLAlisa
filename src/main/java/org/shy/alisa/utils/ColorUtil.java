@@ -2,6 +2,8 @@ package org.shy.alisa.utils;
 
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.shy.alisa.Config;
+import org.shy.alisa.FLAlisa;
 
 import java.util.HashMap;
 
@@ -13,16 +15,16 @@ public class ColorUtil {
 
     private static String ALISA_TAG;
 
-    public ColorUtil(FileConfiguration fileConfiguration) {
-        registerColorConfig(fileConfiguration);
+    public ColorUtil(final Config config) {
+        registerColorConfig(config);
         ALISA_TAG = String.format("%s[%sПомощница%s]%s Алиса:%s ", bracket, prefix, bracket, name, text);
     }
 
-    private static void registerColorConfig(FileConfiguration fileConfiguration) {
-        prefix = translateColorCode(fileConfiguration.getString("chat-colors.prefix-color"));
-        name = translateColorCode(fileConfiguration.getString("chat-colors.name-color"));
-        text = translateColorCode(fileConfiguration.getString("chat-colors.text-color"));
-        bracket = translateColorCode(fileConfiguration.getString("chat-colors.bracket-color"));
+    private static void registerColorConfig(Config config) {
+        prefix = translateColorCode(config.getString("chat-colors.prefix"));
+        name = translateColorCode(config.getString("chat-colors.name"));
+        text = translateColorCode(config.getString("chat-colors.text"));
+        bracket = translateColorCode(config.getString("chat-colors.bracket"));
     }
 
     public static String getAlisaTag() {

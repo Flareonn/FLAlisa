@@ -1,9 +1,11 @@
-name: Alisa # Имя плагина
-main: org.shy.alisa.Main # Путь к главному классу (тому, который наследует JavaPlugin)
-author: Flareon # Автор плагина
-version: 0.1 # Версия плагина
+name: Alisa
+main: org.shy.alisa.FLAlisa
+author: Flareon
+version: 0.2
 api-version: '1.16'
-description: The best in the world plugin # Описание плагина
+description: The best in the world plugin
+
+
 commands:
   ahelp:
     description: Список доступных комманд
@@ -13,14 +15,15 @@ commands:
 #    description: Список доступных цветов в чате
 #    usage: "/colors"
 #    default: true
-  votesun:
-    description: Голосование за отключение дождя
-    usage: "/votesun"
+  aseen:
+    description: Узнать когда игрок был последний раз на сервере
+    usage: "/aseen"
     default: true
-  voteday:
-    description: Голосование за смену дня
-    usage: "/voteday"
+  server:
+    description: Время до рестарта сервера
+    usage: "/server"
     default: true
+    aliases: [aserver]
   'yes':
     description: Проголосовать "Да"
     usage: "/yes"
@@ -28,6 +31,14 @@ commands:
   'no':
     description: Проголосовать "Нет"
     usage: "/no"
+    default: true
+  votesun:
+    description: Голосование за отключение дождя
+    usage: "/votesun"
+    default: true
+  voteday:
+    description: Голосование за смену дня
+    usage: "/voteday"
     default: true
   inf:
     description: Информация по пунктам правил

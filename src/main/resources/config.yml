@@ -1,5 +1,7 @@
 #Длительность голосования (В секундах)
 duration: 2
+#Период рестарта сервера (В минутах)
+restart-period: 180
 #Глобальный кулдаун на голосование (В секундах)
 votesun-global: 15
 voteday-global: 20
@@ -12,9 +14,9 @@ success-ratio: 0.6
 success-advantage: 2
 #Цвета, которые использует алиса
 chat-colors:
-  prefix-color: "c"
-  name-color: "d"
-  text-color: "e"
-  bracket-color: "8"
+  prefix: "c"
+  name: "d"
+  text: "e"
+  bracket: "8"
 #messages:
 #  join: "вассап"

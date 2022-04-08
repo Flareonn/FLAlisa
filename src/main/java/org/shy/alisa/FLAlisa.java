@@ -4,39 +4,37 @@ import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.shy.alisa.cooldown.CooldownsHandler;
 import org.shy.alisa.utils.ChatUtil;
 import org.shy.alisa.utils.ColorUtil;
 
 import java.io.File;
-import java.util.HashMap;
 import java.util.Map;
 
 import static java.lang.String.format;
 
-public class Main extends JavaPlugin {
-    private static Main instance;
-    private static File rulesFile;
+public class FLAlisa extends JavaPlugin {
+    protected static FLAlisa instance;
+    protected static File rulesFile;
+    public Config config;
+    public CooldownsHandler cooldownsHandler;
 
-    public static Main getInstance() {
-        return instance;
-    }
+    public static FLAlisa getInstance() {return instance;}
     public static File getRulesFile() {return rulesFile;}
     @Override
     public void onEnable() {
-        saveDefaultConfig();
-        rulesFile = new File(getDataFolder(), "rules.json");
-        if(!rulesFile.exists()) {
-            saveResource(rulesFile.getName(), true);
-        }
-        instance = this;
-        initUtils();
-
-
         Bukkit.getLogger().info("Plugin " + this.getName() + " is enabled right now!");
 
+        registerConfig();
+        registerCommands();
+        registerEvents();
+    }
+
+    private void registerCommands() {
+        this.getCommand("server").setExecutor(new CommandServer());
+        this.getCommand("aseen").setExecutor(new CommandAseen());
         this.getCommand("alisa").setExecutor(new CommandBot(initListCommands(true)));
         this.getCommand("ahelp").setExecutor(new CommandHelp(initListCommands(false)));
 
@@ -46,14 +44,19 @@ public class Main extends JavaPlugin {
         this.getCommand("voteday").setExecutor(new CommandVoteday());
         this.getCommand("yes").setExecutor(new VoteCommand(true));
         this.getCommand("no").setExecutor(new VoteCommand(false));
-
-        registerEvents();
     }
 
-    @Override
-    public void reloadConfig() {
-        super.reloadConfig();
+    public void registerConfig() {
+        instance = this;
+        this.saveDefaultConfig();
+        this.config = new Config(this);
+
+        rulesFile = new File(getDataFolder(), "rules.json");
+        if(!rulesFile.exists()) {
+            saveResource(rulesFile.getName(), true);
+        }
         initUtils();
+        this.cooldownsHandler = new CooldownsHandler(config);
     }
 
     public void registerEvents() {
@@ -76,17 +79,10 @@ public class Main extends JavaPlugin {
         }
         return String.valueOf(sb);
     }
-    private void initUtils() {
-        FileConfiguration fileConfiguration = getConfig();
-        final HashMap<String, String> colorsConfig = new HashMap<String, String>() {{
-            put("bracket-color", fileConfiguration.getString("chat-colors.bracket"));
-            put("name-color", fileConfiguration.getString("chat-colors.name"));
-            put("text-color", fileConfiguration.getString("chat-colors.text"));
-            put("prefix-color", fileConfiguration.getString("chat-colors.prefix"));
-        }};
 
-        new ColorUtil(colorsConfig);
-        new ChatUtil(colorsConfig);
+    private void initUtils() {
+        new ColorUtil(this.config);
+        new ChatUtil(this.config);
     }
 
     public void say(String words) {

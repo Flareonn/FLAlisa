@@ -4,25 +4,84 @@ import com.google.gson.*;
 import net.md_5.bungee.api.chat.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.*;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.entity.Player;
 import org.bukkit.util.ChatPaginator;
 import org.shy.alisa.listeners.VoteEvent;
+import org.shy.alisa.utils.ChatUtil;
 import org.shy.alisa.utils.ColorUtil;
+import org.shy.alisa.utils.TimeUtil;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.lang.management.ManagementFactory;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import static java.lang.String.format;
 
-class AlisaCommandHelp extends ChatPaginator implements CommandExecutor {
-    private static final Main ALISA = Main.getInstance();
-    private static String listCommands = null;
-    public AlisaCommandHelp(String listCommands) {
-        AlisaCommandHelp.listCommands = listCommands;
+class CommandAseen implements CommandExecutor {
+    private final FLAlisa ALISA;
+
+    public CommandAseen() {
+        this.ALISA = FLAlisa.getInstance();
+    }
+
+    public boolean onCommand(final CommandSender commandSender, final Command command, final String s, final String[] strings) {
+        if (commandSender instanceof Player) {
+            if (strings.length >= 1) {
+                this.ALISA.say(this.getSeenString(strings[0]), commandSender);
+            } else {
+                this.ALISA.say("Похоже, вы забыли указать имя", commandSender);
+            }
+        }
+        return true;
+    }
+
+    private String getSeenString(final String playerName) {
+        final Player onlinePlayer = Bukkit.getPlayerExact(playerName);
+        final String colorName = ColorUtil.wrap(playerName, ChatColor.GOLD);
+        if(onlinePlayer != null && onlinePlayer.isOnline()) {
+            return format("Игрок: %s сейчас %s", colorName, ColorUtil.success("онлайн"));
+        } else {
+            final OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(playerName);
+            if (offlinePlayer == null || !offlinePlayer.getName().equalsIgnoreCase(playerName)) {
+                return format("Не могу найти игрока с именем %s", colorName);
+            }
+
+            final TimeUtil time = new TimeUtil(System.currentTimeMillis() - offlinePlayer.getLastPlayed());
+            if (time.getDays() > 1000L) {
+                return format("Не могу найти игрока с именем %s", colorName);
+            }
+            return format("Игрок: %s сейчас\n%s%s", colorName, ColorUtil.fail("Оффлайн"), time.getLog());
+        }
+    }
+}
+
+class CommandServer implements CommandExecutor {
+    private final FLAlisa ALISA;
+    private final int timeToRestart;
+    public CommandServer() {
+        ALISA = FLAlisa.getInstance();
+        timeToRestart = ALISA.config.getInt("restart-period");
+    }
+    @Override
+    public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
+        final TimeUtil time = new TimeUtil((long) timeToRestart * 60 * 1000 - ManagementFactory.getRuntimeMXBean().getUptime());
+        ALISA.say("До рестарта:" + time.getLog(), commandSender);
+        return true;
+    }
+}
+
+class CommandHelp extends ChatPaginator implements CommandExecutor {
+    private final FLAlisa ALISA;
+    private final String listCommands;
+
+    public CommandHelp(String commands) {
+        ALISA = FLAlisa.getInstance();
+        listCommands = commands;
     }
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
@@ -36,8 +95,8 @@ class AlisaCommandHelp extends ChatPaginator implements CommandExecutor {
     }
 }
 
-class AlisaCommandBot extends ChatPaginator implements CommandExecutor, TabCompleter {
-    private static final Main ALISA = Main.getInstance();
+class CommandBot extends ChatPaginator implements CommandExecutor, TabCompleter {
+    private final FLAlisa ALISA;
     private static final ArrayList<String> subCommands = new ArrayList<String>() {{
         add("read");
         add("set");
@@ -46,9 +105,10 @@ class AlisaCommandBot extends ChatPaginator implements CommandExecutor, TabCompl
 //        add("getname");
 //        add("tospawn");
     }};
-    private static String listCommands = null;
-    public AlisaCommandBot(String listCommands) {
-        AlisaCommandBot.listCommands = listCommands;
+    private final String listCommands;
+    public CommandBot(String commands) {
+        ALISA = FLAlisa.getInstance();
+        listCommands = commands;
     }
 
     @Override
@@ -62,7 +122,7 @@ class AlisaCommandBot extends ChatPaginator implements CommandExecutor, TabCompl
                     paginate(Integer.parseInt(strings[0]), commandSender);
                     return true;
                 }
-                switch (strings[0]) {
+                switch (strings[0].toLowerCase()) {
                     case "read":
                         commandRead(strings, commandSender);
                         break;
@@ -70,7 +130,9 @@ class AlisaCommandBot extends ChatPaginator implements CommandExecutor, TabCompl
                         commandSet(strings, commandSender);
                         break;
                     case "reloadconfig":
-                        ALISA.reloadConfig();
+                        ALISA.say(ALISA.config.getString("duration"));
+                        ALISA.registerConfig();
+                        ALISA.say(ALISA.config.getString("duration"));
                         ALISA.say("Конфиг перезагружен!", commandSender);
                         break;
                     case "getuuid":
@@ -112,7 +174,7 @@ class AlisaCommandBot extends ChatPaginator implements CommandExecutor, TabCompl
         return true;
     }
 
-    private static void paginate(int pageNumber, CommandSender commandSender) {
+    private void paginate(int pageNumber, CommandSender commandSender) {
         ChatPaginator.ChatPage chatPage = ChatPaginator.paginate(listCommands, pageNumber);
         ALISA.say("-----------Команды-("+ chatPage.getPageNumber() +" из "+ chatPage.getTotalPages() +")----------", commandSender);
         for (String line : chatPage.getLines() ) {
@@ -120,10 +182,10 @@ class AlisaCommandBot extends ChatPaginator implements CommandExecutor, TabCompl
         }
     }
 
-    private static void commandRead(String[] strings, CommandSender commandSender) {
+    private void commandRead(String[] strings, CommandSender commandSender) {
         if(strings.length > 1) {
             String configKey = strings[1];
-            Object configValue = ALISA.getConfig().get(configKey);
+            Object configValue = ALISA.config.getObject(configKey);
             if(configValue instanceof MemorySection) {
                 configValue = ((MemorySection) configValue).getKeys(false);
             }
@@ -138,7 +200,7 @@ class AlisaCommandBot extends ChatPaginator implements CommandExecutor, TabCompl
         }
     }
 
-    private static void commandSet(String[] strings, CommandSender commandSender) {
+    private void commandSet(String[] strings, CommandSender commandSender) {
         switch (strings.length) {
             case 1:
                 ALISA.say("Введите имя поля, значение которому вы хотите указать!", commandSender);
@@ -149,9 +211,8 @@ class AlisaCommandBot extends ChatPaginator implements CommandExecutor, TabCompl
             case 3:
                 String configKey = strings[1];
                 String configValue = strings[2];
-                ALISA.getConfig().set(configKey, isDigit(configValue) ? Integer.parseInt(configValue) : configValue);
-                ALISA.saveConfig();
-                ALISA.say(format("Вы установили поле '%s' со значением: %s", ColorUtil.wrap(configKey, ChatColor.LIGHT_PURPLE), ColorUtil.wrap(configValue, ChatColor.DARK_PURPLE, ChatColor.BOLD)), commandSender);
+                ALISA.config.set(configKey, isDigit(configValue) ? Integer.parseInt(configValue) : configValue);
+                ALISA.say(format("Вы установили поле %s со значением: %s", ColorUtil.wrap(configKey, ChatColor.LIGHT_PURPLE), ColorUtil.wrap(configValue, ChatColor.DARK_PURPLE, ChatColor.BOLD)), commandSender);
                 break;
             default:
                 ALISA.sayUnknownCommand("\n" + ALISA.getCommand("alisa " + strings[0]).getUsage() , commandSender);
@@ -180,7 +241,7 @@ class AlisaCommandBot extends ChatPaginator implements CommandExecutor, TabCompl
                     return result;
                 case 2:
                     if (strings[0].equals("read") || strings[0].equals("set")) {
-                        ALISA.getConfig().getKeys(false).forEach(w -> {
+                        ALISA.config.getKeys().forEach(w -> {
                             if (w.startsWith(strings[1])) result.add(w);
                         });
                         return result;
@@ -192,8 +253,8 @@ class AlisaCommandBot extends ChatPaginator implements CommandExecutor, TabCompl
     }
 }
 
-class AlisaCommandColors implements CommandExecutor {
-    private static final Main ALISA = Main.getInstance();
+class CommandColors implements CommandExecutor {
+    private static final FLAlisa ALISA = FLAlisa.getInstance();
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
         TextComponent message = new TextComponent("/yes");
@@ -218,8 +279,11 @@ class AlisaCommandColors implements CommandExecutor {
     }
 }
 
-class AlisaCommandVotesun implements CommandExecutor {
-    private static final Main ALISA = Main.getInstance();
+class CommandVotesun implements CommandExecutor {
+    private static FLAlisa ALISA;
+    public CommandVotesun() {
+        ALISA = FLAlisa.getInstance();
+    }
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
         if(!Bukkit.getWorld("world").isClearWeather()) {
@@ -232,8 +296,8 @@ class AlisaCommandVotesun implements CommandExecutor {
     }
 }
 
-class AlisaCommandVoteday implements CommandExecutor {
-    private static final Main ALISA = Main.getInstance();
+class CommandVoteday implements CommandExecutor {
+    private static final FLAlisa ALISA = FLAlisa.getInstance();
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
@@ -252,14 +316,13 @@ class AlisaCommandVoteday implements CommandExecutor {
     }
 }
 
-class AlisaCommandRules implements CommandExecutor, TabCompleter {
-    private static final Main ALISA = Main.getInstance();
+class CommandRules implements CommandExecutor, TabCompleter {
+    private static final FLAlisa ALISA = FLAlisa.getInstance();
     private static final ArrayList<String> rulesInPoints = new ArrayList<>();
     private static JsonObject rules;
-
-    {
+    static {
         try {
-            rules = new JsonParser().parse(new FileReader(Main.getRulesFile())).getAsJsonObject().getAsJsonObject("rules");
+            rules = new JsonParser().parse(new FileReader(FLAlisa.getRulesFile())).getAsJsonObject().getAsJsonObject("rules");
             rules.getAsJsonObject().entrySet().forEach(w -> rulesInPoints.add(w.getKey()));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -279,7 +342,7 @@ class AlisaCommandRules implements CommandExecutor, TabCompleter {
                 String content = safelyGetFromJson("content", rule);
                 ALISA.say(
                         format("%s\n%s\n" +
-                                        (!punishment.equals("") ? ChatColor.RED + "" + ChatColor.UNDERLINE + "Наказание:" + ChatColor.RESET + "" + ChatColor.RED + " %s" : ""),
+                                (!punishment.equals("") ? ChatColor.RED + "" + ChatColor.UNDERLINE + "Наказание:" + ChatColor.RESET + "" + ChatColor.RED + " %s" : ""),
                                 "----------------" + pointRule + "----------------",
                                 content,
                                 punishment
