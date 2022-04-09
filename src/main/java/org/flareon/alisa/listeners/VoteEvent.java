@@ -1,4 +1,4 @@
-package org.shy.alisa.listeners;
+package org.flareon.alisa.listeners;
 
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -8,9 +8,9 @@ import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
-import org.shy.alisa.FLAlisa;
-import org.shy.alisa.utils.ChatUtil;
-import org.shy.alisa.utils.ColorUtil;
+import org.flareon.alisa.FLAlisa;
+import org.flareon.alisa.utils.ChatUtil;
+import org.flareon.alisa.utils.ColorUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -88,7 +88,7 @@ public class VoteEvent implements Listener {
             playersVotes.add(commandSender.getName());
             if (yesOrNo) {
                 voteYes++;
-                ALISA.say(format("Вы проголосовали %s!", ColorUtil.success("за")), commandSender);
+                ALISA.say(String.format("Вы проголосовали %s!", ColorUtil.success("за")), commandSender);
             } else {
                 voteNo++;
                 ALISA.say(format("Вы проголосовали %s!", ColorUtil.fail("против")), commandSender);
