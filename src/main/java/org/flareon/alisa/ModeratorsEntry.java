@@ -1,4 +1,4 @@
-package org.shy.alisa;
+package org.flareon.alisa;
 
 
 import org.bukkit.Bukkit;
@@ -6,7 +6,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.entity.Player;
-import org.shy.alisa.utils.ColorUtil;
+import org.flareon.alisa.utils.ColorUtil;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;

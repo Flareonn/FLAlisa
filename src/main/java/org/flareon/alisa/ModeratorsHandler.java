@@ -1,12 +1,11 @@
-package org.shy.alisa;
+package org.flareon.alisa;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
-import org.shy.alisa.utils.ColorUtil;
+import org.flareon.alisa.utils.ColorUtil;
 
-import java.io.File;
 import java.util.*;
 
 public class ModeratorsHandler {
