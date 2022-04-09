@@ -1,10 +1,8 @@
-package org.shy.alisa.utils;
+package org.flareon.alisa.utils;
 
 import net.md_5.bungee.api.chat.*;
 import net.md_5.bungee.api.ChatColor;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.shy.alisa.Config;
-import org.shy.alisa.FLAlisa;
+import org.flareon.alisa.Config;
 
 import java.util.HashMap;
 
