@@ -21,13 +21,11 @@ public class JoinEvent implements Listener {
         final Player joinedPlayer = event.getPlayer();
         final String playerName = joinedPlayer.getName();
         ArrayList<String> toSpawnPlayerNames = this.ALISA.config.getList("tospawn-playernames");
-        for(final String name : toSpawnPlayerNames) {
-            if(playerName.equalsIgnoreCase(name)) {
-                joinedPlayer.teleport(joinedPlayer.getWorld().getSpawnLocation().add(0.0, 0.5, 0.0));
-                toSpawnPlayerNames.remove(playerName);
-                this.ALISA.config.set("tospawn-playernames", toSpawnPlayerNames);
-                this.ALISA.say("Вы были отправлены на спавн", joinedPlayer);
-            }
+        if(toSpawnPlayerNames.contains(playerName)) {
+            joinedPlayer.teleport(joinedPlayer.getWorld().getSpawnLocation().add(0.0, 0.5, 0.0));
+            toSpawnPlayerNames.remove(playerName);
+            this.ALISA.config.set("tospawn-playernames", toSpawnPlayerNames);
+            this.ALISA.say("Вы были отправлены на спавн", joinedPlayer);
         }
     }
 }
