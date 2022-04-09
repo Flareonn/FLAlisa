@@ -1,6 +1,4 @@
-package org.shy.alisa.utils;
-
-import org.shy.alisa.FLAlisa;
+package org.flareon.alisa.utils;
 
 public class TimeUtil {
     private final long days;
