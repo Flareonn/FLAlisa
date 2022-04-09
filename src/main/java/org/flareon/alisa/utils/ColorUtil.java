@@ -1,7 +1,7 @@
-package org.shy.alisa.utils;
+package org.flareon.alisa.utils;
 
 import org.bukkit.ChatColor;
-import org.shy.alisa.Config;
+import org.flareon.alisa.Config;
 
 public class ColorUtil {
     public static String prefix;
