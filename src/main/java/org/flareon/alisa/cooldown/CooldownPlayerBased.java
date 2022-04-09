@@ -1,6 +1,4 @@
-package org.shy.alisa.cooldown;
-
-import org.bukkit.entity.Player;
+package org.flareon.alisa.cooldown;
 
 import java.util.HashMap;
 

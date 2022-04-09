@@ -1,6 +1,4 @@
-package org.shy.alisa.cooldown;
-
-import org.shy.alisa.FLAlisa;
+package org.flareon.alisa.cooldown;
 
 public class Cooldown {
     private long lastTriggered;

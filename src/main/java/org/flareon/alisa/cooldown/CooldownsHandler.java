@@ -1,7 +1,6 @@
-package org.shy.alisa.cooldown;
+package org.flareon.alisa.cooldown;
 
-import org.shy.alisa.Config;
-import org.shy.alisa.FLAlisa;
+import org.flareon.alisa.Config;
 
 public class CooldownsHandler {
     public Cooldown votesunGlobalCooldown;
