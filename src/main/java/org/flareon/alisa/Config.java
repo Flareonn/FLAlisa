@@ -1,4 +1,4 @@
-package org.shy.alisa;
+package org.flareon.alisa;
 
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
