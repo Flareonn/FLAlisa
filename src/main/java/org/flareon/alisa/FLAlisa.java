@@ -1,4 +1,4 @@
-package org.shy.alisa;
+package org.flareon.alisa;
 
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.Bukkit;
@@ -8,10 +8,10 @@ import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.shy.alisa.cooldown.CooldownsHandler;
-import org.shy.alisa.listeners.JoinEvent;
-import org.shy.alisa.utils.ChatUtil;
-import org.shy.alisa.utils.ColorUtil;
+import org.flareon.alisa.listeners.JoinEvent;
+import org.flareon.alisa.utils.ChatUtil;
+import org.flareon.alisa.utils.ColorUtil;
+import org.flareon.alisa.cooldown.CooldownsHandler;
 
 import java.util.Map;
 
@@ -66,7 +66,6 @@ public class FLAlisa extends JavaPlugin {
     public void registerEvents() {
         PluginManager pm = Bukkit.getServer().getPluginManager();
         pm.registerEvents(new JoinEvent(), this);
-//        pm.registerEvents(new ChatEvent(), this);
     }
 
     private String initListCommands(boolean isOp) {
