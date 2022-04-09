@@ -4,29 +4,34 @@ import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.shy.alisa.cooldown.CooldownsHandler;
+import org.shy.alisa.listeners.JoinEvent;
 import org.shy.alisa.utils.ChatUtil;
 import org.shy.alisa.utils.ColorUtil;
 
-import java.io.File;
 import java.util.Map;
 
 import static java.lang.String.format;
 
 public class FLAlisa extends JavaPlugin {
     protected static FLAlisa instance;
-    protected static File rulesFile;
     public Config config;
+    public Config moderators;
     public CooldownsHandler cooldownsHandler;
+    public ModeratorsHandler moderatorsHandler;
+    static {
+        ConfigurationSerialization.registerClass(ModeratorsEntry.class, "ModeratorsEntry");
+    }
 
     public static FLAlisa getInstance() {return instance;}
-    public static File getRulesFile() {return rulesFile;}
     @Override
     public void onEnable() {
         Bukkit.getLogger().info("Plugin " + this.getName() + " is enabled right now!");
-
+        instance = this;
         registerConfig();
         registerCommands();
         registerEvents();
@@ -35,6 +40,7 @@ public class FLAlisa extends JavaPlugin {
     private void registerCommands() {
         this.getCommand("server").setExecutor(new CommandServer());
         this.getCommand("aseen").setExecutor(new CommandAseen());
+        this.getCommand("mods").setExecutor(new CommandMods());
         this.getCommand("alisa").setExecutor(new CommandBot(initListCommands(true)));
         this.getCommand("ahelp").setExecutor(new CommandHelp(initListCommands(false)));
 
@@ -47,21 +53,19 @@ public class FLAlisa extends JavaPlugin {
     }
 
     public void registerConfig() {
-        instance = this;
         this.saveDefaultConfig();
         this.config = new Config(this);
+        this.moderators = new Config("moderators.yml");
 
-        rulesFile = new File(getDataFolder(), "rules.json");
-        if(!rulesFile.exists()) {
-            saveResource(rulesFile.getName(), true);
-        }
         initUtils();
+
         this.cooldownsHandler = new CooldownsHandler(config);
+        this.moderatorsHandler = new ModeratorsHandler(instance);
     }
 
     public void registerEvents() {
-//        PluginManager pm = Bukkit.getServer().getPluginManager();
-//        pm.registerEvents(new JoinEvent(), this);
+        PluginManager pm = Bukkit.getServer().getPluginManager();
+        pm.registerEvents(new JoinEvent(), this);
 //        pm.registerEvents(new ChatEvent(), this);
     }
 
