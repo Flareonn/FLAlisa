@@ -1,11 +1,11 @@
-package org.shy.alisa.listeners;
+package org.flareon.alisa.listeners;
 
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.shy.alisa.FLAlisa;
+import org.flareon.alisa.FLAlisa;
 
 import java.util.ArrayList;
 
