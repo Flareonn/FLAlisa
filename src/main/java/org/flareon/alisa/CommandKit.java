@@ -171,7 +171,7 @@ class CommandBot extends ChatPaginator implements CommandExecutor, TabCompleter 
                         if(strings.length == 1) {
                             ALISA.say("Введите дополнительные аргументы!", commandSender);
                         } else {
-                            modsCommandHandler(strings, commandSender);
+                            ALISA.moderatorsUtil.modsCommandHandler(strings, commandSender);
                         }
                         break;
                     default:
@@ -234,7 +234,6 @@ class CommandBot extends ChatPaginator implements CommandExecutor, TabCompleter 
     private void commandGetUUID(final String playerName, final CommandSender commandSender) {
         final OfflinePlayer op = Bukkit.getOfflinePlayer(playerName);
         if(op != null) {
-            ALISA.say(format("Ник игрока: %s", ColorUtil.wrap(playerName, ChatColor.GOLD)), commandSender);
             ALISA.say(format("UUID: %s", ColorUtil.wrap(op.getUniqueId().toString(), ChatColor.GOLD)), commandSender);
         } else {
             ALISA.say(format("Игрок с таким именем %s найден", ColorUtil.fail("не")), commandSender);
@@ -273,50 +272,6 @@ class CommandBot extends ChatPaginator implements CommandExecutor, TabCompleter 
         }
     }
 
-    private void modsCommandHandler(final String[] strings, final CommandSender commandSender) {
-        int ID;
-        String playerName;
-        String groupName;
-        String prefixColor;
-        String nameColor;
-        switch (strings[1].toLowerCase()) {
-            case "add":
-                ID = Integer.parseInt(strings[2]);
-                playerName = strings[3];
-                ALISA.say(ALISA.moderatorsHandler.addPlayerToGroup(ID, playerName), commandSender);
-                break;
-            case "remove":
-                ID = Integer.parseInt(strings[2]);
-                playerName = strings[3];
-                ALISA.say(ALISA.moderatorsHandler.removePlayerFromGroup(ID, playerName), commandSender);
-                break;
-            case "list":
-                ALISA.say(ALISA.moderatorsHandler.getAllModsListString(), commandSender);
-                break;
-            case "creategroup":
-                ID = Integer.parseInt(strings[2]);
-                groupName = strings[3];
-                prefixColor = strings[4];
-                nameColor = strings[5];
-                ALISA.say(ALISA.moderatorsHandler.addGroup(groupName, ID, prefixColor, nameColor), commandSender);
-                break;
-            case "editgroup":
-                ID = Integer.parseInt(strings[2]);
-                groupName = strings[3];
-                prefixColor = strings[4];
-                nameColor = strings[5];
-                ALISA.say(ALISA.moderatorsHandler.editGroup(groupName, ID, prefixColor, nameColor), commandSender);
-                break;
-            case "removegroup":
-                ID = Integer.parseInt(strings[2]);
-                ALISA.say(ALISA.moderatorsHandler.removeGroup(ID), commandSender);
-                break;
-            default:
-                ALISA.say("Такой команды не существует. Список моих возможностей: -> /alisa", commandSender);
-                break;
-        }
-    }
-
     private static boolean isDigit(String s) throws NumberFormatException {
         try {
             Integer.parseInt(s);
@@ -333,18 +288,18 @@ class CommandBot extends ChatPaginator implements CommandExecutor, TabCompleter 
             switch (strings.length) {
                 case 1:
                     subCommands.forEach(w -> {
-                        if (w.startsWith(strings[0])) result.add(w);
+                        if (w.contains(strings[0])) result.add(w);
                     });
                     return result;
                 case 2:
                     if (strings[0].equalsIgnoreCase("read") || strings[0].equalsIgnoreCase("set")) {
                         ALISA.config.getKeys().forEach(w -> {
-                            if (w.startsWith(strings[1])) result.add(w);
+                            if (w.contains(strings[1])) result.add(w);
                         });
                         return result;
                     } else if(strings[0].equalsIgnoreCase("mods")) {
                         modsSubCommands.forEach(w -> {
-                            if(w.startsWith(strings[1])) result.add(w);
+                            if(w.contains(strings[1])) result.add(w);
                         });
                         return result;
                     }
