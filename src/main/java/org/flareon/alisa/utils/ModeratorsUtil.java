@@ -10,7 +10,7 @@ public class ModeratorsUtil {
     }
 
     public void modsCommandHandler(final String[] strings, final CommandSender commandSender) {
-        if(strings.length == 2) {
+        if(strings.length == 2 && !strings[1].equalsIgnoreCase("list")) {
             ALISA.sayUnknownCommand(sayTrueUsage(strings), commandSender);
             return;
         }
