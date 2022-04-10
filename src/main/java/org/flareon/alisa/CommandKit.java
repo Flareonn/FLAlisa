@@ -56,7 +56,9 @@ class CommandAseen implements CommandExecutor {
     private String getSeenString(final String playerName) {
         final Player onlinePlayer = Bukkit.getPlayerExact(playerName);
         final String colorName = ColorUtil.wrap(playerName, ChatColor.GOLD);
-        if(onlinePlayer != null && onlinePlayer.isOnline()) {
+        if(ALISA.moderatorsHandler.isModerator(playerName)) {
+            return "Извини, но это секрет";
+        } else if(onlinePlayer != null && onlinePlayer.isOnline()) {
             return format("Игрок: %s сейчас %s", colorName, ColorUtil.success("онлайн"));
         } else {
             final OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(playerName);
