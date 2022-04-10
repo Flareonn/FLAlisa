@@ -12,6 +12,7 @@ import org.flareon.alisa.listeners.JoinEvent;
 import org.flareon.alisa.utils.ChatUtil;
 import org.flareon.alisa.utils.ColorUtil;
 import org.flareon.alisa.cooldown.CooldownsHandler;
+import org.flareon.alisa.utils.ModeratorsUtil;
 
 import java.util.Map;
 
@@ -23,6 +24,7 @@ public class FLAlisa extends JavaPlugin {
     public Config moderators;
     public CooldownsHandler cooldownsHandler;
     public ModeratorsHandler moderatorsHandler;
+    public ModeratorsUtil moderatorsUtil;
     static {
         ConfigurationSerialization.registerClass(ModeratorsEntry.class, "ModeratorsEntry");
     }
@@ -61,6 +63,7 @@ public class FLAlisa extends JavaPlugin {
 
         this.cooldownsHandler = new CooldownsHandler(config);
         this.moderatorsHandler = new ModeratorsHandler(instance);
+        this.moderatorsUtil = new ModeratorsUtil(instance);
     }
 
     public void registerEvents() {
@@ -105,6 +108,6 @@ public class FLAlisa extends JavaPlugin {
     }
 
     public void sayUnknownCommand(String words, CommandSender commandSender) {
-        say(String.format("Используй команду правильно!%s ", words), commandSender);
+        say(String.format("Используй команду правильно! %s", words), commandSender);
     }
 }
