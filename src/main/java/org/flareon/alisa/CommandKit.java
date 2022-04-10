@@ -169,7 +169,7 @@ class CommandBot extends ChatPaginator implements CommandExecutor, TabCompleter 
                         break;
                     case "mods":
                         if(strings.length == 1) {
-                            ALISA.say("Введите дополнительные аргументы!");
+                            ALISA.say("Введите дополнительные аргументы!", commandSender);
                         } else {
                             modsCommandHandler(strings, commandSender);
                         }
@@ -269,7 +269,7 @@ class CommandBot extends ChatPaginator implements CommandExecutor, TabCompleter 
                 ALISA.say(String.format("Игрок с таким именем %s найден", ColorUtil.fail("не")), commandSender);
             }
         } else {
-            ALISA.say(String.format("Игрок %s находится в списке на телепортацию", ColorUtil.fail("уже")));
+            ALISA.say(String.format("Игрок %s находится в списке на телепортацию", ColorUtil.fail("уже")), commandSender);
         }
     }
 
@@ -283,15 +283,15 @@ class CommandBot extends ChatPaginator implements CommandExecutor, TabCompleter 
             case "add":
                 ID = Integer.parseInt(strings[2]);
                 playerName = strings[3];
-                ALISA.say(ALISA.moderatorsHandler.addPlayerToGroup(ID, playerName));
+                ALISA.say(ALISA.moderatorsHandler.addPlayerToGroup(ID, playerName), commandSender);
                 break;
             case "remove":
                 ID = Integer.parseInt(strings[2]);
                 playerName = strings[3];
-                ALISA.say(ALISA.moderatorsHandler.removePlayerFromGroup(ID, playerName));
+                ALISA.say(ALISA.moderatorsHandler.removePlayerFromGroup(ID, playerName), commandSender);
                 break;
             case "list":
-                ALISA.say(ALISA.moderatorsHandler.getAllModsListString());
+                ALISA.say(ALISA.moderatorsHandler.getAllModsListString(), commandSender);
                 break;
             case "creategroup":
                 ID = Integer.parseInt(strings[2]);
@@ -305,11 +305,11 @@ class CommandBot extends ChatPaginator implements CommandExecutor, TabCompleter 
                 groupName = strings[3];
                 prefixColor = strings[4];
                 nameColor = strings[5];
-                ALISA.say(ALISA.moderatorsHandler.editGroup(groupName, ID, prefixColor, nameColor));
+                ALISA.say(ALISA.moderatorsHandler.editGroup(groupName, ID, prefixColor, nameColor), commandSender);
                 break;
             case "removegroup":
                 ID = Integer.parseInt(strings[2]);
-                ALISA.say(ALISA.moderatorsHandler.removeGroup(ID));
+                ALISA.say(ALISA.moderatorsHandler.removeGroup(ID), commandSender);
                 break;
             default:
                 ALISA.say("Такой команды не существует. Список моих возможностей: -> /alisa", commandSender);
