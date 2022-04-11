@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.ChatPaginator;
 import org.flareon.alisa.utils.ColorUtil;
 import org.flareon.alisa.listeners.VoteEvent;
+import org.flareon.alisa.utils.PaginateUtil;
 import org.flareon.alisa.utils.TimeUtil;
 
 import java.io.FileNotFoundException;
@@ -91,21 +92,15 @@ class CommandServer implements CommandExecutor {
 }
 
 class CommandHelp extends ChatPaginator implements CommandExecutor {
-    private final FLAlisa ALISA;
-    private final String listCommands;
+    private final PaginateUtil paginateUtil;
 
     public CommandHelp(String commands) {
-        ALISA = FLAlisa.getInstance();
-        listCommands = commands;
+        this.paginateUtil = new PaginateUtil(commands);
     }
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
-        int pageNumber = strings.length == 1 ? Integer.parseInt(strings[0]) : 1;
-        ChatPaginator.ChatPage chatPage = ChatPaginator.paginate(listCommands, pageNumber);
-        ALISA.say("-----------Команды-("+ chatPage.getPageNumber() +" из "+ chatPage.getTotalPages() +")----------", commandSender);
-        for (String line : chatPage.getLines() ) {
-            commandSender.sendMessage(line);
-        }
+        this.paginateUtil.setCommandSender(commandSender);
+        this.paginateUtil.paginate(strings[0]);
         return true;
     }
 }
@@ -118,8 +113,8 @@ class CommandBot extends ChatPaginator implements CommandExecutor, TabCompleter 
         add("reloadconfig");
         add("mods");
         add("getuuid");
-//        add("getname");
-//        add("tospawn");
+        add("getname");
+        add("tospawn");
     }};
     private static final ArrayList<String> modsSubCommands = new ArrayList<String>() {{
         add("add");
@@ -129,21 +124,21 @@ class CommandBot extends ChatPaginator implements CommandExecutor, TabCompleter 
         add("creategroup");
         add("removegroup");
     }};
-    private final String listCommands;
+    private final PaginateUtil paginateUtil;
 
     public CommandBot(String commands) {
         ALISA = FLAlisa.getInstance();
-        listCommands = commands;
+        this.paginateUtil = new PaginateUtil(commands);
     }
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
+        this.paginateUtil.setCommandSender(commandSender);
         if(commandSender.isOp()) {
             if (strings.length == 0) {
-                paginate(1, commandSender);
+                this.paginateUtil.paginate(1);
             } else {
-                if (isDigit(strings[0])) {
-                    paginate(Integer.parseInt(strings[0]), commandSender);
+                if(this.paginateUtil.paginate(strings[0])) {
                     return true;
                 }
                 switch (strings[0].toLowerCase()) {
@@ -185,14 +180,6 @@ class CommandBot extends ChatPaginator implements CommandExecutor, TabCompleter 
             ALISA.say(String.format("%s Вы не обладаете правами администратора!", ColorUtil.fail("[Ошибка доступа]")), commandSender);
         }
         return true;
-    }
-
-    private void paginate(int pageNumber, final CommandSender commandSender) {
-        ChatPaginator.ChatPage chatPage = ChatPaginator.paginate(listCommands, pageNumber);
-        ALISA.say("-----------Команды-("+ chatPage.getPageNumber() +" из "+ chatPage.getTotalPages() +")----------", commandSender);
-        for (String line : chatPage.getLines() ) {
-            commandSender.sendMessage(line);
-        }
     }
 
     private void commandRead(final String[] strings, final CommandSender commandSender) {
