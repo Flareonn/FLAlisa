@@ -8,6 +8,8 @@ public class ColorUtil {
     public static String name;
     public static String text;
     public static String bracket;
+    public static String success;
+    public static String warning;
 
     private static String ALISA_TAG;
 
@@ -21,6 +23,8 @@ public class ColorUtil {
         name = translateColorCode(config.getString("chat-colors.name"));
         text = translateColorCode(config.getString("chat-colors.text"));
         bracket = translateColorCode(config.getString("chat-colors.bracket"));
+        warning = translateColorCode(config.getString("chat-colors.warning"));
+        success = translateColorCode(config.getString("chat-colors.success"));
     }
 
     public static String getAlisaTag() {
@@ -32,11 +36,11 @@ public class ColorUtil {
     }
 
     public static String success(String word) {
-        return wrap(word, ChatColor.GREEN, ChatColor.BOLD);
+        return wrap(word, translateColorCode(success) + ChatColor.BOLD);
     }
 
     public static String fail(String word) {
-        return wrap(word, ChatColor.RED, ChatColor.BOLD);
+        return wrap(word, translateColorCode(warning) + ChatColor.BOLD);
     }
 
     public static String wrap(String word, String color) {

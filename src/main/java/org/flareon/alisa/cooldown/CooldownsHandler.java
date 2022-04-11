@@ -9,9 +9,9 @@ public class CooldownsHandler {
     public CooldownPlayerBased votedayPersonalCooldowns;
 
     public CooldownsHandler(Config config) {
-        this.votesunGlobalCooldown = new Cooldown(config.getInt("votesun-global"));
-        this.votedayGlobalCooldown = new Cooldown(config.getInt("voteday-global"));
-        this.votesunPersonalCooldowns = new CooldownPlayerBased(config.getInt("votesun-personal"));
-        this.votedayPersonalCooldowns = new CooldownPlayerBased(config.getInt("voteday-personal"));
+        this.votesunGlobalCooldown = new Cooldown(config.getInt("cooldown.votesun-global"));
+        this.votedayGlobalCooldown = new Cooldown(config.getInt("cooldown.voteday-global"));
+        this.votesunPersonalCooldowns = new CooldownPlayerBased(config.getInt("cooldown.votesun-personal"));
+        this.votedayPersonalCooldowns = new CooldownPlayerBased(config.getInt("cooldown.voteday-personal"));
     }
 }

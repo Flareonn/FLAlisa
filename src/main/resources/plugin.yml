@@ -1,5 +1,5 @@
 name: Alisa
-main: org.shy.alisa.FLAlisa
+main: org.flareon.alisa.FLAlisa
 author: Flareon
 version: 0.2
 api-version: '1.16'
@@ -44,12 +44,20 @@ commands:
     description: Информация по пунктам правил
     usage: "/inf <point rule>"
     default: true
+  mods:
+    description: Список модераторов онлайн
+    usage: "/mods"
+    default: true
   alisa:
     description: Все комманды администратора
     usage: "/alisa <command>"
     default: op
   alisa read:
       description: Посмотреть значение в конфиге
+      usage: "/alisa read <Ключ>"
+      default: op
+  alisa tospawn:
+      description: Отправить игрока на спавн
       usage: "/alisa read <Ключ>"
       default: op
   alisa set:
@@ -62,9 +70,41 @@ commands:
       default: op
   alisa getname:
       description: Получить Ник игрока по UUID
-      usage: "/alisa reloadconfig"
+      usage: "/alisa getname"
       default: op
   alisa getuuid:
       description: Получить UUID игрока по Нику
-      usage: "/alisa reloadconfig"
+      usage: "/alisa getuuid"
+      default: op
+  alisa toggledetect:
+      description: Скрыть себя из онлайн списков
+      usage: "/alisa toggledetect"
+      default: op
+  alisa mods:
+      description: Команды управления группами
+      usage: "/alisa mods"
+      default: op
+  alisa mods add:
+      description: Добавить игрока в группу
+      usage: "/alisa mods add <ID> <PlayerName>"
+      default: op
+  alisa mods remove:
+      description: Удалить игрока из группы
+      usage: "/alisa mods remove <ID> <PlayerName>"
+      default: op
+  alisa mods list:
+      description: Показать весь список групп
+      usage: "/alisa mods list"
+      default: op
+  alisa mods creategroup:
+      description: Создать группу
+      usage: "/alisa mods creategroup <ID> <GroupName> <PrefixColor> <NameColor>"
+      default: op
+  alisa mods editgroup:
+      description: Редактировать имя и цвета группы
+      usage: "/alisa mods editgroup <ID> <GroupName> <PrefixColor> <NameColor>"
+      default: op
+  alisa mods removegroup:
+      description: Удалить группу
+      usage: "/alisa mods removegroup <ID>"
       default: op

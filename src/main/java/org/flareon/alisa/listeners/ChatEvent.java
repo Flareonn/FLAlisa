@@ -1,4 +1,4 @@
-package org.shy.alisa.listeners;
+package org.flareon.alisa.listeners;
 
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;

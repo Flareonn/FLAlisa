@@ -1,22 +1,26 @@
 #Длительность голосования (В секундах)
-duration: 2
+duration: 45
 #Период рестарта сервера (В минутах)
 restart-period: 180
-#Глобальный кулдаун на голосование (В секундах)
-votesun-global: 15
-voteday-global: 20
-#Персональный кулдаун на голосование (В секундах)
-votesun-personal: 10
-voteday-personal: 15
 #Какой нужен перевес голосов "за" для того, чтобы голосование прошло.
 success-ratio: 0.6
 #Какой должен быть абсолютный перевес голосов "за" чтобы голосование прошло
 success-advantage: 2
 #Цвета, которые использует алиса
+prefix: "Помощница"
+tospawn-playernames: []
+#Кулдауны (В секундах)
+cooldown:
+  votesun-global: 900
+  voteday-global: 2400
+  votesun-personal: 600
+  voteday-personal: 3600
 chat-colors:
   prefix: "c"
   name: "d"
   text: "e"
   bracket: "8"
+  warning: "c"
+  success: "a"
 #messages:
 #  join: "вассап"

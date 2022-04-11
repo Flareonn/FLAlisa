@@ -1,4 +1,4 @@
-package org.shy.alisa;
+package org.flareon.alisa;
 
 import java.security.MessageDigest;
 
