@@ -6,7 +6,7 @@
 
     <groupId>org.shy.alisa</groupId>
     <artifactId>FLAlisa</artifactId>
-    <version>1.1</version>
+    <version>0.3</version>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
