@@ -91,7 +91,7 @@ class CommandServer implements CommandExecutor {
     }
 }
 
-class CommandHelp extends ChatPaginator implements CommandExecutor {
+class CommandHelp implements CommandExecutor {
     private final PaginateUtil paginateUtil;
 
     public CommandHelp(String commands) {
@@ -100,12 +100,12 @@ class CommandHelp extends ChatPaginator implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
         this.paginateUtil.setCommandSender(commandSender);
-        this.paginateUtil.paginate(strings[0]);
+        this.paginateUtil.paginate(String.valueOf(strings.length == 1 ? strings[0] : 1));
         return true;
     }
 }
 
-class CommandBot extends ChatPaginator implements CommandExecutor, TabCompleter {
+class CommandBot implements CommandExecutor, TabCompleter {
     private final FLAlisa ALISA;
     private static final ArrayList<String> subCommands = new ArrayList<String>() {{
         add("read");
