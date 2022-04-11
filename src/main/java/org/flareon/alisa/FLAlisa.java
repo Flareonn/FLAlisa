@@ -45,6 +45,7 @@ public class FLAlisa extends JavaPlugin {
         this.getCommand("mods").setExecutor(new CommandMods());
         this.getCommand("alisa").setExecutor(new CommandBot(initListCommands(true)));
         this.getCommand("ahelp").setExecutor(new CommandHelp(initListCommands(false)));
+        this.getCommand("amouth").setExecutor(new CommandMouth());
 
         this.getCommand("inf").setExecutor(new CommandRules());
 //        this.getCommand("colors").setExecutor(new CommandColors());

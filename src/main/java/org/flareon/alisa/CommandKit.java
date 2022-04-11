@@ -8,7 +8,8 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.*;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.entity.Player;
-import org.bukkit.util.ChatPaginator;
+import org.bukkit.plugin.PluginManager;
+import org.flareon.alisa.listeners.ChatEvent;
 import org.flareon.alisa.utils.ColorUtil;
 import org.flareon.alisa.listeners.VoteEvent;
 import org.flareon.alisa.utils.PaginateUtil;
@@ -437,6 +438,23 @@ class VoteCommand implements CommandExecutor {
         }
 
         VoteEvent.setVote(isYes, commandSender);
+        return true;
+    }
+}
+
+class CommandMouth implements CommandExecutor {
+    private final FLAlisa ALISA;
+    public CommandMouth() {
+        this.ALISA = FLAlisa.getInstance();
+    }
+
+    @Override
+    public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
+        if(commandSender.isOp()) {
+            ALISA.say(String.join(" ", strings));
+            return true;
+        }
+        ALISA.say(String.format("%s Вы не обладаете правами администратора!", ColorUtil.fail("[Ошибка доступа]")), commandSender);
         return true;
     }
 }

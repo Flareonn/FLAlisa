@@ -108,3 +108,7 @@ commands:
       description: Удалить группу
       usage: "/alisa mods removegroup <ID>"
       default: op
+  amouth:
+      description: Говорить через Алису
+      usage: "/amouth <Message>"
+      default: op
