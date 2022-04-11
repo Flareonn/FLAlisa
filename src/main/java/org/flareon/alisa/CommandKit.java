@@ -154,13 +154,32 @@ class CommandBot implements CommandExecutor, TabCompleter {
                         ALISA.say("Конфиг перезагружен!", commandSender);
                         break;
                     case "getname":
-                        commandGetName(strings[1], commandSender);
+                        if(strings.length == 2) {
+                            commandGetName(strings[1], commandSender);
+                        } else {
+                            ALISA.say(String.format("%s, укажите UUID!", ColorUtil.fail("Ошибка")), commandSender);
+                        }
                         break;
                     case "getuuid":
-                        commandGetUUID(strings[1], commandSender);
+                        if(strings.length == 2) {
+                            commandGetUUID(strings[1], commandSender);
+                        } else {
+                            ALISA.say(String.format("%s, укажите ник!", ColorUtil.fail("Ошибка")), commandSender);
+                        }
                         break;
                     case "tospawn":
-                        commandToSpawn(strings[1], commandSender);
+                        if(strings.length == 2) {
+                            commandToSpawn(strings[1], commandSender);
+                        } else {
+                            ALISA.say(String.format("%s, укажите ник!", ColorUtil.fail("Ошибка")), commandSender);
+                        }
+                        break;
+                    case "tp":
+                        if(strings.length == 2) {
+                            commandTp(strings[1], commandSender);
+                        } else {
+                            ALISA.say(String.format("%s, укажите ник!", ColorUtil.fail("Ошибка")), commandSender);
+                        }
                         break;
                     case "toggledetect":
                         ALISA.moderatorsHandler.toggleDetect(commandSender);
@@ -259,6 +278,17 @@ class CommandBot implements CommandExecutor, TabCompleter {
             }
         } else {
             ALISA.say(String.format("Игрок %s находится в списке на телепортацию", ColorUtil.fail("уже")), commandSender);
+        }
+    }
+
+    private void commandTp(final String playerName, final CommandSender commandSender) {
+        final Player player = Bukkit.getPlayer(playerName);
+        final Player iniciator = (Player) commandSender;
+        if(player != null) {
+            iniciator.teleport(player.getLocation());
+            ALISA.say("Игрок найден, телепортирую...", commandSender);
+        } else {
+            ALISA.say(String.format("Игрок %s найден", ColorUtil.fail("не")), commandSender);
         }
     }
 
