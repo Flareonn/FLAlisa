@@ -10,6 +10,10 @@ public class ModeratorsUtil {
     }
 
     public void modsCommandHandler(final String[] strings, final CommandSender commandSender) {
+        if(strings.length == 1) {
+            ALISA.say("Введите дополнительные аргументы!", commandSender);
+            return;
+        }
         switch (strings[1].toLowerCase()) {
             case "add":
                 commandAdd(strings, commandSender);
