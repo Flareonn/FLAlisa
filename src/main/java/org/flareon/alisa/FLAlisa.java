@@ -107,7 +107,7 @@ public class FLAlisa extends JavaPlugin {
         commandSender.sendMessage(ColorUtil.getAlisaTag() + words);
     }
 
-    public void say(BaseComponent[] component) {
+    public void broadcast(BaseComponent[] component) {
         Bukkit.spigot().broadcast(component);
     }
 

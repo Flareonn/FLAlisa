@@ -53,7 +53,7 @@ public class VoteEvent {
 
     private void registerEvent(TypeVote type) {
         active = true;
-        ALISA.say(sayStartVote.get(type));
+        ALISA.broadcast(sayStartVote.get(type));
         // Длительность голосования
         ALISA.getServer().getScheduler().runTaskLater(ALISA, () -> unregisterEvent(type), 20L * ALISA.config.getLong("duration"));
     }
