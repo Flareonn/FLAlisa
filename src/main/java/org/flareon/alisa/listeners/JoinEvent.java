@@ -1,6 +1,5 @@
 package org.flareon.alisa.listeners;
 
-import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -15,7 +14,6 @@ public class JoinEvent implements Listener {
     public JoinEvent() {
         this.ALISA = FLAlisa.getInstance();
     }
-    public static Server plugin;
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         final Player joinedPlayer = event.getPlayer();
