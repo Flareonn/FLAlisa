@@ -9,6 +9,7 @@ success-advantage: 2
 #Цвета, которые использует алиса
 prefix: "Помощница"
 tospawn-playernames: []
+name: "Алиса"
 #Кулдауны (В секундах)
 cooldown:
   votesun-global: 900

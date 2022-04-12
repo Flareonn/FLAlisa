@@ -3,7 +3,6 @@ main: org.flareon.alisa.FLAlisa
 author: Flareon
 version: 0.3
 api-version: '1.16'
-softdepend: [PlayTimeMain]
 description: The best in the world plugin
 
 

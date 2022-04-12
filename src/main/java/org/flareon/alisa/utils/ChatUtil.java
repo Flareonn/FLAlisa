@@ -31,7 +31,7 @@ public class ChatUtil {
         ALISA_TAG = text("[", bracketColor);
         ALISA_TAG.addExtra(text("Помощница", prefixColor));
         ALISA_TAG.addExtra(text("]", bracketColor));
-        ALISA_TAG.addExtra(text(" Алиса: ", nameColor));
+        ALISA_TAG.addExtra(text(String.format(" %s: ", config.getString("name")), nameColor));
 
         YES = textCommand(text("'Да'", ChatColor.GREEN), "/yes");
         YES.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Проголосовать 'За'").color(YES.getColor()).create()));

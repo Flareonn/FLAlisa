@@ -15,7 +15,10 @@ public class ColorUtil {
 
     public ColorUtil(final Config config) {
         registerColorConfig(config);
-        ALISA_TAG = String.format("%s%s%s %s:%s ", ColorUtil.wrap("[", bracket), ColorUtil.wrap(config.getString("prefix"), prefix), ColorUtil.wrap("]", bracket), ColorUtil.wrap("Алиса", name), text);
+        ALISA_TAG = String.format("%s%s%s %s:%s ",
+                ColorUtil.wrap("[", bracket), ColorUtil.wrap(config.getString("prefix"), prefix), ColorUtil.wrap("]", bracket),
+                ColorUtil.wrap(config.getString("name"), name)
+                , text);
     }
 
     private static void registerColorConfig(Config config) {
