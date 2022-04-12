@@ -1,5 +1,10 @@
 package org.flareon.alisa.utils;
 
+import org.flareon.alisa.FLAlisa;
+
+import java.util.Calendar;
+import java.util.Date;
+
 public class TimeUtil {
     private final long days;
     private final long hours;
@@ -44,5 +49,13 @@ public class TimeUtil {
 
     public long getSeconds() {
         return seconds;
+    }
+
+    @Deprecated
+    public static int getDayOfWeek() {
+        final Date date = new Date(System.currentTimeMillis());
+        final Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        return c.get(Calendar.DAY_OF_WEEK);
     }
 }

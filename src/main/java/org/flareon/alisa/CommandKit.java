@@ -8,8 +8,6 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.*;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.PluginManager;
-import org.flareon.alisa.listeners.ChatEvent;
 import org.flareon.alisa.utils.ColorUtil;
 import org.flareon.alisa.listeners.VoteEvent;
 import org.flareon.alisa.utils.PaginateUtil;

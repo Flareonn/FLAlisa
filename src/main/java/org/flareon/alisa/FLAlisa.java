@@ -8,7 +8,7 @@ import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.flareon.alisa.listeners.JoinEvent;
+import org.flareon.alisa.listeners.JoinEvent;;
 import org.flareon.alisa.utils.ChatUtil;
 import org.flareon.alisa.utils.ColorUtil;
 import org.flareon.alisa.cooldown.CooldownsHandler;
@@ -25,8 +25,10 @@ public class FLAlisa extends JavaPlugin {
     public CooldownsHandler cooldownsHandler;
     public ModeratorsHandler moderatorsHandler;
     public ModeratorsUtil moderatorsUtil;
+//    public PlaytimeHandler playtimeHandler;
     static {
         ConfigurationSerialization.registerClass(ModeratorsEntry.class, "ModeratorsEntry");
+//        ConfigurationSerialization.registerClass(PlaytimeReport.class, "PlaytimeReport");
     }
 
     public static FLAlisa getInstance() {return instance;}
@@ -63,6 +65,7 @@ public class FLAlisa extends JavaPlugin {
         initUtils();
 
         this.cooldownsHandler = new CooldownsHandler(config);
+//        this.playtimeHandler = new PlaytimeHandler(config);
         this.moderatorsHandler = new ModeratorsHandler(instance);
         this.moderatorsUtil = new ModeratorsUtil(instance);
     }
