@@ -484,7 +484,7 @@ class CommandMouth implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
         if(commandSender.isOp()) {
-            ALISA.say(String.join(" ", strings));
+            ALISA.broadcast(String.join(" ", strings));
             return true;
         }
         ALISA.say(String.format("%s Вы не обладаете правами администратора!", ColorUtil.fail("[Ошибка доступа]")), commandSender);

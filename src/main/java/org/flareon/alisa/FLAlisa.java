@@ -95,7 +95,7 @@ public class FLAlisa extends JavaPlugin {
         new ChatUtil(this.config);
     }
 
-    public void say(String words) {
+    public void broadcast(String words) {
         Bukkit.broadcastMessage(ColorUtil.getAlisaTag() + words);
     }
 

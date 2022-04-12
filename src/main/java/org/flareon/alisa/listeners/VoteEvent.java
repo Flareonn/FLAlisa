@@ -101,7 +101,7 @@ public class VoteEvent {
         active = false;
 
         if(isWin()) {
-            ALISA.say(format("Голосование увенчалось %s, смена...", ColorUtil.success("успехом")));
+            ALISA.broadcast(format("Голосование увенчалось %s, смена...", ColorUtil.success("успехом")));
             switch (type) {
                 case SUN:
                     world.setStorm(false);
@@ -112,7 +112,7 @@ public class VoteEvent {
                     break;
             }
         } else {
-            ALISA.say(format("Голосование %s, попробуйте позже", ColorUtil.fail("провалено")));
+            ALISA.broadcast(format("Голосование %s, попробуйте позже", ColorUtil.fail("провалено")));
         }
     }
 
