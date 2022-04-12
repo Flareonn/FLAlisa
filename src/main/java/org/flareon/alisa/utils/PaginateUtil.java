@@ -11,11 +11,6 @@ public class PaginateUtil extends ChatPaginator {
     private final FLAlisa ALISA;
     private final String lines;
     private CommandSender commandSender;
-    public PaginateUtil(String lines, CommandSender commandSender) {
-        this.ALISA = FLAlisa.getInstance();
-        this.lines = lines;
-        this.commandSender = commandSender;
-    }
     public PaginateUtil(String lines) {
         this.ALISA = FLAlisa.getInstance();
         this.lines = lines;
@@ -25,12 +20,10 @@ public class PaginateUtil extends ChatPaginator {
         this.commandSender = commandSender;
     }
 
-    public boolean paginate(final String pageNumber) {
-        boolean isDigit = isDigit(pageNumber);
-        if(isDigit) {
+    public void paginate(final String pageNumber) {
+        if(isDigit(pageNumber)) {
             paginate(Integer.parseInt(pageNumber));
         }
-        return isDigit;
     }
 
     public void paginate(final int pageNumber) {
