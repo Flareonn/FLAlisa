@@ -6,8 +6,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
-import org.bukkit.event.HandlerList;
-import org.bukkit.event.Listener;
 import org.flareon.alisa.FLAlisa;
 import org.flareon.alisa.utils.ChatUtil;
 import org.flareon.alisa.utils.ColorUtil;
@@ -17,7 +15,7 @@ import java.util.HashMap;
 
 import static java.lang.String.format;
 
-public class VoteEvent implements Listener {
+public class VoteEvent {
     private static final FLAlisa ALISA = FLAlisa.getInstance();
 
     // Список проголосовавших
@@ -48,17 +46,16 @@ public class VoteEvent implements Listener {
             voteYes = 0;
             playersVotes = new ArrayList<>();
             world = Bukkit.getServer().getWorld("world");
-            registerEvent(this, type);
+            registerEvent(type);
             VoteEvent.setVote(true, commandSender);
         }
     }
 
-    private void registerEvent(Listener listener, TypeVote type) {
+    private void registerEvent(TypeVote type) {
         active = true;
-        ALISA.getServer().getPluginManager().registerEvents(listener, ALISA);
         ALISA.say(sayStartVote.get(type));
         // Длительность голосования
-        ALISA.getServer().getScheduler().runTaskLater(ALISA, () -> unregisterEvent(listener, type), 20L * ALISA.config.getLong("duration"));
+        ALISA.getServer().getScheduler().runTaskLater(ALISA, () -> unregisterEvent(type), 20L * ALISA.config.getLong("duration"));
     }
 
     private static boolean isWin() {
@@ -100,9 +97,8 @@ public class VoteEvent implements Listener {
         return playersVotes.contains(playerName);
     }
 
-    private void unregisterEvent(Listener listener, TypeVote type) {
+    private void unregisterEvent(TypeVote type) {
         active = false;
-        HandlerList.unregisterAll(listener);
 
         if(isWin()) {
             ALISA.say(format("Голосование увенчалось %s, смена...", ColorUtil.success("успехом")));
