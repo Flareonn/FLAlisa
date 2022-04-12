@@ -1,7 +1,7 @@
 name: Alisa
 main: org.flareon.alisa.FLAlisa
 author: Flareon
-version: 0.2
+version: 0.3
 api-version: '1.16'
 description: The best in the world plugin
 
@@ -9,7 +9,7 @@ description: The best in the world plugin
 commands:
   ahelp:
     description: Список доступных комманд
-    usage: "/ahelp"
+    usage: "/ahelp [Number]"
     default: true
 #  colors:
 #    description: Список доступных цветов в чате
@@ -17,7 +17,7 @@ commands:
 #    default: true
   aseen:
     description: Узнать когда игрок был последний раз на сервере
-    usage: "/aseen"
+    usage: "/aseen [Nick]"
     default: true
   server:
     description: Время до рестарта сервера
@@ -42,7 +42,7 @@ commands:
     default: true
   inf:
     description: Информация по пунктам правил
-    usage: "/inf <point rule>"
+    usage: "/inf [Rule]"
     default: true
   mods:
     description: Список модераторов онлайн
@@ -50,19 +50,19 @@ commands:
     default: true
   alisa:
     description: Все комманды администратора
-    usage: "/alisa <command>"
+    usage: "/alisa [Number]"
     default: op
   alisa read:
       description: Посмотреть значение в конфиге
-      usage: "/alisa read <Ключ>"
+      usage: "/alisa read [Key]"
       default: op
   alisa tospawn:
       description: Отправить игрока на спавн
-      usage: "/alisa read <Ключ>"
+      usage: "/alisa read [Key]"
       default: op
   alisa set:
       description: Изменить значение в конфиге
-      usage: "/alisa set <ключ> <значение>"
+      usage: "/alisa set [Key] [Value]"
       default: op
   alisa reloadconfig:
       description: Перезагрузка конфига
@@ -70,11 +70,11 @@ commands:
       default: op
   alisa getname:
       description: Получить Ник игрока по UUID
-      usage: "/alisa getname"
+      usage: "/alisa getname [Nick]"
       default: op
   alisa getuuid:
       description: Получить UUID игрока по Нику
-      usage: "/alisa getuuid"
+      usage: "/alisa getuuid [UUID]"
       default: op
   alisa toggledetect:
       description: Скрыть себя из онлайн списков
@@ -86,11 +86,11 @@ commands:
       default: op
   alisa mods add:
       description: Добавить игрока в группу
-      usage: "/alisa mods add <ID> <PlayerName>"
+      usage: "/alisa mods add [ID] [PlayerName]"
       default: op
   alisa mods remove:
       description: Удалить игрока из группы
-      usage: "/alisa mods remove <ID> <PlayerName>"
+      usage: "/alisa mods remove [ID] [PlayerName]"
       default: op
   alisa mods list:
       description: Показать весь список групп
@@ -98,17 +98,17 @@ commands:
       default: op
   alisa mods creategroup:
       description: Создать группу
-      usage: "/alisa mods creategroup <ID> <GroupName> <PrefixColor> <NameColor>"
+      usage: "/alisa mods creategroup [ID] [GroupName] [PrefixColor] [NameColor]"
       default: op
   alisa mods editgroup:
       description: Редактировать имя и цвета группы
-      usage: "/alisa mods editgroup <ID> <GroupName> <PrefixColor> <NameColor>"
+      usage: "/alisa mods editgroup [ID] [GroupName] [PrefixColor] [NameColor]"
       default: op
   alisa mods removegroup:
       description: Удалить группу
-      usage: "/alisa mods removegroup <ID>"
+      usage: "/alisa mods removegroup [ID]"
       default: op
   amouth:
       description: Говорить через Алису
-      usage: "/amouth <Message>"
+      usage: "/amouth [Message]"
       default: op
