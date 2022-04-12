@@ -134,14 +134,18 @@ class CommandBot implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
-        this.paginateUtil.setCommandSender(commandSender);
         if(commandSender.isOp()) {
+            this.paginateUtil.setCommandSender(commandSender);
+
+            // Если ничего не ввёл - использовать пагинатор
             if (strings.length == 0) {
                 this.paginateUtil.paginate(1);
+            // Если ввёл число - использовать пагинатор
+            } else if (isDigit(strings[0])) {
+                this.paginateUtil.paginate(strings[0]);
+                return true;
+            // Иначе по командам...
             } else {
-                if(this.paginateUtil.paginate(strings[0])) {
-                    return true;
-                }
                 switch (strings[0].toLowerCase()) {
                     case "read":
                         commandRead(strings, commandSender);
@@ -154,42 +158,22 @@ class CommandBot implements CommandExecutor, TabCompleter {
                         ALISA.say("Конфиг перезагружен!", commandSender);
                         break;
                     case "getname":
-                        if(strings.length == 2) {
-                            commandGetName(strings[1], commandSender);
-                        } else {
-                            ALISA.say(String.format("%s, укажите UUID!", ColorUtil.fail("Ошибка")), commandSender);
-                        }
+                        commandGetName(strings, commandSender);
                         break;
                     case "getuuid":
-                        if(strings.length == 2) {
-                            commandGetUUID(strings[1], commandSender);
-                        } else {
-                            ALISA.say(String.format("%s, укажите ник!", ColorUtil.fail("Ошибка")), commandSender);
-                        }
+                        commandGetUUID(strings, commandSender);
                         break;
                     case "tospawn":
-                        if(strings.length == 2) {
-                            commandToSpawn(strings[1], commandSender);
-                        } else {
-                            ALISA.say(String.format("%s, укажите ник!", ColorUtil.fail("Ошибка")), commandSender);
-                        }
+                        commandToSpawn(strings, commandSender);
                         break;
                     case "tp":
-                        if(strings.length == 2) {
-                            commandTp(strings[1], commandSender);
-                        } else {
-                            ALISA.say(String.format("%s, укажите ник!", ColorUtil.fail("Ошибка")), commandSender);
-                        }
+                        commandTp(strings, commandSender);
                         break;
                     case "toggledetect":
                         ALISA.moderatorsHandler.toggleDetect(commandSender);
                         break;
                     case "mods":
-                        if(strings.length == 1) {
-                            ALISA.say("Введите дополнительные аргументы!", commandSender);
-                        } else {
-                            ALISA.moderatorsUtil.modsCommandHandler(strings, commandSender);
-                        }
+                        ALISA.moderatorsUtil.modsCommandHandler(strings, commandSender);
                         break;
                     default:
                         ALISA.say("Такой команды не существует. Список моих возможностей: -> /alisa", commandSender);
@@ -240,8 +224,12 @@ class CommandBot implements CommandExecutor, TabCompleter {
         }
     }
 
-    private void commandGetUUID(final String playerName, final CommandSender commandSender) {
-        final OfflinePlayer op = Bukkit.getOfflinePlayer(playerName);
+    private void commandGetUUID(final String[] strings, final CommandSender commandSender) {
+        if(strings.length != 2) {
+            ALISA.say(String.format("%s, укажите ник!", ColorUtil.fail("Ошибка")), commandSender);
+            return;
+        }
+        final OfflinePlayer op = Bukkit.getOfflinePlayer(strings[1]);
         if(op != null) {
             ALISA.say(format("UUID: %s", ColorUtil.wrap(op.getUniqueId().toString(), ChatColor.GOLD)), commandSender);
         } else {
@@ -249,7 +237,13 @@ class CommandBot implements CommandExecutor, TabCompleter {
         }
     }
 
-    private void commandGetName(final String uuidInString, final CommandSender commandSender) {
+    private void commandGetName(final String[] strings, final CommandSender commandSender) {
+        if(strings.length != 2) {
+            ALISA.say(String.format("%s, укажите UUID!", ColorUtil.fail("Ошибка")), commandSender);
+            return;
+        }
+
+        final String uuidInString = strings[1];
         final OfflinePlayer op;
         try {
             UUID uuid = UUID.fromString(uuidInString);
@@ -265,7 +259,13 @@ class CommandBot implements CommandExecutor, TabCompleter {
         }
     }
 
-    private void commandToSpawn(final String playerName, final CommandSender commandSender) {
+    private void commandToSpawn(final String[] strings, final CommandSender commandSender) {
+        if(strings.length != 2) {
+            ALISA.say(String.format("%s, укажите ник!", ColorUtil.fail("Ошибка")), commandSender);
+            return;
+        }
+
+        final String playerName = strings[1];
         final ArrayList<String> toSpawnPlayerNames = this.ALISA.config.getList("tospawn-playernames");
         if(!toSpawnPlayerNames.contains(playerName)) {
             OfflinePlayer op = Bukkit.getOfflinePlayer(playerName);
@@ -281,18 +281,23 @@ class CommandBot implements CommandExecutor, TabCompleter {
         }
     }
 
-    private void commandTp(final String playerName, final CommandSender commandSender) {
-        final Player player = Bukkit.getPlayer(playerName);
+    private void commandTp(final String[] strings, final CommandSender commandSender) {
+        if(strings.length != 2) {
+            ALISA.say(String.format("%s, укажите ник!", ColorUtil.fail("Ошибка")), commandSender);
+            return;
+        }
+
+        final Player player = Bukkit.getPlayer(strings[1]);
         final Player iniciator = (Player) commandSender;
         if(player != null) {
             iniciator.teleport(player.getLocation());
-            ALISA.say("Игрок найден, телепортирую...", commandSender);
+            ALISA.say(format("Игрок %s, телепортирую...", ColorUtil.success("найден")), commandSender);
         } else {
             ALISA.say(String.format("Игрок %s найден", ColorUtil.fail("не")), commandSender);
         }
     }
 
-    private static boolean isDigit(String s) throws NumberFormatException {
+    private static boolean isDigit(final String s) throws NumberFormatException {
         try {
             Integer.parseInt(s);
             return true;
