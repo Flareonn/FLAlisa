@@ -112,7 +112,7 @@ public class ModeratorsUtil {
         try {
             ALISA.sayUnknownCommand("\n" + ALISA.getCommand("alisa " + strings[0] + " " + strings[1]).getUsage(), commandSender);
         } catch (ArrayIndexOutOfBoundsException | NullPointerException e) {
-            ALISA.say("Такой команды не существует. Список моих возможностей: -> /alisa");
+            ALISA.say("Такой команды не существует. Список моих возможностей: -> /alisa", commandSender);
         }
     }
 
