@@ -210,14 +210,15 @@ class CommandBot implements CommandExecutor, TabCompleter {
             case 2:
                 ALISA.say("Введите значение поля!", commandSender);
                 break;
-            case 3:
+            default:
                 final String configKey = strings[1];
-                final String configValue = strings[2];
+                final StringBuilder sb = new StringBuilder();
+                for (int i = 2; i < strings.length; i++) {
+                    sb.append(strings[i]).append(' ');
+                }
+                final String configValue = sb.toString();
                 ALISA.config.set(configKey, isDigit(configValue) ? Integer.parseInt(configValue) : configValue);
                 ALISA.say(format("Вы установили поле %s со значением: %s", ColorUtil.wrap(configKey, ChatColor.LIGHT_PURPLE), ColorUtil.wrap(configValue, ChatColor.DARK_PURPLE, ChatColor.BOLD)), commandSender);
-                break;
-            default:
-                ALISA.sayUnknownCommand("\n" + ALISA.getCommand("alisa " + strings[0]).getUsage() , commandSender);
                 break;
         }
     }
