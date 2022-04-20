@@ -6,3 +6,5 @@ CTRL
 ALT
 ПКМ
 ЛКМ
+МЭ
+QIO
