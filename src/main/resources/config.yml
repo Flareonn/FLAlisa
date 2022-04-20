@@ -6,9 +6,11 @@ restart-period: 180
 success-ratio: 0.6
 #Какой должен быть абсолютный перевес голосов "за" чтобы голосование прошло
 success-advantage: 2
-#Цвета, которые использует алиса
+#Префикс бота
 prefix: "Помощница"
+#Список игроков, которые будут отправлены на спавн при входе
 tospawn-playernames: []
+#Имя бота
 name: "Алиса"
 #Кулдауны (В секундах)
 cooldown:
@@ -16,6 +18,9 @@ cooldown:
   voteday-global: 2400
   votesun-personal: 600
   voteday-personal: 3600
+  warn: 3000
+  hello: 35
+#Цвета которые использует алиса
 chat-colors:
   prefix: "c"
   name: "d"
@@ -23,5 +28,14 @@ chat-colors:
   bracket: "8"
   warning: "c"
   success: "a"
-#messages:
-#  join: "вассап"
+#Время мута (В секундах)
+tempmute:
+  flood: 900
+  symbol-flood: 600
+  advertisement: 900
+  caps: 600
+  profanity: 1200
+caps-ratio: 0.85
+symbol-ratio: 0.85
+mute-command: 'tempmute %s %s %s'
+warn-command: 'warn %s %s'
