@@ -1,5 +1,7 @@
-package org.flareon.alisa.chat;
+package org.flareon.alisa.processors;
+
+import org.bukkit.entity.Player;
 
 public interface IProcessor {
-    boolean processMessage(final String playerName, final String p1);
+    boolean processMessage(final Player player, final String message);
 }
