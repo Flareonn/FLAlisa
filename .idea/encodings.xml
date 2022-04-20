@@ -1,6 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/src/main/resources/answers-advertisement.txt" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/answers-caps.txt" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/answers-doublewarn.txt" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/answers-flood.txt" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/answers-profanity.txt" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/answers-warn.txt" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/bye-answers.txt" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/bye-secondary-words.txt" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/hello-answers.txt" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/hello-secondary-words.txt" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/ignored-words-caps.txt" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/profanity.txt" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/profanity2.txt" charset="windows-1251" />
     <file url="file://$PROJECT_DIR$/src/main/resources/rules.json" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/trade-filters-2.txt" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/trade-filters.txt" charset="windows-1251" />
   </component>
 </project>
