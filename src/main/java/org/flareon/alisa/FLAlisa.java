@@ -1,5 +1,6 @@
 package org.flareon.alisa;
 
+import net.luckperms.api.LuckPerms;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -7,6 +8,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.flareon.alisa.chat.Answer;
@@ -17,7 +19,6 @@ import org.flareon.alisa.listeners.JoinEvent;;
 import org.flareon.alisa.utils.ChatUtil;
 import org.flareon.alisa.utils.ColorUtil;
 import org.flareon.alisa.cooldown.CooldownsHandler;
-import org.flareon.alisa.utils.FileUtil;
 import org.flareon.alisa.utils.ModeratorsUtil;
 
 import java.util.*;
@@ -35,6 +36,7 @@ public class FLAlisa extends JavaPlugin {
     public MessageHandler messageHandler;
     public HashSet<String> knownPlayerNames;
     public Supervision supervision;
+    public LuckPerms LuckAPI = null;
     public Answer answer;
 //    public PlaytimeHandler playtimeHandler;
     public Statistics statistics;
@@ -49,6 +51,11 @@ public class FLAlisa extends JavaPlugin {
     public void onEnable() {
         Bukkit.getLogger().info("Plugin " + this.getName() + " is enabled right now!");
         instance = this;
+
+        final RegisteredServiceProvider<LuckPerms> provider = Bukkit.getServicesManager().getRegistration(LuckPerms.class);
+        if(provider != null) {
+            LuckAPI = provider.getProvider();
+        }
 
         knownPlayerNames = new HashSet<>();
 

@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="PlayTime">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/PlayTime.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>

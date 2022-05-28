@@ -3,10 +3,10 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
     <groupId>org.flareon.alisa</groupId>
     <artifactId>FLAlisa</artifactId>
     <version>0.4</version>
+    <packaging>jar</packaging>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -28,12 +28,24 @@
             <version>1.16.5-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>net.luckperms</groupId>
+            <artifactId>api</artifactId>
+            <version>5.4</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
     <profiles>
         <profile>
             <id>conf</id>
             <build>
                 <directory>D:\code.lang\Mine\Plugins\plugins</directory>
+            </build>
+        </profile>
+        <profile>
+            <id>default</id>
+            <build>
+                <directory>D:\code.lang\Mine\Plugins\Alisa</directory>
             </build>
         </profile>
     </profiles>

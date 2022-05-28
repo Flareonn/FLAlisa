@@ -11,6 +11,8 @@ import org.flareon.alisa.utils.ColorUtil;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @SerializableAs("ModeratorsEntry")
 public class ModeratorsEntry implements Comparable<ModeratorsEntry>, ConfigurationSerializable {
@@ -33,12 +35,11 @@ public class ModeratorsEntry implements Comparable<ModeratorsEntry>, Configurati
     }
 
     protected ModeratorsEntry(final int ID, final String groupName, final ArrayList<String> playerNames, final String prefixColor, final String playerNameColor) {
-        this.playerNames = new ArrayList<>();
         this.ID = ID;
         this.groupName = groupName;
         this.prefixColor = prefixColor;
         this.playerNameColor = playerNameColor;
-        this.playerNames = playerNames;
+        this.playerNames = (ArrayList<String>) playerNames.stream().filter(Objects::nonNull).collect(Collectors.toList());
     }
 
     private String getPlayerListString() {

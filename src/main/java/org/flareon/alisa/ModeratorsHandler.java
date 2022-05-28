@@ -1,5 +1,9 @@
 package org.flareon.alisa;
 
+import net.luckperms.api.LuckPerms;
+import net.luckperms.api.model.user.User;
+import net.luckperms.api.node.matcher.NodeMatcher;
+import net.luckperms.api.node.types.InheritanceNode;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -7,6 +11,9 @@ import org.bukkit.command.CommandSender;
 import org.flareon.alisa.utils.ColorUtil;
 
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 public class ModeratorsHandler {
     FLAlisa ALISA;
@@ -170,7 +177,47 @@ public class ModeratorsHandler {
         this.ALISA.moderators.setCustom("moderators", groups);
     }
 
+   private CompletableFuture<List<User>> getUsersInGroup(String groupName) {
+        LuckPerms api = ALISA.LuckAPI;
+        NodeMatcher<InheritanceNode> matcher = NodeMatcher.key(InheritanceNode.builder(groupName).build());
+        return api.getUserManager().searchAll(matcher).thenComposeAsync(results -> {
+            List<CompletableFuture<User>> users = new ArrayList<>();
+            return CompletableFuture.allOf(
+                    results.keySet().stream()
+                            .map(uuid -> api.getUserManager().loadUser(uuid))
+                            .peek(users::add)
+                            .toArray(CompletableFuture[]::new)
+            ).thenApply(x -> users.stream()
+                    .map(CompletableFuture::join)
+                    .collect(Collectors.toList())
+            );
+        });
+    }
+
     private void loadModeratorsConfig() {
-        this.groups = (ArrayList<ModeratorsEntry>) this.ALISA.moderators.getObject("moderators");
+        if(ALISA.LuckAPI != null) {
+            int id = 1;
+            for (String staff : ALISA.config.getList("staff")) {
+                List<String> playerNames;
+
+                final String[] code = staff.split(" ");
+                final String luckyPermName = code[0];
+                final String groupName = code[1];
+                final String prefixColor = code[2];
+                final String playerNameColor = code[3];
+
+                try {
+                    playerNames = getUsersInGroup(luckyPermName).get().stream()
+                            .map(user -> Bukkit.getOfflinePlayer(user.getUniqueId()).getName())
+                            .collect(Collectors.toList());
+                } catch (InterruptedException | ExecutionException e) {
+                    throw new RuntimeException(e);
+                }
+                this.groups.add(new ModeratorsEntry(id++, groupName, new ArrayList<>(playerNames), prefixColor, playerNameColor));
+            }
+            saveModeratorsConfig();
+        } else {
+            this.groups = (ArrayList<ModeratorsEntry>) this.ALISA.moderators.getObject("moderators");
+        }
     }
 }
