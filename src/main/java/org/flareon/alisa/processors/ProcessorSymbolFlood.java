@@ -2,6 +2,7 @@ package org.flareon.alisa.processors;
 
 import org.bukkit.entity.*;
 import org.flareon.alisa.FLAlisa;
+import org.flareon.alisa.chat.Answer;
 
 public class ProcessorSymbolFlood implements IProcessor
 {
@@ -16,7 +17,7 @@ public class ProcessorSymbolFlood implements IProcessor
     @Override
     public boolean processMessage(final Player player, final String message) {
         if (message.length() >= this.minimumMessageLengthForSymbolCheck && this.getSymbolRatioOfMessage(message) > this.getAllowedSymbolRatio()) {
-            this.ALISA.punish(player, this.getTempmuteDurationSymbolFlood(), "3.1 (флуд символами)", FLAlisa.AnswerReason.FLOOD);
+            this.ALISA.supervision.punish(player, this.getTempmuteDurationSymbolFlood(), "3.1 (флуд символами)", Answer.AnswerReason.FLOOD);
             return true;
         }
         return false;

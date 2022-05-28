@@ -2,6 +2,7 @@ package org.flareon.alisa.processors;
 
 import org.bukkit.entity.Player;
 import org.flareon.alisa.FLAlisa;
+import org.flareon.alisa.chat.Answer;
 import org.flareon.alisa.utils.FileUtil;
 
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ public class ProcessorCaps implements IProcessor {
         message = this.removePlayerNames(message);
         message = this.removeDigitsAndSpaces(message);
         if (message.length() > this.minimumMessageLengthForCapsCheck && this.getCapsRatioOfMessage(message) > this.getAllowedCapsRatio()) {
-            this.ALISA.punish(player, this.getTempmuteDurationCaps(), "3.1 (капс)", FLAlisa.AnswerReason.CAPS);
+            this.ALISA.supervision.punish(player, this.getTempmuteDurationCaps(), "3.1 (капс)", Answer.AnswerReason.CAPS);
             this.ALISA.debug("mute/caps: " + player.getName() + ": '" + playerMessage + "' (" + message + ")");
             return true;
         }

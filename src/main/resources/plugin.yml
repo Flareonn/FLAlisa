@@ -123,6 +123,11 @@ commands:
       usage: "/alisa mods removegroup [ID]"
       default: op
       permission: op
+  alisa stats:
+      description: Статистика по Алисе
+      usage: "/alisa stats"
+      default: op
+      permission: op
   amouth:
       description: Говорить через Алису
       usage: "/amouth [Message]"

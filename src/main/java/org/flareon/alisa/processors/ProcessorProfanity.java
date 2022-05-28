@@ -3,6 +3,7 @@ package org.flareon.alisa.processors;
 import java.util.*;
 import org.bukkit.entity.*;
 import org.flareon.alisa.FLAlisa;
+import org.flareon.alisa.chat.Answer;
 import org.flareon.alisa.utils.FileUtil;
 
 import java.util.regex.*;
@@ -28,7 +29,7 @@ public class ProcessorProfanity implements IProcessor
         for (final Pattern p : this.badWords) {
             final Matcher matcher = p.matcher(message);
             if (matcher.find()) {
-                this.ALISA.punish(player, this.getTempmuteDurationProfanity(), "3.2 (нецензурная брань)", FLAlisa.AnswerReason.PROFANITY);
+                this.ALISA.supervision.punish(player, this.getTempmuteDurationProfanity(), "3.2 (нецензурная брань)", Answer.AnswerReason.PROFANITY);
                 this.ALISA.debug("mute/profanity: " + player.getName() + ": '" + message + "' (" + playerMesage + ")");
                 return true;
             }

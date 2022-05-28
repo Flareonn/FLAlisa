@@ -19,7 +19,7 @@ public class JoinEvent implements Listener {
         final Player joinedPlayer = event.getPlayer();
         final String playerName = joinedPlayer.getName();
         ArrayList<String> toSpawnPlayerNames = this.ALISA.config.getList("tospawn-playernames");
-        this.ALISA.addKnownPlayer(joinedPlayer.getName());
+        this.ALISA.addKnownPlayer(playerName);
         if(toSpawnPlayerNames.contains(playerName)) {
             joinedPlayer.teleport(joinedPlayer.getWorld().getSpawnLocation().add(0.0, 0.5, 0.0));
             toSpawnPlayerNames.remove(playerName);

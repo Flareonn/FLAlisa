@@ -45,9 +45,9 @@ class CommandAseen implements CommandExecutor {
     public boolean onCommand(final CommandSender commandSender, final Command command, final String s, final String[] strings) {
         if (commandSender instanceof Player) {
             if (strings.length >= 1) {
-                this.ALISA.say(this.getSeenString(strings[0]), commandSender);
+                ALISA.say(this.getSeenString(strings[0]), commandSender);
             } else {
-                this.ALISA.say("Похоже, вы забыли указать имя", commandSender);
+                ALISA.say("Похоже, вы забыли указать имя", commandSender);
             }
         }
         return true;
@@ -173,6 +173,9 @@ class CommandBot implements CommandExecutor, TabCompleter {
                     case "mods":
                         ALISA.moderatorsUtil.modsCommandHandler(strings, commandSender);
                         break;
+                    case "stats":
+                        commandStats(commandSender);
+                        break;
                     default:
                         ALISA.say("Такой команды не существует. Список моих возможностей: -> /alisa", commandSender);
                         break;
@@ -294,6 +297,19 @@ class CommandBot implements CommandExecutor, TabCompleter {
         } else {
             ALISA.say(String.format("Игрок %s найден", ColorUtil.fail("не")), commandSender);
         }
+    }
+
+    private void commandStats(final CommandSender commandSender) {
+        final StringBuilder sb = new StringBuilder("\n---------------Статистика--------------\n");
+        sb.append(String.format("%s %d\n", ColorUtil.wrap ("Сообщений в чат:", ChatColor.GOLD), ALISA.statistics.chatMessages));
+        sb.append(String.format("%s %d\n", ColorUtil.wrap ("Ответов на вопросы:", ChatColor.GOLD), ALISA.statistics.answers));
+        sb.append(String.format("%s %d\n", ColorUtil.wrap ("Выдано варнов:", ChatColor.GOLD), ALISA.statistics.warns));
+        sb.append(String.format("%s %d\n", ColorUtil.wrap ("Выдано мутов:", ChatColor.GOLD), ALISA.statistics.mutes));
+        sb.append(String.format("%s %.2f\n", ColorUtil.wrap ("Общая длительность мутов в минутах:", ChatColor.GOLD), (ALISA.statistics.mutesDuration / 60.0f)));
+        sb.append(String.format("%s %d\n", ColorUtil.wrap ("Начато голосований:", ChatColor.GOLD), ALISA.statistics.totalVotesStarted));
+        sb.append(String.format("%s %d\n", ColorUtil.wrap ("Успешных голосований:", ChatColor.GOLD), ALISA.statistics.successfulVotes));
+        sb.append(String.format("%s %d\n", ColorUtil.wrap ("Команд /mods и /inf:", ChatColor.GOLD), ALISA.statistics.modsAndInfCommands));
+        ALISA.say(String.valueOf(sb), commandSender);
     }
 
     private static boolean isDigit(final String s) throws NumberFormatException {
@@ -421,6 +437,7 @@ class CommandRules implements CommandExecutor, TabCompleter {
             } else {
                 String punishment = safelyGetFromJson("punishment", rule);
                 String content = safelyGetFromJson("content", rule);
+                ++ALISA.statistics.modsAndInfCommands;
                 ALISA.say(
                         format("%s\n%s\n" +
                                 (!punishment.equals("") ? ChatColor.RED + "" + ChatColor.UNDERLINE + "Наказание:" + ChatColor.RESET + "" + ChatColor.RED + " %s" : ""),

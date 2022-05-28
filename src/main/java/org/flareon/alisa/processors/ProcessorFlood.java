@@ -2,6 +2,7 @@ package org.flareon.alisa.processors;
 
 import org.bukkit.entity.Player;
 import org.flareon.alisa.FLAlisa;
+import org.flareon.alisa.chat.Answer.AnswerReason;
 import org.flareon.alisa.utils.FileUtil;
 
 import java.util.ArrayList;
@@ -52,15 +53,15 @@ public class ProcessorFlood implements IProcessor {
             md.tradeMessageTimers.add(System.currentTimeMillis());
         }
         if (isTrade && md.subsequentMessagesCount >= this.flood_identical_trade_messages_trigger) {
-            this.ALISA.punish(player, this.getTempmuteDurationAdvertisement(), "3.1 (Частая реклама)", FLAlisa.AnswerReason.ADVERTISEMENT);
+            this.ALISA.supervision.punish(player, this.getTempmuteDurationAdvertisement(), "3.1 (Частая реклама)", AnswerReason.ADVERTISEMENT);
             return true;
         }
         if (isTrade && md.tradeMessageTimers.get(0) != 0L && System.currentTimeMillis() - md.tradeMessageTimers.get(0) <= this.flood_any_trade_messages_period * 1000L) {
-            this.ALISA.punish(player, this.getTempmuteDurationAdvertisement(), "3.1 (Частая реклама+)", FLAlisa.AnswerReason.ADVERTISEMENT);
+            this.ALISA.supervision.punish(player, this.getTempmuteDurationAdvertisement(), "3.1 (Частая реклама+)", AnswerReason.ADVERTISEMENT);
             return true;
         }
         if (md.subsequentMessagesCount >= this.flood_normal_messages_trigger) {
-            this.ALISA.punish(player, this.getTempmuteDurationFlood(), "3.1 (Флуд)", FLAlisa.AnswerReason.FLOOD);
+            this.ALISA.supervision.punish(player, this.getTempmuteDurationFlood(), "3.1 (Флуд)", AnswerReason.FLOOD);
             return true;
         }
         return false;

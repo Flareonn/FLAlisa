@@ -54,6 +54,7 @@ public class VoteEvent {
     private void registerEvent(TypeVote type) {
         active = true;
         ALISA.broadcast(sayStartVote.get(type));
+        ++ALISA.statistics.totalVotesStarted;
         // Длительность голосования
         ALISA.getServer().getScheduler().runTaskLater(ALISA, () -> unregisterEvent(type), 20L * ALISA.config.getLong("duration"));
     }
@@ -68,6 +69,7 @@ public class VoteEvent {
         final boolean isWinAdvantage = advantage > ALISA.config.getInt("success-advantage");
 
         if (isWinRatio && isWinAdvantage) {
+            ++ALISA.statistics.successfulVotes;
             Bukkit.getLogger().info("The vote win. Number of those who voted: Yes(" + voteYes + ") | No(" + voteNo + ")\nPercentage advantage: " + voteYesInPercent + ". Absolute advantage: " + advantage);
         } else {
             Bukkit.getLogger().info("The vote failed. Number of those who voted: Yes(" + voteYes + ") | No(" + voteNo + ")\nPercentage advantage: " + voteYesInPercent + ". Absolute advantage: " + advantage);

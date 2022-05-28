@@ -21,12 +21,12 @@ public class ProcessorHelloBye implements IProcessor
             final Matcher m = this.toAll.matcher(message);
             if (message.contains("всем") && !m.find()) {
                 if (this.containsWord(message, this.helloSecondaryWords)) {
-                    this.ALISA.sayHello(player);
+                    this.ALISA.answer.sayHello(player);
                     this.ALISA.cooldownsHandler.helloByeCooldown.trigger();
                     return false;
                 }
                 if (this.containsWord(message, this.byeSecondaryWords)) {
-                    this.ALISA.sayBye(player);
+                    this.ALISA.answer.sayBye(player);
                     this.ALISA.cooldownsHandler.helloByeCooldown.trigger();
                     return false;
                 }

@@ -85,7 +85,6 @@ public class ModeratorsUtil {
     private void commandEditGroup(final String[] strings, final CommandSender commandSender) {
         if(strings.length > 5) {
             final int ID = isDigit(strings[2]);
-            System.out.println(strings.length);
             if (ID != Integer.MIN_VALUE) {
                 final String groupName = strings[3];
                 final String prefixColor = strings[4];

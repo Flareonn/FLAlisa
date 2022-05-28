@@ -28,7 +28,7 @@ public class PaginateUtil extends ChatPaginator {
 
     public void paginate(final int pageNumber) {
         ChatPaginator.ChatPage chatPage = ChatPaginator.paginate(lines, pageNumber);
-        System.out.println(chatPage.getTotalPages() + " " + pageNumber);
+
         ALISA.say(format("\n-----------Команды-(%s из %s)----------",
                 ColorUtil.wrap(String.valueOf(chatPage.getPageNumber()), ChatColor.GOLD),
                 ColorUtil.wrap(String.valueOf(chatPage.getTotalPages()), ChatColor.GOLD)

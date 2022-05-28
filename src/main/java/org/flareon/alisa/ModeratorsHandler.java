@@ -88,21 +88,20 @@ public class ModeratorsHandler {
     public void toggleDetect(final CommandSender commandSender) {
         final String playerName = commandSender.getName();
         if(this.isModerator(playerName)) {
-            if(this.hiddenModerators.contains(playerName)) {
-                this.hiddenModerators.remove(playerName);
-                this.ALISA.say(String.format("Теперь тебя %s в списке онлайн модераторов", ColorUtil.success("видно")), commandSender);
+            if(hiddenModerators.contains(playerName)) {
+                hiddenModerators.remove(playerName);
+                ALISA.say(String.format("Теперь тебя %s в списке онлайн модераторов", ColorUtil.success("видно")), commandSender);
             } else {
-                this.hiddenModerators.add(playerName);
-                this.ALISA.say(String.format("Теперь тебя %s в списке онлайн модераторов", ColorUtil.fail("не видно")), commandSender);
+                hiddenModerators.add(playerName);
+                ALISA.say(String.format("Теперь тебя %s в списке онлайн модераторов", ColorUtil.fail("не видно")), commandSender);
             }
         } else {
-            this.ALISA.say(String.format("Тебя %s в этой группе", ColorUtil.fail("нет")), commandSender);
+            ALISA.say(String.format("Тебя %s в этой группе", ColorUtil.fail("нет")), commandSender);
         }
     }
 
     public String addPlayerToGroup(final int ID, final String playerName) {
         final OfflinePlayer op = Bukkit.getOfflinePlayer(playerName);
-        System.out.println(op.getName());
         if(op == null || op.getName() == null) {
             return String.format("Игрок %s %s найден", ColorUtil.wrap(playerName, ChatColor.GOLD), ColorUtil.fail("не"));
         }
@@ -129,6 +128,7 @@ public class ModeratorsHandler {
 
     public String getOnlineModsString() {
         final StringBuilder sb = new StringBuilder("Список модераторов онлайн:");
+        ++ALISA.statistics.modsAndInfCommands;
         for (ModeratorsEntry group : this.groups) {
             String onlinePlayersString = group.getOnlinePlayersString();
             if (!onlinePlayersString.equals("")) {
