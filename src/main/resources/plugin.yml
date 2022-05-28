@@ -52,63 +52,79 @@ commands:
     description: Все комманды администратора
     usage: "/alisa [Number]"
     default: op
+    permission: op
   alisa read:
       description: Посмотреть значение в конфиге
       usage: "/alisa read [Key]"
       default: op
+      permission: op
   alisa tospawn:
       description: Отправить игрока на спавн
       usage: "/alisa read [Key]"
       default: op
+      permission: op
   alisa set:
       description: Изменить значение в конфиге
       usage: "/alisa set [Key] [Value]"
       default: op
+      permission: op
   alisa reloadconfig:
       description: Перезагрузка конфига
       usage: "/alisa reloadconfig"
       default: op
+      permission: op
   alisa getname:
       description: Получить Ник игрока по UUID
       usage: "/alisa getname [Nick]"
       default: op
+      permission: op
   alisa getuuid:
       description: Получить UUID игрока по Нику
       usage: "/alisa getuuid [UUID]"
       default: op
+      permission: op
   alisa toggledetect:
       description: Скрыть себя из онлайн списков
       usage: "/alisa toggledetect"
       default: op
+      permission: op
   alisa mods:
       description: Команды управления группами
       usage: "/alisa mods"
       default: op
+      permission: op
   alisa mods add:
       description: Добавить игрока в группу
       usage: "/alisa mods add [ID] [PlayerName]"
       default: op
+      permission: op
   alisa mods remove:
       description: Удалить игрока из группы
       usage: "/alisa mods remove [ID] [PlayerName]"
       default: op
+      permission: op
   alisa mods list:
       description: Показать весь список групп
       usage: "/alisa mods list"
       default: op
+      permission: op
   alisa mods creategroup:
       description: Создать группу
       usage: "/alisa mods creategroup [ID] [GroupName] [PrefixColor] [NameColor]"
       default: op
+      permission: op
   alisa mods editgroup:
       description: Редактировать имя и цвета группы
       usage: "/alisa mods editgroup [ID] [GroupName] [PrefixColor] [NameColor]"
       default: op
+      permission: op
   alisa mods removegroup:
       description: Удалить группу
       usage: "/alisa mods removegroup [ID]"
       default: op
+      permission: op
   amouth:
       description: Говорить через Алису
       usage: "/amouth [Message]"
       default: op
+      permission: op
