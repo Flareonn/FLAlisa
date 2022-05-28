@@ -68,4 +68,15 @@ public class ChatUtil {
         textComponent.addExtra(cleaner);
         return textComponent;
     }
+
+    public static TextComponent textLink(TextComponent textComponent, String link) {
+        textComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Открыть ссылку").color(ChatColor.BLUE).create()));
+        textComponent.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, link));
+        textComponent.addExtra(cleaner);
+        return textComponent;
+    }
+
+    public static TextComponent linkBuilder(final String link, final String name) {
+        return ChatUtil.textLink(ChatUtil.text("[" + name + "]", ChatColor.GOLD), link);
+    }
 }

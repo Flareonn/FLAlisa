@@ -11,6 +11,7 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.flareon.alisa.chat.Advertisment;
 import org.flareon.alisa.chat.Answer;
 import org.flareon.alisa.chat.MessageHandler;
 import org.flareon.alisa.chat.Supervision;
@@ -30,6 +31,7 @@ public class FLAlisa extends JavaPlugin {
     public Config config;
     public Config moderators;
     public Config stats;
+    public Config advertisments;
     public CooldownsHandler cooldownsHandler;
     public ModeratorsHandler moderatorsHandler;
     public ModeratorsUtil moderatorsUtil;
@@ -38,6 +40,7 @@ public class FLAlisa extends JavaPlugin {
     public Supervision supervision;
     public LuckPerms LuckAPI = null;
     public Answer answer;
+    public Advertisment advertisment;
 //    public PlaytimeHandler playtimeHandler;
     public Statistics statistics;
     static {
@@ -95,6 +98,7 @@ public class FLAlisa extends JavaPlugin {
         this.config = new Config(this);
         this.moderators = new Config("moderators.yml");
         this.stats = new Config("stats.yml");
+        this.advertisments = new Config("advertisment.yml");
 
         initUtils();
 
@@ -107,6 +111,7 @@ public class FLAlisa extends JavaPlugin {
         this.messageHandler = new MessageHandler(instance);
         this.supervision = new Supervision();
         this.answer = new Answer();
+        this.advertisment = new Advertisment();
     }
 
     public void registerEvents() {
