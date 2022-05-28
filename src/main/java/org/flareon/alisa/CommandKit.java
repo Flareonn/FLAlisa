@@ -114,6 +114,7 @@ class CommandBot implements CommandExecutor, TabCompleter {
         add("getuuid");
         add("getname");
         add("tospawn");
+        add("stats");
     }};
     private static final ArrayList<String> modsSubCommands = new ArrayList<String>() {{
         add("add");
