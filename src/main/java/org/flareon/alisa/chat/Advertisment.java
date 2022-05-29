@@ -13,7 +13,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Advertisment {
-    private final ArrayList<String> advertisments;
+    private final ArrayList<BaseComponent[]> advertisments = new ArrayList<>();
     private int step = 0;
     private final FLAlisa ALISA;
     private int TASK_ID = -1;
@@ -21,8 +21,18 @@ public class Advertisment {
     public Advertisment() {
         ALISA = FLAlisa.getInstance();
 
-        advertisments = ALISA.advertisments.getList("advertisments");
+        for (String adv : ALISA.advertisments.getList("advertisments")) {
+            adv = adv.replaceAll("&", "§");
+            if(ChatUtil.hasPattern(adv, "LINK")) {
+                advertisments.add(ChatUtil.tagFinder(adv, "link,name"));
+            } else if (ChatUtil.hasPattern(adv, "BUTTON")) {
+                advertisments.add(ChatUtil.tagFinder(adv, "button,name"));
+            } else {
+                advertisments.add(new ComponentBuilder().append(ChatUtil.ALISA_TAG).append(ChatUtil.text(adv)).create());
+            }
+        }
         Collections.shuffle(this.advertisments);
+
 
         if(TASK_ID == -1) {
             TASK_ID = Bukkit.getScheduler().scheduleSyncRepeatingTask(ALISA, this::sayAdvertisment, 0L, 20L * ALISA.config.getLong("cooldown.advertisment"));
@@ -30,16 +40,7 @@ public class Advertisment {
     }
 
     public void sayAdvertisment() {
-
-        final String adv = advertisments.get(step);
-        if(ChatUtil.hasPattern(adv, "LINK")) {
-            ALISA.broadcast(ChatUtil.tagFinder(adv, "link,name"));
-        } else if (ChatUtil.hasPattern(adv, "BUTTON")) {
-            ALISA.broadcast(ChatUtil.tagFinder(adv, "button,name"));
-        } else {
-            ALISA.broadcast(adv);
-        }
-//
+        ALISA.broadcast(advertisments.get(step));
         ++step;
         if(step >= advertisments.size()) {
             step = 0;

@@ -91,13 +91,12 @@ public class ChatUtil {
 
     public static BaseComponent[] tagFinder(String s, String patterns) {
         ComponentBuilder componentBuilder = new ComponentBuilder().append(ALISA_TAG);
-        s = s.replaceAll("&", "§");
 
         ArrayList<String> list = new ArrayList<>(Arrays.asList(patterns.split(",")));
         final String pattern = tagPatternBuilder(list);
 
         componentBuilder.append(text(replaceTags(s, ""))).append(" ");
-        ArrayList<TextComponent> textComponents = new ArrayList<>();
+
         for (String s1 : parseByPattern(pattern, s)) {
             final String[] str = s1.split("\\|\\|");
             if(pattern.contains("link")) {
