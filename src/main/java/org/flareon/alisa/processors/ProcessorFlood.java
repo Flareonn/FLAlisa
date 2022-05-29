@@ -29,6 +29,7 @@ public class ProcessorFlood implements IProcessor {
         this.ALISA = ALISA;
         this.tradeFilters = FileUtil.readProjectFileLines("trade-filters.txt");
     }
+
     @Override
     public boolean processMessage(Player player, String playerMessage) {
         final String playerName = player.getName();
@@ -38,10 +39,9 @@ public class ProcessorFlood implements IProcessor {
         final boolean isTrade = this.isTradeMessage(playerMessage);
         final MessageData md = this.messages.get(playerName);
         if (md.previousMessage.isEmpty() || !md.previousMessage.equalsIgnoreCase(playerMessage)
-            || System.currentTimeMillis() - md.previousMessageTime > this.flood_timeout * 1000L) {
+                || System.currentTimeMillis() - md.previousMessageTime > this.flood_timeout * 1000L) {
             md.subsequentMessagesCount = 1;
-        }
-        else {
+        } else {
             ++md.subsequentMessagesCount;
         }
 
@@ -66,6 +66,7 @@ public class ProcessorFlood implements IProcessor {
         }
         return false;
     }
+
     private int getTempmuteDurationFlood() {
         return this.ALISA.config.getInt("tempmute.flood");
     }

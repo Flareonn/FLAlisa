@@ -23,18 +23,15 @@ public class FileUtil {
                     result.add(line);
                 }
             }
-        }
-        catch (Exception e2) {
+        } catch (Exception e2) {
             FLAlisa.getInstance().getLogger().info("error reading project file");
             return result;
-        }
-        finally {
+        } finally {
             try {
                 if (reader != null) {
                     reader.close();
                 }
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
@@ -53,17 +50,14 @@ public class FileUtil {
                     result.add(line);
                 }
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
-        }
-        finally {
+        } finally {
             if (reader != null) {
                 try {
                     reader.close();
-                }
-                catch (IOException e2) {
+                } catch (IOException e2) {
                     e2.printStackTrace();
                 }
             }

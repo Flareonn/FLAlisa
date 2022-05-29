@@ -1,14 +1,14 @@
 package org.flareon.alisa.processors;
 
-import org.bukkit.entity.*;
+import org.bukkit.entity.Player;
 import org.flareon.alisa.FLAlisa;
 import org.flareon.alisa.utils.FileUtil;
 
-import java.util.regex.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-public class ProcessorHelloBye implements IProcessor
-{
+public class ProcessorHelloBye implements IProcessor {
     private final FLAlisa ALISA;
     private final Pattern toAll;
     private final ArrayList<String> helloSecondaryWords;

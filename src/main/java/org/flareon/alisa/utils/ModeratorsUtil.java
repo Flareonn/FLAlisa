@@ -5,12 +5,13 @@ import org.flareon.alisa.FLAlisa;
 
 public class ModeratorsUtil {
     private final FLAlisa ALISA;
+
     public ModeratorsUtil(final FLAlisa ALISA) {
         this.ALISA = ALISA;
     }
 
     public void modsCommandHandler(final String[] strings, final CommandSender commandSender) {
-        if(strings.length == 1) {
+        if (strings.length == 1) {
             ALISA.say("Введите дополнительные аргументы!", commandSender);
             return;
         }
@@ -53,9 +54,9 @@ public class ModeratorsUtil {
     }
 
     private void commandRemove(final String[] strings, final CommandSender commandSender) {
-        if(strings.length > 3) {
+        if (strings.length > 3) {
             final int ID = isDigit(strings[2]);
-            if(ID != Integer.MIN_VALUE) {
+            if (ID != Integer.MIN_VALUE) {
                 final String playerName = strings[3];
                 ALISA.say(ALISA.moderatorsHandler.removePlayerFromGroup(ID, playerName), commandSender);
             } else {
@@ -67,7 +68,7 @@ public class ModeratorsUtil {
     }
 
     private void commandCreateGroup(final String[] strings, final CommandSender commandSender) {
-        if(strings.length > 5) {
+        if (strings.length > 5) {
             final int ID = isDigit(strings[2]);
             if (ID != Integer.MIN_VALUE) {
                 final String groupName = strings[3];
@@ -83,7 +84,7 @@ public class ModeratorsUtil {
     }
 
     private void commandEditGroup(final String[] strings, final CommandSender commandSender) {
-        if(strings.length > 5) {
+        if (strings.length > 5) {
             final int ID = isDigit(strings[2]);
             if (ID != Integer.MIN_VALUE) {
                 final String groupName = strings[3];
@@ -100,7 +101,7 @@ public class ModeratorsUtil {
 
     private void commandRemoveGroup(final String[] strings, final CommandSender commandSender) {
         final int ID = isDigit(strings[2]);
-        if(ID != Integer.MIN_VALUE) {
+        if (ID != Integer.MIN_VALUE) {
             ALISA.say(ALISA.moderatorsHandler.removeGroup(ID), commandSender);
         } else {
             sayTrueUsage(strings, commandSender);

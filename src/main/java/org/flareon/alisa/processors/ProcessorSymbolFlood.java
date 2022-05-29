@@ -1,11 +1,10 @@
 package org.flareon.alisa.processors;
 
-import org.bukkit.entity.*;
+import org.bukkit.entity.Player;
 import org.flareon.alisa.FLAlisa;
 import org.flareon.alisa.chat.Answer;
 
-public class ProcessorSymbolFlood implements IProcessor
-{
+public class ProcessorSymbolFlood implements IProcessor {
     private final FLAlisa ALISA;
     private final int minimumMessageLengthForSymbolCheck;
 
@@ -38,7 +37,7 @@ public class ProcessorSymbolFlood implements IProcessor
                 ++count;
             }
         }
-        return count / (float)message.length();
+        return count / (float) message.length();
     }
 
     private float getAllowedSymbolRatio() {

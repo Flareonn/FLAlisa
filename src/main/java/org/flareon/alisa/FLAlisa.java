@@ -15,16 +15,19 @@ import org.flareon.alisa.chat.Advertisment;
 import org.flareon.alisa.chat.Answer;
 import org.flareon.alisa.chat.MessageHandler;
 import org.flareon.alisa.chat.Supervision;
+import org.flareon.alisa.cooldown.CooldownsHandler;
 import org.flareon.alisa.listeners.ChatEvent;
-import org.flareon.alisa.listeners.JoinEvent;;
+import org.flareon.alisa.listeners.JoinEvent;
 import org.flareon.alisa.utils.ChatUtil;
 import org.flareon.alisa.utils.ColorUtil;
-import org.flareon.alisa.cooldown.CooldownsHandler;
 import org.flareon.alisa.utils.ModeratorsUtil;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Map;
 
 import static java.lang.String.format;
+
+;
 
 public class FLAlisa extends JavaPlugin {
     protected static FLAlisa instance;
@@ -41,22 +44,26 @@ public class FLAlisa extends JavaPlugin {
     public LuckPerms LuckAPI = null;
     public Answer answer;
     public Advertisment advertisment;
-//    public PlaytimeHandler playtimeHandler;
+    //    public PlaytimeHandler playtimeHandler;
     public Statistics statistics;
+
     static {
         ConfigurationSerialization.registerClass(ModeratorsEntry.class, "ModeratorsEntry");
         ConfigurationSerialization.registerClass(Statistics.class, "Statistics");
 //        ConfigurationSerialization.registerClass(PlaytimeReport.class, "PlaytimeReport");
     }
 
-    public static FLAlisa getInstance() {return instance;}
+    public static FLAlisa getInstance() {
+        return instance;
+    }
+
     @Override
     public void onEnable() {
         Bukkit.getLogger().info("Plugin " + this.getName() + " is enabled right now!");
         instance = this;
 
         final RegisteredServiceProvider<LuckPerms> provider = Bukkit.getServicesManager().getRegistration(LuckPerms.class);
-        if(provider != null) {
+        if (provider != null) {
             LuckAPI = provider.getProvider();
         }
 
@@ -123,13 +130,13 @@ public class FLAlisa extends JavaPlugin {
 
     private String initListCommands(boolean isOp) {
         StringBuilder sb = new StringBuilder();
-        for(Map.Entry<String, Map<String, Object>> mapEntry : getDescription().getCommands().entrySet()) {
+        for (Map.Entry<String, Map<String, Object>> mapEntry : getDescription().getCommands().entrySet()) {
             final boolean isCommandOp = (mapEntry.getValue().get("default")).equals("op");
             final String command = format("%s: %s\n", ChatColor.GOLD + "/" + mapEntry.getKey(), ChatColor.WHITE + "" + mapEntry.getValue().get("description"));
 
-            if(isOp && isCommandOp) {
+            if (isOp && isCommandOp) {
                 sb.append(command);
-            } else if(!isOp && !isCommandOp) {
+            } else if (!isOp && !isCommandOp) {
                 sb.append(command);
             }
         }
@@ -146,8 +153,7 @@ public class FLAlisa extends JavaPlugin {
         if (st != null) {
             getLogger().info("[FL:ALISA] Инициализация статистики...");
             this.statistics = st;
-        }
-        else {
+        } else {
             getLogger().info("[FL:ALISA] Файл статистики не найден, создание нового...");
             this.statistics = new Statistics(0, 0, 0, 0, 0, 0, 0, 0);
         }

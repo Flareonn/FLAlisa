@@ -1,23 +1,24 @@
 package org.flareon.alisa;
 
 //import me.PCPSells.PlayTimeMain;
-import org.bukkit.Bukkit;
+
 import org.flareon.alisa.utils.TimeUtil;
 
 import java.util.HashMap;
-import java.util.UUID;
 import java.util.logging.Logger;
+
 @Deprecated
 public class PlaytimeHandler {
     private final Config config;
     private final Logger logger;
     private final FLAlisa ALISA;
-//    private final PlayTimeMain pluginPlayTime;
+
+    //    private final PlayTimeMain pluginPlayTime;
     public PlaytimeHandler(Config config) {
         this.config = config;
         this.ALISA = FLAlisa.getInstance();
         this.logger = ALISA.getLogger();
-        if(needNewPlaytimeReport()) {
+        if (needNewPlaytimeReport()) {
             pushNewPlaytimeReport();
             this.logger.info("A new Playtime log has been generated");
         }
@@ -29,7 +30,7 @@ public class PlaytimeHandler {
 //    }
 
     private void pushNewPlaytimeReport() {
-        final PlaytimeReport oldReport = (PlaytimeReport)this.config.getObject("report2");
+        final PlaytimeReport oldReport = (PlaytimeReport) this.config.getObject("report2");
         this.config.set("report1", oldReport);
         this.config.set("report2", this.newPlaytimeReport());
     }
@@ -47,12 +48,12 @@ public class PlaytimeHandler {
 
     private boolean needNewPlaytimeReport() {
         final PlaytimeReport oldReport = (PlaytimeReport) this.config.getObject("report2");
-        if(TimeUtil.getDayOfWeek() != 2) {
+        if (TimeUtil.getDayOfWeek() != 2) {
             // Не тот день для обновления PlayTime логов, не создаём
             this.logger.info("Not the day to update the PlayTime logs, we do not create");
             return false;
         }
-        if(oldReport == null) {
+        if (oldReport == null) {
             // Старый лог не найден - создаём
             this.logger.info("The old log was not found - we create");
             return true;

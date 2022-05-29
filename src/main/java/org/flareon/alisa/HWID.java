@@ -4,13 +4,11 @@ import java.security.MessageDigest;
 
 public class HWID {
     /**
-     *
      * @return HWID in MD5;
-     *
      */
 
     public static String getHWID() {
-        try{
+        try {
             String toEncrypt = System.getenv("COMPUTERNAME") + System.getProperty("user.name") + System.getenv("PROCESSOR_IDENTIFIER") + System.getenv("PROCESSOR_LEVEL");
             MessageDigest md = MessageDigest.getInstance("MD5");
             md.update(toEncrypt.getBytes());

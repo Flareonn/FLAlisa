@@ -10,7 +10,9 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.flareon.alisa.utils.ColorUtil;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
@@ -36,7 +38,7 @@ public class ModeratorsHandler {
 
     public String removeGroup(final int ID) {
         final ModeratorsEntry toRemove = this.getGroupByID(ID);
-        if(toRemove != null) {
+        if (toRemove != null) {
             this.groups.remove(toRemove);
             this.saveModeratorsConfig();
             return String.format("Группа с ID %s была %s удалена", ColorUtil.wrap(String.valueOf(ID), ChatColor.GOLD), ColorUtil.success("успешно"));
@@ -46,7 +48,7 @@ public class ModeratorsHandler {
 
     public String editGroup(final String newGroupName, final int ID, final String newPrefixColor, final String newNameColor) {
         final ModeratorsEntry me = this.getGroupByID(ID);
-        if(me != null) {
+        if (me != null) {
             me.groupName = newGroupName;
             me.prefixColor = newPrefixColor;
             me.playerNameColor = newNameColor;
@@ -58,15 +60,15 @@ public class ModeratorsHandler {
     }
 
     private void removePlayerFromAllGroupsExceptOneSilent(final String playerName, final int exceptionGroupID) {
-        for(final ModeratorsEntry group : this.groups) {
-            if(group.ID != exceptionGroupID) {
+        for (final ModeratorsEntry group : this.groups) {
+            if (group.ID != exceptionGroupID) {
                 group.removePlayerByName(playerName);
             }
         }
     }
 
     public String addGroup(final String groupName, final int ID, final String prefixColor, final String nameColor) {
-        if(this.getGroupByID(ID) == null && !this.groupWithThisNameExists(groupName)) {
+        if (this.getGroupByID(ID) == null && !this.groupWithThisNameExists(groupName)) {
             final ModeratorsEntry me = new ModeratorsEntry(ID, groupName, prefixColor, nameColor);
             return this.createGroup(me);
         }
@@ -82,9 +84,9 @@ public class ModeratorsHandler {
     }
 
     public boolean isModerator(final String playerName) {
-        for(final ModeratorsEntry me : this.groups) {
-            for(final String name : me.playerNames) {
-                if(name.equalsIgnoreCase(playerName)) {
+        for (final ModeratorsEntry me : this.groups) {
+            for (final String name : me.playerNames) {
+                if (name.equalsIgnoreCase(playerName)) {
                     return true;
                 }
             }
@@ -94,8 +96,8 @@ public class ModeratorsHandler {
 
     public void toggleDetect(final CommandSender commandSender) {
         final String playerName = commandSender.getName();
-        if(this.isModerator(playerName)) {
-            if(hiddenModerators.contains(playerName)) {
+        if (this.isModerator(playerName)) {
+            if (hiddenModerators.contains(playerName)) {
                 hiddenModerators.remove(playerName);
                 ALISA.say(String.format("Теперь тебя %s в списке онлайн модераторов", ColorUtil.success("видно")), commandSender);
             } else {
@@ -109,12 +111,12 @@ public class ModeratorsHandler {
 
     public String addPlayerToGroup(final int ID, final String playerName) {
         final OfflinePlayer op = Bukkit.getOfflinePlayer(playerName);
-        if(op == null || op.getName() == null) {
+        if (op == null || op.getName() == null) {
             return String.format("Игрок %s %s найден", ColorUtil.wrap(playerName, ChatColor.GOLD), ColorUtil.fail("не"));
         }
         final String opName = op.getName();
         final ModeratorsEntry group = this.getGroupByID(ID);
-        if(group != null) {
+        if (group != null) {
             final String response = group.addPlayerByName(opName);
             this.saveModeratorsConfig();
             return response;
@@ -124,7 +126,7 @@ public class ModeratorsHandler {
 
     public String removePlayerFromGroup(final int ID, final String playerName) {
         for (ModeratorsEntry group : groups) {
-            if(group.ID == ID) {
+            if (group.ID == ID) {
                 group.removePlayerByName(playerName);
                 this.saveModeratorsConfig();
                 return String.format("Игрок %s %s удалён из группы: [%s] %s", ColorUtil.wrap(playerName, group.playerNameColor), ColorUtil.success("успешно"), ColorUtil.wrap(String.valueOf(group.ID), ChatColor.GOLD), ColorUtil.wrap(group.groupName, group.prefixColor));
@@ -146,8 +148,8 @@ public class ModeratorsHandler {
     }
 
     public boolean isModeratorHidden(final String name) {
-        for(final String hiddenName : this.hiddenModerators) {
-            if(hiddenName.equalsIgnoreCase(name)) {
+        for (final String hiddenName : this.hiddenModerators) {
+            if (hiddenName.equalsIgnoreCase(name)) {
                 return true;
             }
         }
@@ -165,8 +167,8 @@ public class ModeratorsHandler {
     }
 
     private boolean groupWithThisNameExists(final String name) {
-        for(final ModeratorsEntry me : this.groups) {
-            if(me.groupName.equalsIgnoreCase(name)) {
+        for (final ModeratorsEntry me : this.groups) {
+            if (me.groupName.equalsIgnoreCase(name)) {
                 return true;
             }
         }
@@ -177,7 +179,7 @@ public class ModeratorsHandler {
         this.ALISA.moderators.setCustom("moderators", groups);
     }
 
-   private CompletableFuture<List<User>> getUsersInGroup(String groupName) {
+    private CompletableFuture<List<User>> getUsersInGroup(String groupName) {
         LuckPerms api = ALISA.LuckAPI;
         NodeMatcher<InheritanceNode> matcher = NodeMatcher.key(InheritanceNode.builder(groupName).build());
         return api.getUserManager().searchAll(matcher).thenComposeAsync(results -> {
@@ -195,7 +197,7 @@ public class ModeratorsHandler {
     }
 
     private void loadModeratorsConfig() {
-        if(ALISA.LuckAPI != null) {
+        if (ALISA.LuckAPI != null) {
             int id = 1;
             for (String staff : ALISA.config.getList("staff")) {
                 List<String> playerNames;

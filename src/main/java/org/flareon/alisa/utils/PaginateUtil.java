@@ -11,6 +11,7 @@ public class PaginateUtil extends ChatPaginator {
     private final FLAlisa ALISA;
     private final String lines;
     private CommandSender commandSender;
+
     public PaginateUtil(String lines) {
         this.ALISA = FLAlisa.getInstance();
         this.lines = lines;
@@ -21,7 +22,7 @@ public class PaginateUtil extends ChatPaginator {
     }
 
     public void paginate(final String pageNumber) {
-        if(isDigit(pageNumber)) {
+        if (isDigit(pageNumber)) {
             paginate(Integer.parseInt(pageNumber));
         }
     }
@@ -33,13 +34,17 @@ public class PaginateUtil extends ChatPaginator {
                 ColorUtil.wrap(String.valueOf(chatPage.getPageNumber()), ChatColor.GOLD),
                 ColorUtil.wrap(String.valueOf(chatPage.getTotalPages()), ChatColor.GOLD)
         ), commandSender);
-        for (String line : chatPage.getLines() ) {
+        for (String line : chatPage.getLines()) {
             commandSender.sendMessage(line);
         }
     }
 
     private boolean isDigit(String s) throws NumberFormatException {
-        try {Integer.parseInt(s); return true;}
-        catch (NumberFormatException e) {return false;}
+        try {
+            Integer.parseInt(s);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 }

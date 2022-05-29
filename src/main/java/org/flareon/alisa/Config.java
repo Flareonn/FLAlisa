@@ -31,7 +31,7 @@ public class Config {
         FileConfiguration fileConfiguration;
         File file = new File(this.ALISA.getDataFolder(), fileName);
         this.file = file;
-        if(!file.exists()) {
+        if (!file.exists()) {
             this.ALISA.saveResource(fileName, true);
         }
         fileConfiguration = new YamlConfiguration();
@@ -45,20 +45,22 @@ public class Config {
 
     private File createFile(String filename) {
         File file = new File(ALISA.getDataFolder(), filename);
-        if(!file.exists()) {
+        if (!file.exists()) {
             ALISA.saveResource(filename, true);
         }
         return file;
     }
 
-    public File getRulesFile() {return rulesFile;}
+    public File getRulesFile() {
+        return rulesFile;
+    }
 
     public String getString(final String key) {
         return this.config.getString(key);
     }
 
     public float getFloat(final String key) {
-        return (float)this.config.getDouble(key);
+        return (float) this.config.getDouble(key);
     }
 
     public int getInt(final String key) {
@@ -69,10 +71,12 @@ public class Config {
         return this.config.getBoolean(key, false);
     }
 
-    public long getLong(final String key) {return this.config.getLong(key);}
+    public long getLong(final String key) {
+        return this.config.getLong(key);
+    }
 
     public ArrayList<String> getList(final String key) {
-        return (ArrayList<String>)this.config.getStringList(key);
+        return (ArrayList<String>) this.config.getStringList(key);
     }
 
     public Set<String> getKeys() {

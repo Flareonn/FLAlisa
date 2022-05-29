@@ -12,9 +12,10 @@ public class ChatEvent implements Listener {
     public ChatEvent() {
         this.ALISA = FLAlisa.getInstance();
     }
+
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerChat(AsyncPlayerChatEvent event) {
-        if(!event.isCancelled()) {
+        if (!event.isCancelled()) {
             this.ALISA.messageHandler.handleMessage(event.getPlayer(), event.getMessage());
         }
     }

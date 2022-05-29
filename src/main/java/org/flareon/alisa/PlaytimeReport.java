@@ -5,6 +5,7 @@ import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+
 @Deprecated
 public class PlaytimeReport implements ConfigurationSerializable {
     protected long time;

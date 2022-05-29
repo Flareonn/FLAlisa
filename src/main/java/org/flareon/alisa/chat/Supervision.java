@@ -18,8 +18,7 @@ public class Supervision {
     private final CooldownsHandler cooldownsHandler;
     public HashMap<PunishmentType, String> punishments;
 
-    public enum PunishmentType
-    {
+    public enum PunishmentType {
         MUTE,
         WARN,
         BAN;

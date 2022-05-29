@@ -9,7 +9,7 @@ success-advantage: 2
 #Префикс бота
 prefix: "Помощница"
 #Список игроков, которые будут отправлены на спавн при входе
-tospawn-playernames: []
+tospawn-playernames: [ ]
 #Имя бота
 name: "Алиса"
 #Кулдауны (В секундах)

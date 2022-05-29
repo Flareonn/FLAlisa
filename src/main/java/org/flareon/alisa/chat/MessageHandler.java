@@ -9,6 +9,7 @@ import java.util.ArrayList;
 public class MessageHandler {
     private final ArrayList<IProcessor> globalMessageProcessors;
     private final ArrayList<IProcessor> localMessageProcessors;
+
     public MessageHandler(final FLAlisa ALISA) {
         this.globalMessageProcessors = new ArrayList<IProcessor>() {{
             add(new ProcessorCaps(ALISA));
@@ -32,6 +33,7 @@ public class MessageHandler {
             }
         }
     }
+
     private boolean isGlobalMessage(final String message) {
         return message.indexOf("!") == 0;
     }

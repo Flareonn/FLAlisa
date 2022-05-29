@@ -36,7 +36,7 @@ public class Statistics implements ConfigurationSerializable {
         result.put("totalVotesStarted", this.totalVotesStarted);
         result.put("successfulVotes", this.successfulVotes);
         result.put("modsAndInfCommands", this.modsAndInfCommands);
-        return (Map<String, Object>)result;
+        return (Map<String, Object>) result;
     }
 
     public static Statistics deserialize(final Map<String, Object> args) {

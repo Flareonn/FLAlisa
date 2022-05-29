@@ -1,7 +1,5 @@
 package org.flareon.alisa.utils;
 
-import org.flareon.alisa.FLAlisa;
-
 import java.util.Calendar;
 import java.util.Date;
 
@@ -20,16 +18,16 @@ public class TimeUtil {
 
     public String getLog() {
         final StringBuilder sb = new StringBuilder("");
-        if(days > 0) {
+        if (days > 0) {
             sb.append(String.format(" %s дней", days));
         }
-        if(hours > 0) {
+        if (hours > 0) {
             sb.append(String.format(" %s час(а)", hours));
         }
-        if(minutes > 0) {
+        if (minutes > 0) {
             sb.append(String.format(" %s минут", minutes));
         }
-        if(seconds > 0) {
+        if (seconds > 0) {
             sb.append(String.format(" %s секунд", seconds));
         }
         return sb.toString();

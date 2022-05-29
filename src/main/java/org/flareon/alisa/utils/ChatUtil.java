@@ -1,8 +1,7 @@
 package org.flareon.alisa.utils;
 
-import net.md_5.bungee.api.chat.*;
 import net.md_5.bungee.api.ChatColor;
-import org.bukkit.Bukkit;
+import net.md_5.bungee.api.chat.*;
 import org.flareon.alisa.Config;
 
 import java.util.ArrayList;
@@ -22,10 +21,22 @@ public class ChatUtil {
     public static BaseComponent[] YES_NO;
 
     public static final HashMap<String, String> hexColor = new HashMap<String, String>() {{
-        put("0", "#000000"); put("1", "#0000AA"); put("2", "#00AA00"); put("3", "#00AAAA");
-        put("4", "#AA0000"); put("5", "#AA00AA"); put("6", "#FFAA00"); put("7", "#AAAAAA");
-        put("8", "#3F3F3F"); put("9", "#5555FF"); put("a", "#55FF55"); put("b", "#55FFFF");
-        put("c", "#FF5555"); put("d", "#FF55FF"); put("e", "#FFFF55"); put("f", "#FFFFFF");
+        put("0", "#000000");
+        put("1", "#0000AA");
+        put("2", "#00AA00");
+        put("3", "#00AAAA");
+        put("4", "#AA0000");
+        put("5", "#AA00AA");
+        put("6", "#FFAA00");
+        put("7", "#AAAAAA");
+        put("8", "#3F3F3F");
+        put("9", "#5555FF");
+        put("a", "#55FF55");
+        put("b", "#55FFFF");
+        put("c", "#FF5555");
+        put("d", "#FF55FF");
+        put("e", "#FFFF55");
+        put("f", "#FFFFFF");
         put("g", "#DDD605");
     }};
     private static ChatColor prefixColor;
@@ -66,11 +77,13 @@ public class ChatUtil {
         textComponent.setBold(false);
         return textComponent;
     }
+
     public static TextComponent text(String text, ChatColor chatColor) {
         final TextComponent textComponent = new TextComponent(text);
         textComponent.setColor(chatColor);
         return textComponent;
     }
+
     public static TextComponent textCommand(TextComponent textComponent, String command) {
         textComponent.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, command));
         textComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Использовать команду").color(ChatColor.BLUE).create()));
@@ -98,20 +111,20 @@ public class ChatUtil {
         ComponentBuilder componentBuilder = new ComponentBuilder();
         componentBuilder.append(ALISA_TAG);
 
-        if(tags.isEmpty()) {
+        if (tags.isEmpty()) {
             return componentBuilder.append(text(s)).create();
         }
 
-        List<String> parsed = parseByPattern(tagPatternBuilder(tags+",name"), s);
+        List<String> parsed = parseByPattern(tagPatternBuilder(tags + ",name"), s);
         final String replaced = replaceTags(s, "%%%");
 
         String[] arrs = replaced.split("%%%");
         IntStream.range(0, arrs.length).forEach(idx -> {
             final String[] codeLink = parsed.get(idx).split("\\|\\|");
             componentBuilder.append(text(arrs[idx]));
-            if(tags.contains("link")) {
+            if (tags.contains("link")) {
                 componentBuilder.append(textLink(codeLink[0], codeLink[1]));
-            } else if(tags.contains("button")) {
+            } else if (tags.contains("button")) {
                 TextComponent command = textCommand(codeLink[0], codeLink[1]);
                 command.setColor(ChatColor.AQUA);
                 command.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, codeLink[1]));

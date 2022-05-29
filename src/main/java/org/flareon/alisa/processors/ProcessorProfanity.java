@@ -1,15 +1,15 @@
 package org.flareon.alisa.processors;
 
-import java.util.*;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Player;
 import org.flareon.alisa.FLAlisa;
 import org.flareon.alisa.chat.Answer;
 import org.flareon.alisa.utils.FileUtil;
 
-import java.util.regex.*;
+import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-public class ProcessorProfanity implements IProcessor
-{
+public class ProcessorProfanity implements IProcessor {
     protected FLAlisa ALISA;
     ArrayList<Pattern> badWords;
 

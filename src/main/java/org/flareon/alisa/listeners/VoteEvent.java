@@ -27,9 +27,9 @@ public class VoteEvent {
     private World world;
 
     private static final HashMap<TypeVote, BaseComponent[]> sayStartVote = new HashMap<TypeVote, BaseComponent[]>() {{
-       put(TypeVote.SUN, new ComponentBuilder()
+        put(TypeVote.SUN, new ComponentBuilder()
                 .append(ChatUtil.ALISA_TAG).append(ChatUtil.text("Началось голосование за смену погоды! Голосуйте: ")).append(ChatUtil.YES_NO).create());
-       put(TypeVote.DAY, new ComponentBuilder()
+        put(TypeVote.DAY, new ComponentBuilder()
                 .append(ChatUtil.ALISA_TAG).append(ChatUtil.text("Началось голосование за смену времени суток! Голосуйте: ")).append(ChatUtil.YES_NO).create());
     }};
 
@@ -39,9 +39,9 @@ public class VoteEvent {
     }
 
     public VoteEvent(TypeVote type, CommandSender commandSender) {
-        if(isActive()) {
+        if (isActive()) {
             ALISA.say("Голосование уже запущено!", commandSender);
-        } else if(checkCooldowns(commandSender, type)) {
+        } else if (checkCooldowns(commandSender, type)) {
             voteNo = 0;
             voteYes = 0;
             playersVotes = new ArrayList<>();
@@ -79,9 +79,9 @@ public class VoteEvent {
     }
 
     public static void setVote(boolean yesOrNo, CommandSender commandSender) {
-        if(!isActive()) {
+        if (!isActive()) {
             ALISA.say("На данный момент нет никакого голосования!", commandSender);
-        } else if(isVoted(commandSender.getName())) {
+        } else if (isVoted(commandSender.getName())) {
             ALISA.say("Вы уже голосовали!", commandSender);
         } else {
             playersVotes.add(commandSender.getName());
@@ -102,7 +102,7 @@ public class VoteEvent {
     private void unregisterEvent(TypeVote type) {
         active = false;
 
-        if(isWin()) {
+        if (isWin()) {
             ALISA.broadcast(format("Голосование увенчалось %s, смена...", ColorUtil.success("успехом")));
             switch (type) {
                 case SUN:
@@ -135,7 +135,7 @@ public class VoteEvent {
                             ColorUtil.fail(String.valueOf(ALISA.cooldownsHandler.votesunPersonalCooldowns.getSecondsLeft(playerName)))
                     ), commandSender);
                     personalCooldown = false;
-                } else if(!ALISA.cooldownsHandler.votesunGlobalCooldown.isExpired()){
+                } else if (!ALISA.cooldownsHandler.votesunGlobalCooldown.isExpired()) {
                     ALISA.say(format("%s: Вы сможете запустить голосование через %s сек.",
                             ColorUtil.wrap("[Глобально]", ChatColor.GOLD),
                             ColorUtil.fail(String.valueOf(ALISA.cooldownsHandler.votesunGlobalCooldown.getSecondsLeft()))
@@ -155,7 +155,7 @@ public class VoteEvent {
                             ColorUtil.fail(String.valueOf(ALISA.cooldownsHandler.votedayPersonalCooldowns.getSecondsLeft(playerName)))
                     ), commandSender);
                     personalCooldown = false;
-                } else if(!ALISA.cooldownsHandler.votedayGlobalCooldown.isExpired()){
+                } else if (!ALISA.cooldownsHandler.votedayGlobalCooldown.isExpired()) {
                     ALISA.say(format("%s: Вы сможете запустить голосование через %s сек.",
                             ColorUtil.wrap("[Глобально]", ChatColor.GOLD),
                             ColorUtil.fail(String.valueOf(ALISA.cooldownsHandler.votedayGlobalCooldown.getSecondsLeft()))

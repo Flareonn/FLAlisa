@@ -21,6 +21,7 @@ public class ModeratorsEntry implements Comparable<ModeratorsEntry>, Configurati
     public String prefixColor;
     public String playerNameColor;
     public ArrayList<String> playerNames;
+
     @Override
     public int compareTo(ModeratorsEntry o) {
         return o.ID - this.ID;
@@ -55,7 +56,7 @@ public class ModeratorsEntry implements Comparable<ModeratorsEntry>, Configurati
     }
 
     public String addPlayerByName(final String playerName) {
-        if(!this.hasPlayer(playerName)) {
+        if (!this.hasPlayer(playerName)) {
             this.playerNames.add(playerName);
             return String.format("Игрок %s %s добавлен в группу", ColorUtil.wrap(playerName, ChatColor.GOLD), ColorUtil.success("успешно"));
         }
@@ -63,7 +64,7 @@ public class ModeratorsEntry implements Comparable<ModeratorsEntry>, Configurati
     }
 
     public void removePlayerByName(final String playerName) {
-        if(this.hasPlayer(playerName)) {
+        if (this.hasPlayer(playerName)) {
             this.removeIgnoreCase(playerName, this.playerNames);
         }
     }
@@ -83,7 +84,7 @@ public class ModeratorsEntry implements Comparable<ModeratorsEntry>, Configurati
 
     public boolean hasPlayer(final String playerName) {
         for (String name : this.playerNames) {
-            if(name.equalsIgnoreCase(playerName)) {
+            if (name.equalsIgnoreCase(playerName)) {
                 return true;
             }
         }

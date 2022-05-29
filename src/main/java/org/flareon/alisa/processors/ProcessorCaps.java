@@ -12,12 +12,14 @@ public class ProcessorCaps implements IProcessor {
     private final int minimumMessageLengthForCapsCheck;
     private final int minimumLettersForCapsCheck;
     private final ArrayList<String> ignoredWords;
+
     public ProcessorCaps(final FLAlisa ALISA) {
         this.minimumMessageLengthForCapsCheck = 6;
         this.minimumLettersForCapsCheck = 3;
         this.ALISA = ALISA;
         this.ignoredWords = FileUtil.readProjectFileLines("ignored-words-caps.txt");
     }
+
     @Override
     public boolean processMessage(Player player, String playerMessage) {
         String message = this.removeIgnoredWords(playerMessage);
@@ -73,6 +75,6 @@ public class ProcessorCaps implements IProcessor {
         if (total < this.minimumLettersForCapsCheck) {
             return 0.0f;
         }
-        return uppercase / (float)total;
+        return uppercase / (float) total;
     }
 }

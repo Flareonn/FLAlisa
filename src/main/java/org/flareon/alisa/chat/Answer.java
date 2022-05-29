@@ -10,19 +10,20 @@ import java.util.Random;
 
 public class Answer {
 
-    public enum AnswerReason
-    {
+    public enum AnswerReason {
         CAPS,
         PROFANITY,
         FLOOD,
         ADVERTISEMENT,
         WARN,
     }
+
     private static Random rand;
     public HashMap<AnswerReason, AnswerChunk> answers = new HashMap<>();
     private final ArrayList<String> helloAnswers;
     private final ArrayList<String> byeAnswers;
     private final FLAlisa ALISA;
+
     public Answer() {
         ALISA = FLAlisa.getInstance();
         rand = new Random();
@@ -43,15 +44,18 @@ public class Answer {
     public void sayHello(final Player player) {
         ALISA.say(helloAnswers.get(rand.nextInt(helloAnswers.size())), player);
     }
+
     public void sayBye(final Player player) {
         ALISA.say(byeAnswers.get(rand.nextInt(byeAnswers.size())), player);
     }
 
     public static class AnswerChunk {
         private final ArrayList<String> answerStrings;
+
         private AnswerChunk(final String answersFilePath) {
             this.answerStrings = FileUtil.readProjectFileLines(answersFilePath);
         }
+
         public String getRandomAnswer(final String playerName) {
             return String.format(answerStrings.get(rand.nextInt(answerStrings.size())), "#c2" + playerName + "#c1");
         }
