@@ -533,7 +533,7 @@ class CommandShare implements CommandExecutor, TabCompleter {
                     if(!args[2].startsWith("/")) {
                         args[2] = "/" + args[2].trim();
                     }
-                    final TextComponent componentCommand = ChatUtil.textCommand(ChatUtil.text("["+args[1]+"]"), args[2]);
+                    final TextComponent componentCommand = ChatUtil.textCommand(args[1], args[2]);
                     componentCommand.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, args[2]));
                     componentCommand.setColor(net.md_5.bungee.api.ChatColor.GOLD);
 

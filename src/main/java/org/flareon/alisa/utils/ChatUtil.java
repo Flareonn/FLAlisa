@@ -2,8 +2,8 @@ package org.flareon.alisa.utils;
 
 import net.md_5.bungee.api.chat.*;
 import net.md_5.bungee.api.ChatColor;
+import org.bukkit.Bukkit;
 import org.flareon.alisa.Config;
-import org.flareon.alisa.FLAlisa;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class ChatUtil {
     private static final TextComponent cleaner = text("");
@@ -77,8 +78,12 @@ public class ChatUtil {
         return textComponent;
     }
 
+    public static TextComponent textCommand(String text, String command) {
+        return textCommand(new TextComponent(text), command);
+    }
+
     public static TextComponent textLink(String text, String link) {
-        TextComponent textComponent = text("["+text+"]", ChatColor.GOLD);
+        TextComponent textComponent = text(text, ChatColor.GOLD);
         textComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Открыть ссылку").color(ChatColor.BLUE).create()));
         textComponent.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, link));
         textComponent.addExtra(cleaner);
@@ -86,31 +91,34 @@ public class ChatUtil {
     }
 
     public static boolean hasPattern(final String s, final String pattern) {
-        return Pattern.compile(pattern, Pattern.CASE_INSENSITIVE).matcher(s).find();
+        return pattern.isEmpty() || Pattern.compile(pattern, Pattern.CASE_INSENSITIVE).matcher(s).find();
     }
 
-    public static BaseComponent[] tagFinder(String s, String patterns) {
-        ComponentBuilder componentBuilder = new ComponentBuilder().append(ALISA_TAG);
+    public static BaseComponent[] buildWithTags(final String s, final String tags) {
+        ComponentBuilder componentBuilder = new ComponentBuilder();
+        componentBuilder.append(ALISA_TAG);
 
-        ArrayList<String> list = new ArrayList<>(Arrays.asList(patterns.split(",")));
-        final String pattern = tagPatternBuilder(list);
+        if(tags.isEmpty()) {
+            return componentBuilder.append(text(s)).create();
+        }
 
-        componentBuilder.append(text(replaceTags(s, ""))).append(" ");
+        List<String> parsed = parseByPattern(tagPatternBuilder(tags+",name"), s);
+        final String replaced = replaceTags(s, "%%%");
 
-        for (String s1 : parseByPattern(pattern, s)) {
-            final String[] str = s1.split("\\|\\|");
-            if(pattern.contains("link")) {
-                componentBuilder.append(textLink(str[0], str[1])).append(" ");
-            } else if(pattern.contains("button")) {
-                TextComponent button = textCommand(text(str[0], ChatColor.AQUA), str[1]);
-                button.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, str[1]));
-                componentBuilder.append(button).append(" -> ");
+        String[] arrs = replaced.split("%%%");
+        IntStream.range(0, arrs.length).forEach(idx -> {
+            final String[] codeLink = parsed.get(idx).split("\\|\\|");
+            componentBuilder.append(text(arrs[idx]));
+            if(tags.contains("link")) {
+                componentBuilder.append(textLink(codeLink[0], codeLink[1]));
+            } else if(tags.contains("button")) {
+                TextComponent command = textCommand(codeLink[0], codeLink[1]);
+                command.setColor(ChatColor.AQUA);
+                command.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, codeLink[1]));
+
+                componentBuilder.append(command);
             }
-        }
-
-        if(pattern.contains(("button"))) {
-            componentBuilder.removeComponent(componentBuilder.create().length - 1);
-        }
+        });
 
         return componentBuilder.create();
     }
@@ -121,6 +129,10 @@ public class ChatUtil {
         pattern.append(")");
 
         return pattern.toString();
+    }
+
+    public static String tagPatternBuilder(final String tags) {
+        return tagPatternBuilder((ArrayList<String>) Arrays.stream(tags.split(",")).collect(Collectors.toList()));
     }
 
     public static List<String> parseByPattern(final String pattern, final String s) {
