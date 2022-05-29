@@ -26,8 +26,10 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.lang.management.ManagementFactory;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
 
 import static java.lang.String.format;
 
@@ -542,7 +544,7 @@ class CommandShare implements CommandExecutor, TabCompleter {
     private String[] toTwoInputByPattern(final String pattern, final String[] args) throws Exception {
         List<String> listInput = Arrays.asList(args);
         listInput = listInput.subList(1, listInput.size());
-        if(listInput.stream().noneMatch(s -> s.startsWith(pattern))) {
+        if (listInput.stream().noneMatch(s -> s.startsWith(pattern))) {
             throw new Exception("В вашей команде нет: \"" + pattern + "\"");
         }
 
