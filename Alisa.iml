@@ -18,6 +18,7 @@
       <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
     </content>
     <content url="file://$MODULE_DIR$" />
+    <content url="file://$MODULE_DIR$" />
     <content url="file://$MODULE_DIR$">
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>

@@ -8,6 +8,7 @@ import org.flareon.alisa.utils.ChatUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -30,20 +31,15 @@ public class Advertisment {
 
     public void sayAdvertisment() {
 
-        final String advertisment = advertisments.get(step).replaceAll("&", "§");
-
-        if(advertisment.contains("LINK:::")) {
-            final Pattern linkPattern = Pattern.compile("LINK:::.+:::LINK");
-            final Pattern linkNamePattern = Pattern.compile("NAME:::.+:::NAME");
-            final String link = findAndCut(linkPattern, advertisment, 7);
-            final String linkName = findAndCut(linkNamePattern, advertisment, 7);
-
-            final String text = advertisment.replaceAll("LINK:::.+:::LINK.*NAME:::.+:::NAME", "");
-            ALISA.broadcast(new ComponentBuilder().append(ChatUtil.ALISA_TAG).append(ChatUtil.text(text)).append(ChatUtil.linkBuilder(link, linkName)).create());
+        final String adv = advertisments.get(step);
+        if(ChatUtil.hasPattern(adv, "LINK")) {
+            ALISA.broadcast(ChatUtil.tagFinder(adv, "link,name"));
+        } else if (ChatUtil.hasPattern(adv, "BUTTON")) {
+            ALISA.broadcast(ChatUtil.tagFinder(adv, "button,name"));
         } else {
-            ALISA.broadcast(advertisment);
+            ALISA.broadcast(adv);
         }
-
+//
         ++step;
         if(step >= advertisments.size()) {
             step = 0;
@@ -53,8 +49,21 @@ public class Advertisment {
     private String findAndCut(final Pattern pattern, final String str, final int limiter) {
         Matcher matcher = pattern.matcher(str);
         while (matcher.find()) {
-            return str.substring(matcher.start() + limiter,matcher.end() - limiter);
+            return str.substring(matcher.start() + limiter,matcher.end() - limiter - 1);
         }
         return str;
     }
+
+    private String getByTags(final String patterns, final String str) {
+        Pattern pattern = Pattern.compile(patternBuilder(patterns), Pattern.CASE_INSENSITIVE);
+        return findAndCut(pattern, str, 6);
+    }
+    private String patternBuilder(final String pattern) {
+        final StringBuilder sb = new StringBuilder();
+        for (String s : pattern.split(",")) {
+            sb.append("<").append(s).append(">(.+?)</").append(s).append(">");
+        }
+        return sb.toString();
+    }
+
 }
