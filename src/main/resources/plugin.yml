@@ -50,6 +50,10 @@ commands:
     description: Список модераторов онлайн
     usage: "/mods"
     default: true
+  ashare:
+    description: Поделиться командой или ссылкой
+    usage: "/ashare [Type] [Name] [Action]"
+    default: true
   alisa:
     description: Все комманды администратора
     usage: "/alisa [Number]"

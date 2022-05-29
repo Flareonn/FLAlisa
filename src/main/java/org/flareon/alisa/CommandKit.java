@@ -8,6 +8,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.*;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.entity.Player;
+import org.flareon.alisa.utils.ChatUtil;
 import org.flareon.alisa.utils.ColorUtil;
 import org.flareon.alisa.listeners.VoteEvent;
 import org.flareon.alisa.utils.PaginateUtil;
@@ -508,5 +509,75 @@ class CommandMouth implements CommandExecutor {
         }
         ALISA.say(String.format("%s Вы не обладаете правами администратора!", ColorUtil.fail("[Ошибка доступа]")), commandSender);
         return true;
+    }
+}
+
+class CommandShare implements CommandExecutor, TabCompleter {
+    private final FLAlisa ALISA;
+    private final List<String> TYPE_SHARE = new ArrayList<String>() {{
+        add("command");
+        add("link");
+    }};
+    public CommandShare() {
+        this.ALISA = FLAlisa.getInstance();
+    }
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        ComponentBuilder componentBuilder = new ComponentBuilder()
+                .append(ChatUtil.ALISA_TAG)
+                .append(ChatUtil.text(sender.getName(), net.md_5.bungee.api.ChatColor.GOLD))
+                .append(ChatUtil.text(" поделился "));
+        if(args.length > 2) {
+            switch (args[0].toLowerCase()) {
+                case "command":
+                    if(!args[2].startsWith("/")) {
+                        args[2] = "/" + args[2].trim();
+                    }
+                    final TextComponent componentCommand = ChatUtil.textCommand(ChatUtil.text("["+args[1]+"]"), args[2]);
+                    componentCommand.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, args[2]));
+                    componentCommand.setColor(net.md_5.bungee.api.ChatColor.GOLD);
+
+                    componentBuilder.append("командой: ").append(componentCommand);
+                    break;
+                case "link":
+                    if(!args[2].startsWith("http")) {
+                        ALISA.sayUnknownCommand("Вы ввели не ссылку!", sender);
+                        return true;
+                    }
+                    componentBuilder.append("ссылкой: ").append(ChatUtil.textLink(args[1], args[2]));
+                    break;
+            }
+            ALISA.broadcast(componentBuilder.create());
+        } else {
+            ALISA.sayUnknownCommand("Введите дополнительные аргументы!", sender);
+        }
+        return true;
+    }
+    @Override
+    public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings) {
+        switch (strings.length) {
+            case 1:
+                List<String> result = new ArrayList<>();
+                TYPE_SHARE.forEach(w -> {
+                    if (w.toLowerCase().startsWith(strings[0])) result.add(w);
+                });
+                return result;
+            case 2:
+                return new ArrayList<String>() {{
+                    add("Название");
+                }};
+            case 3:
+                switch (strings[0].toLowerCase()) {
+                    case "link":
+                        return new ArrayList<String>() {{
+                            add("Ссылка");
+                        }};
+                    case "command":
+                        return new ArrayList<String>() {{
+                            add("Команда");
+                        }};
+                }
+        }
+        return null;
     }
 }

@@ -91,6 +91,7 @@ public class FLAlisa extends JavaPlugin {
         this.getCommand("voteday").setExecutor(new CommandVoteday());
         this.getCommand("yes").setExecutor(new VoteCommand(true));
         this.getCommand("no").setExecutor(new VoteCommand(false));
+        this.getCommand("ashare").setExecutor(new CommandShare());
     }
 
     public void registerConfig() {
