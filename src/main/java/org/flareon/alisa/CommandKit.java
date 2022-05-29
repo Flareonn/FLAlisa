@@ -549,6 +549,9 @@ class CommandShare implements CommandExecutor, TabCompleter {
         }
 
         final String[] inputs = String.join(" ", listInput).split(pattern, 2);
+        if(inputs[0].isEmpty()) {
+            throw new Exception("Тут нет названия!");
+        }
         inputs[1] = pattern + inputs[1].replaceAll(pattern, "");
 
         return inputs;
@@ -556,6 +559,17 @@ class CommandShare implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        final String playerName = sender.getName();
+        if(!ALISA.cooldownsHandler.shareCooldowns.isExpired(playerName)) {
+            ALISA.say(
+                String.format("%s %s %s",
+                    "Ты не можешь использовать эту команду еще:",
+                    ColorUtil.fail(String.valueOf(ALISA.cooldownsHandler.shareCooldowns.getSecondsLeft(playerName))),
+                    "секунд"),
+                sender
+            );
+            return true;
+        }
         ComponentBuilder componentBuilder = new ComponentBuilder()
                 .append(ChatUtil.ALISA_TAG)
                 .append(ChatUtil.text(sender.getName(), net.md_5.bungee.api.ChatColor.GOLD))
@@ -587,6 +601,7 @@ class CommandShare implements CommandExecutor, TabCompleter {
                     }
                     break;
             }
+            ALISA.cooldownsHandler.shareCooldowns.trigger(playerName);
             ALISA.broadcast(componentBuilder.create());
         } else {
             ALISA.sayUnknownCommand("Введите дополнительные аргументы!", sender);

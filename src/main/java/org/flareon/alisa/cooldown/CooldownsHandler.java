@@ -9,6 +9,7 @@ public class CooldownsHandler {
     public CooldownPlayerBased votesunPersonalCooldowns;
     public CooldownPlayerBased votedayPersonalCooldowns;
     public CooldownPlayerBased warnCooldowns;
+    public CooldownPlayerBased shareCooldowns;
 
     public CooldownsHandler(Config config) {
         this.helloByeCooldown = new Cooldown(config.getInt("cooldown.hello"));
@@ -17,5 +18,6 @@ public class CooldownsHandler {
         this.votesunPersonalCooldowns = new CooldownPlayerBased(config.getInt("cooldown.votesun-personal"));
         this.votedayPersonalCooldowns = new CooldownPlayerBased(config.getInt("cooldown.voteday-personal"));
         this.warnCooldowns = new CooldownPlayerBased(config.getInt("cooldown.warn"));
+        this.shareCooldowns = new CooldownPlayerBased(config.getInt("cooldown.share"));
     }
 }

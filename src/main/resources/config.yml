@@ -21,6 +21,7 @@ cooldown:
   warn: 3000
   hello: 35
   advertisment: 300
+  share: 300
 #Цвета которые использует алиса
 chat-colors:
   prefix: "c"
