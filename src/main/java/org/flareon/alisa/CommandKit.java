@@ -26,9 +26,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.lang.management.ManagementFactory;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 
@@ -540,6 +539,19 @@ class CommandShare implements CommandExecutor, TabCompleter {
         this.ALISA = FLAlisa.getInstance();
     }
 
+    private String[] toTwoInputByPattern(final String pattern, final String[] args) throws Exception {
+        List<String> listInput = Arrays.asList(args);
+        listInput = listInput.subList(1, listInput.size());
+        if(listInput.stream().noneMatch(s -> s.startsWith(pattern))) {
+            throw new Exception("В вашей команде нет: \"" + pattern + "\"");
+        }
+
+        final String[] inputs = String.join(" ", listInput).split(pattern, 2);
+        inputs[1] = pattern + inputs[1].replaceAll(pattern, "");
+
+        return inputs;
+    }
+
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         ComponentBuilder componentBuilder = new ComponentBuilder()
@@ -547,23 +559,30 @@ class CommandShare implements CommandExecutor, TabCompleter {
                 .append(ChatUtil.text(sender.getName(), net.md_5.bungee.api.ChatColor.GOLD))
                 .append(ChatUtil.text(" поделился "));
         if (args.length > 2) {
+            String[] input;
             switch (args[0].toLowerCase()) {
                 case "command":
-                    if (!args[2].startsWith("/")) {
-                        args[2] = "/" + args[2].trim();
-                    }
-                    final TextComponent componentCommand = ChatUtil.textCommand(args[1], args[2]);
-                    componentCommand.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, args[2]));
-                    componentCommand.setColor(net.md_5.bungee.api.ChatColor.GOLD);
+                    try {
+                        input = toTwoInputByPattern("/", args);
 
-                    componentBuilder.append("командой: ").append(componentCommand);
-                    break;
-                case "link":
-                    if (!args[2].startsWith("http")) {
-                        ALISA.sayUnknownCommand("Вы ввели не ссылку!", sender);
+                        final TextComponent componentCommand = ChatUtil.textCommand(input[0], input[1]);
+                        componentCommand.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, input[1]));
+                        componentCommand.setColor(net.md_5.bungee.api.ChatColor.GOLD);
+
+                        componentBuilder.append("командой: ").append(componentCommand);
+                    } catch (Exception e) {
+                        ALISA.sayUnknownCommand(e.getMessage(), sender);
                         return true;
                     }
-                    componentBuilder.append("ссылкой: ").append(ChatUtil.textLink(args[1], args[2]));
+                    break;
+                case "link":
+                    try {
+                        input = toTwoInputByPattern("http", args);
+                        componentBuilder.append("ссылкой: ").append(ChatUtil.textLink(input[0], input[1]));
+                    } catch (Exception e) {
+                        ALISA.sayUnknownCommand(e.getMessage(), sender);
+                        return true;
+                    }
                     break;
             }
             ALISA.broadcast(componentBuilder.create());
