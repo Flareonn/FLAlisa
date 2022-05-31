@@ -14,12 +14,6 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class ChatUtil {
-    private static final TextComponent cleaner = text("");
-    public static TextComponent ALISA_TAG;
-    public static TextComponent YES;
-    public static TextComponent NO;
-    public static BaseComponent[] YES_NO;
-
     public static final HashMap<String, String> hexColor = new HashMap<String, String>() {{
         put("0", "#000000");
         put("1", "#0000AA");
@@ -39,9 +33,14 @@ public class ChatUtil {
         put("f", "#FFFFFF");
         put("g", "#DDD605");
     }};
+    public static TextComponent ALISA_TAG;
+    public static TextComponent YES;
+    public static TextComponent NO;
+    public static BaseComponent[] YES_NO;
     private static ChatColor prefixColor;
     private static ChatColor nameColor;
     private static ChatColor textColor;
+    private static final TextComponent cleaner = text("");
     private static ChatColor bracketColor;
 
     public ChatUtil(final Config config) {

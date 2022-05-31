@@ -31,6 +31,13 @@ import static java.lang.String.format;
 
 public class FLAlisa extends JavaPlugin {
     protected static FLAlisa instance;
+
+    static {
+        ConfigurationSerialization.registerClass(ModeratorsEntry.class, "ModeratorsEntry");
+        ConfigurationSerialization.registerClass(Statistics.class, "Statistics");
+//        ConfigurationSerialization.registerClass(PlaytimeReport.class, "PlaytimeReport");
+    }
+
     public Config config;
     public Config moderators;
     public Config stats;
@@ -46,12 +53,6 @@ public class FLAlisa extends JavaPlugin {
     public Advertisment advertisment;
     //    public PlaytimeHandler playtimeHandler;
     public Statistics statistics;
-
-    static {
-        ConfigurationSerialization.registerClass(ModeratorsEntry.class, "ModeratorsEntry");
-        ConfigurationSerialization.registerClass(Statistics.class, "Statistics");
-//        ConfigurationSerialization.registerClass(PlaytimeReport.class, "PlaytimeReport");
-    }
 
     public static FLAlisa getInstance() {
         return instance;

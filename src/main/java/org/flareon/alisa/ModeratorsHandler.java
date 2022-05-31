@@ -18,9 +18,9 @@ import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 public class ModeratorsHandler {
-    FLAlisa ALISA;
     public ArrayList<ModeratorsEntry> groups;
     protected ArrayList<String> hiddenModerators;
+    FLAlisa ALISA;
 
     public ModeratorsHandler(final FLAlisa ALISA) {
         this.groups = new ArrayList<>();

@@ -18,12 +18,6 @@ public class Supervision {
     private final CooldownsHandler cooldownsHandler;
     public HashMap<PunishmentType, String> punishments;
 
-    public enum PunishmentType {
-        MUTE,
-        WARN,
-        BAN;
-    }
-
     public Supervision() {
         this.punishments = new HashMap<>();
         this.ALISA = FLAlisa.getInstance();
@@ -31,7 +25,6 @@ public class Supervision {
         this.cooldownsHandler = this.ALISA.cooldownsHandler;
         this.createPunishments();
     }
-
 
     private void createPunishments() {
         this.punishments.put(PunishmentType.MUTE, config.getString("mute-command"));
@@ -41,7 +34,6 @@ public class Supervision {
     private String getPunishmentCommand(final PunishmentType punishmentType) {
         return punishments.get(punishmentType);
     }
-
 
     private void mute(final String playerName, final int durationSeconds, final String reason) {
         new BukkitRunnable() {
@@ -72,6 +64,12 @@ public class Supervision {
         }
         ALISA.say(format("%s, ", ColorUtil.wrap(playerName, ChatColor.GOLD)) + ALISA.answer.answers.get(answerReason).getRandomAnswer(playerName), player);
         cooldownsHandler.warnCooldowns.trigger(playerName);
+    }
+
+    public enum PunishmentType {
+        MUTE,
+        WARN,
+        BAN;
     }
 
 }

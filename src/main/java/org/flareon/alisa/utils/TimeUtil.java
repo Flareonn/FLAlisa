@@ -16,6 +16,14 @@ public class TimeUtil {
         this.seconds = time / 1000L % 60L;
     }
 
+    @Deprecated
+    public static int getDayOfWeek() {
+        final Date date = new Date(System.currentTimeMillis());
+        final Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        return c.get(Calendar.DAY_OF_WEEK);
+    }
+
     public String getLog() {
         final StringBuilder sb = new StringBuilder("");
         if (days > 0) {
@@ -47,13 +55,5 @@ public class TimeUtil {
 
     public long getSeconds() {
         return seconds;
-    }
-
-    @Deprecated
-    public static int getDayOfWeek() {
-        final Date date = new Date(System.currentTimeMillis());
-        final Calendar c = Calendar.getInstance();
-        c.setTime(date);
-        return c.get(Calendar.DAY_OF_WEEK);
     }
 }

@@ -10,8 +10,8 @@ import java.util.Collections;
 
 public class Advertisment {
     private final ArrayList<BaseComponent[]> advertisments = new ArrayList<>();
-    private int step = 0;
     private final FLAlisa ALISA;
+    private int step = 0;
     private int TASK_ID = -1;
 
     public Advertisment() {

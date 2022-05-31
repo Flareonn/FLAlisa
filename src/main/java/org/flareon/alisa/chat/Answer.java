@@ -10,20 +10,11 @@ import java.util.Random;
 
 public class Answer {
 
-    public enum AnswerReason {
-        CAPS,
-        PROFANITY,
-        FLOOD,
-        ADVERTISEMENT,
-        WARN,
-    }
-
     private static Random rand;
-    public HashMap<AnswerReason, AnswerChunk> answers = new HashMap<>();
     private final ArrayList<String> helloAnswers;
     private final ArrayList<String> byeAnswers;
     private final FLAlisa ALISA;
-
+    public HashMap<AnswerReason, AnswerChunk> answers = new HashMap<>();
     public Answer() {
         ALISA = FLAlisa.getInstance();
         rand = new Random();
@@ -47,6 +38,14 @@ public class Answer {
 
     public void sayBye(final Player player) {
         ALISA.say(byeAnswers.get(rand.nextInt(byeAnswers.size())), player);
+    }
+
+    public enum AnswerReason {
+        CAPS,
+        PROFANITY,
+        FLOOD,
+        ADVERTISEMENT,
+        WARN,
     }
 
     public static class AnswerChunk {

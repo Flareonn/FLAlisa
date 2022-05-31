@@ -35,7 +35,7 @@ public class MessageHandler {
     }
 
     private boolean isGlobalMessage(final String message) {
-        return message.indexOf("!") == 0;
+        return message.startsWith("㈇") || message.startsWith("!");
     }
 
     private String deColor(final String msg) {

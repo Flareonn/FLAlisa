@@ -16,14 +16,6 @@ public class PlaytimeReport implements ConfigurationSerializable {
         this.entries = entries;
     }
 
-    @Override
-    public Map<String, Object> serialize() {
-        final LinkedHashMap map = new LinkedHashMap();
-        map.put("time", this.time);
-        map.put("entries", this.entries);
-        return map;
-    }
-
     public static PlaytimeReport deserialize(final Map<String, Object> args) {
         long time = -1L;
         HashMap<String, Long> entries = new HashMap<>();
@@ -34,5 +26,13 @@ public class PlaytimeReport implements ConfigurationSerializable {
             entries = (HashMap<String, Long>) args.get("entries");
         }
         return new PlaytimeReport(time, entries);
+    }
+
+    @Override
+    public Map<String, Object> serialize() {
+        final LinkedHashMap map = new LinkedHashMap();
+        map.put("time", this.time);
+        map.put("entries", this.entries);
+        return map;
     }
 }

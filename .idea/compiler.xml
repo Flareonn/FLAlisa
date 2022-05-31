@@ -2,15 +2,15 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <annotationProcessing>
-      <profile name="Annotation profile for FLAlisa" enabled="true">
-        <sourceOutputDir name="../plugins/generated-sources/annotations" />
-        <sourceTestOutputDir name="../plugins/generated-test-sources/test-annotations" />
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="Alisa" />
+        <module name="FLAlisa" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="Alisa" target="1.8" />
+      <module name="FLAlisa" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

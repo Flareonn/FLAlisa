@@ -26,19 +26,6 @@ public class Statistics implements ConfigurationSerializable {
         this.modsAndInfCommands = modsAndInfCommands;
     }
 
-    public Map<String, Object> serialize() {
-        final LinkedHashMap result = new LinkedHashMap();
-        result.put("chatMessages", this.chatMessages);
-        result.put("answers", this.answers);
-        result.put("warns", this.warns);
-        result.put("mutes", this.mutes);
-        result.put("mutesDuration", this.mutesDuration);
-        result.put("totalVotesStarted", this.totalVotesStarted);
-        result.put("successfulVotes", this.successfulVotes);
-        result.put("modsAndInfCommands", this.modsAndInfCommands);
-        return (Map<String, Object>) result;
-    }
-
     public static Statistics deserialize(final Map<String, Object> args) {
         int chatMessages = 0;
         int answers = 0;
@@ -74,5 +61,18 @@ public class Statistics implements ConfigurationSerializable {
             modsAndInfCommands = (int) args.get("modsAndInfCommands");
         }
         return new Statistics(chatMessages, answers, warns, mutes, mutesDuration, totalVotesStarted, successfulVotes, modsAndInfCommands);
+    }
+
+    public Map<String, Object> serialize() {
+        final LinkedHashMap result = new LinkedHashMap();
+        result.put("chatMessages", this.chatMessages);
+        result.put("answers", this.answers);
+        result.put("warns", this.warns);
+        result.put("mutes", this.mutes);
+        result.put("mutesDuration", this.mutesDuration);
+        result.put("totalVotesStarted", this.totalVotesStarted);
+        result.put("successfulVotes", this.successfulVotes);
+        result.put("modsAndInfCommands", this.modsAndInfCommands);
+        return (Map<String, Object>) result;
     }
 }

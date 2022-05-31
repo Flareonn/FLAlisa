@@ -120,7 +120,6 @@ class CommandHelp implements CommandExecutor {
 }
 
 class CommandBot implements CommandExecutor, TabCompleter {
-    private final FLAlisa ALISA;
     private static final ArrayList<String> subCommands = new ArrayList<String>() {{
         add("read");
         add("set");
@@ -139,11 +138,21 @@ class CommandBot implements CommandExecutor, TabCompleter {
         add("creategroup");
         add("removegroup");
     }};
+    private final FLAlisa ALISA;
     private final PaginateUtil paginateUtil;
 
     public CommandBot(String commands) {
         ALISA = FLAlisa.getInstance();
         this.paginateUtil = new PaginateUtil(commands);
+    }
+
+    private static boolean isDigit(final String s) throws NumberFormatException {
+        try {
+            Integer.parseInt(s);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 
     @Override
@@ -326,15 +335,6 @@ class CommandBot implements CommandExecutor, TabCompleter {
         sb.append(String.format("%s %d\n", ColorUtil.wrap("Успешных голосований:", ChatColor.GOLD), ALISA.statistics.successfulVotes));
         sb.append(String.format("%s %d\n", ColorUtil.wrap("Команд /mods и /inf:", ChatColor.GOLD), ALISA.statistics.modsAndInfCommands));
         ALISA.say(String.valueOf(sb), commandSender);
-    }
-
-    private static boolean isDigit(final String s) throws NumberFormatException {
-        try {
-            Integer.parseInt(s);
-            return true;
-        } catch (NumberFormatException e) {
-            return false;
-        }
     }
 
     @Override
@@ -549,7 +549,7 @@ class CommandShare implements CommandExecutor, TabCompleter {
         }
 
         final String[] inputs = String.join(" ", listInput).split(pattern, 2);
-        if(inputs[0].isEmpty()) {
+        if (inputs[0].isEmpty()) {
             throw new Exception("Тут нет названия!");
         }
         inputs[1] = pattern + inputs[1].replaceAll(pattern, "");
@@ -560,13 +560,13 @@ class CommandShare implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         final String playerName = sender.getName();
-        if(!ALISA.cooldownsHandler.shareCooldowns.isExpired(playerName)) {
+        if (!ALISA.cooldownsHandler.shareCooldowns.isExpired(playerName)) {
             ALISA.say(
-                String.format("%s %s %s",
-                    "Ты не можешь использовать эту команду еще:",
-                    ColorUtil.fail(String.valueOf(ALISA.cooldownsHandler.shareCooldowns.getSecondsLeft(playerName))),
-                    "секунд"),
-                sender
+                    String.format("%s %s %s",
+                            "Ты не можешь использовать эту команду еще:",
+                            ColorUtil.fail(String.valueOf(ALISA.cooldownsHandler.shareCooldowns.getSecondsLeft(playerName))),
+                            "секунд"),
+                    sender
             );
             return true;
         }

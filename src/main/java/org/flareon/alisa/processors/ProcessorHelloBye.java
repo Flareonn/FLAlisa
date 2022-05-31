@@ -14,6 +14,13 @@ public class ProcessorHelloBye implements IProcessor {
     private final ArrayList<String> helloSecondaryWords;
     private final ArrayList<String> byeSecondaryWords;
 
+    public ProcessorHelloBye(final FLAlisa ALISA) {
+        this.ALISA = ALISA;
+        this.toAll = Pattern.compile("\\Sвсем");
+        this.helloSecondaryWords = FileUtil.readProjectFileLines("hello-secondary-words.txt");
+        this.byeSecondaryWords = FileUtil.readProjectFileLines("bye-secondary-words.txt");
+    }
+
     @Override
     public boolean processMessage(final Player player, String message) {
         if (this.ALISA.cooldownsHandler.helloByeCooldown.isExpired()) {
@@ -42,13 +49,6 @@ public class ProcessorHelloBye implements IProcessor {
             }
         }
         return false;
-    }
-
-    public ProcessorHelloBye(final FLAlisa ALISA) {
-        this.ALISA = ALISA;
-        this.toAll = Pattern.compile("\\Sвсем");
-        this.helloSecondaryWords = FileUtil.readProjectFileLines("hello-secondary-words.txt");
-        this.byeSecondaryWords = FileUtil.readProjectFileLines("bye-secondary-words.txt");
     }
 }
 

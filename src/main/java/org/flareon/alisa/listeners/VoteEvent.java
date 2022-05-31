@@ -17,26 +17,18 @@ import static java.lang.String.format;
 
 public class VoteEvent {
     private static final FLAlisa ALISA = FLAlisa.getInstance();
-
-    // Список проголосовавших
-    private static ArrayList<String> playersVotes = new ArrayList<>();
-
-    private static boolean active = false;
-    private static int voteYes = 0;
-    private static int voteNo = 0;
-    private World world;
-
     private static final HashMap<TypeVote, BaseComponent[]> sayStartVote = new HashMap<TypeVote, BaseComponent[]>() {{
         put(TypeVote.SUN, new ComponentBuilder()
                 .append(ChatUtil.ALISA_TAG).append(ChatUtil.text("Началось голосование за смену погоды! Голосуйте: ")).append(ChatUtil.YES_NO).create());
         put(TypeVote.DAY, new ComponentBuilder()
                 .append(ChatUtil.ALISA_TAG).append(ChatUtil.text("Началось голосование за смену времени суток! Голосуйте: ")).append(ChatUtil.YES_NO).create());
     }};
-
-    public enum TypeVote {
-        SUN,
-        DAY,
-    }
+    // Список проголосовавших
+    private static ArrayList<String> playersVotes = new ArrayList<>();
+    private static boolean active = false;
+    private static int voteYes = 0;
+    private static int voteNo = 0;
+    private World world;
 
     public VoteEvent(TypeVote type, CommandSender commandSender) {
         if (isActive()) {
@@ -49,14 +41,6 @@ public class VoteEvent {
             registerEvent(type);
             VoteEvent.setVote(true, commandSender);
         }
-    }
-
-    private void registerEvent(TypeVote type) {
-        active = true;
-        ALISA.broadcast(sayStartVote.get(type));
-        ++ALISA.statistics.totalVotesStarted;
-        // Длительность голосования
-        ALISA.getServer().getScheduler().runTaskLater(ALISA, () -> unregisterEvent(type), 20L * ALISA.config.getLong("duration"));
     }
 
     private static boolean isWin() {
@@ -97,25 +81,6 @@ public class VoteEvent {
 
     public static boolean isVoted(String playerName) {
         return playersVotes.contains(playerName);
-    }
-
-    private void unregisterEvent(TypeVote type) {
-        active = false;
-
-        if (isWin()) {
-            ALISA.broadcast(format("Голосование увенчалось %s, смена...", ColorUtil.success("успехом")));
-            switch (type) {
-                case SUN:
-                    world.setStorm(false);
-                    world.setThundering(false);
-                    break;
-                case DAY:
-                    world.setTime(0);
-                    break;
-            }
-        } else {
-            ALISA.broadcast(format("Голосование %s, попробуйте позже", ColorUtil.fail("провалено")));
-        }
     }
 
     public static boolean isActive() {
@@ -173,5 +138,37 @@ public class VoteEvent {
                 globalCooldown = false;
         }
         return personalCooldown && globalCooldown;
+    }
+
+    private void registerEvent(TypeVote type) {
+        active = true;
+        ALISA.broadcast(sayStartVote.get(type));
+        ++ALISA.statistics.totalVotesStarted;
+        // Длительность голосования
+        ALISA.getServer().getScheduler().runTaskLater(ALISA, () -> unregisterEvent(type), 20L * ALISA.config.getLong("duration"));
+    }
+
+    private void unregisterEvent(TypeVote type) {
+        active = false;
+
+        if (isWin()) {
+            ALISA.broadcast(format("Голосование увенчалось %s, смена...", ColorUtil.success("успехом")));
+            switch (type) {
+                case SUN:
+                    world.setStorm(false);
+                    world.setThundering(false);
+                    break;
+                case DAY:
+                    world.setTime(0);
+                    break;
+            }
+        } else {
+            ALISA.broadcast(format("Голосование %s, попробуйте позже", ColorUtil.fail("провалено")));
+        }
+    }
+
+    public enum TypeVote {
+        SUN,
+        DAY,
     }
 }

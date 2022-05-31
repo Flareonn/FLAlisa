@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 
 public class ProcessorFlood implements IProcessor {
-    protected FLAlisa ALISA;
     private final ArrayList<String> tradeFilters;
     private final HashMap<String, MessageData> messages;
     private final int flood_any_trade_messages_trigger;
@@ -18,6 +17,7 @@ public class ProcessorFlood implements IProcessor {
     private final int flood_timeout;
     private final int flood_normal_messages_trigger;
     private final int flood_any_trade_messages_period;
+    protected FLAlisa ALISA;
 
     public ProcessorFlood(final FLAlisa ALISA) {
         this.messages = new HashMap<>();

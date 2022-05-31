@@ -22,11 +22,6 @@ public class ModeratorsEntry implements Comparable<ModeratorsEntry>, Configurati
     public String playerNameColor;
     public ArrayList<String> playerNames;
 
-    @Override
-    public int compareTo(ModeratorsEntry o) {
-        return o.ID - this.ID;
-    }
-
     public ModeratorsEntry(final int ID, final String groupName, final String prefixColor, final String playerNameColor) {
         this.playerNames = new ArrayList<>();
         this.ID = ID;
@@ -41,6 +36,35 @@ public class ModeratorsEntry implements Comparable<ModeratorsEntry>, Configurati
         this.prefixColor = prefixColor;
         this.playerNameColor = playerNameColor;
         this.playerNames = (ArrayList<String>) playerNames.stream().filter(Objects::nonNull).collect(Collectors.toList());
+    }
+
+    public static ModeratorsEntry deserialize(final Map<String, Object> map) {
+        String groupName = "";
+        String prefixColor = "";
+        String playernameColor = "";
+        ArrayList<String> playerNames = new ArrayList<>();
+        int ID = 0;
+        if (map.containsKey("groupName")) {
+            groupName = map.get("groupName").toString();
+        }
+        if (map.containsKey("prefixColor")) {
+            prefixColor = map.get("prefixColor").toString();
+        }
+        if (map.containsKey("playerNameColor")) {
+            playernameColor = map.get("playerNameColor").toString();
+        }
+        if (map.containsKey("playerNames")) {
+            playerNames = (ArrayList<String>) map.get("playerNames");
+        }
+        if (map.containsKey("ID")) {
+            ID = (int) map.get("ID");
+        }
+        return new ModeratorsEntry(ID, groupName, playerNames, prefixColor, playernameColor);
+    }
+
+    @Override
+    public int compareTo(ModeratorsEntry o) {
+        return o.ID - this.ID;
     }
 
     private String getPlayerListString() {
@@ -121,29 +145,5 @@ public class ModeratorsEntry implements Comparable<ModeratorsEntry>, Configurati
         map.put("ID", this.ID);
         map.put("playerNames", this.playerNames);
         return map;
-    }
-
-    public static ModeratorsEntry deserialize(final Map<String, Object> map) {
-        String groupName = "";
-        String prefixColor = "";
-        String playernameColor = "";
-        ArrayList<String> playerNames = new ArrayList<>();
-        int ID = 0;
-        if (map.containsKey("groupName")) {
-            groupName = map.get("groupName").toString();
-        }
-        if (map.containsKey("prefixColor")) {
-            prefixColor = map.get("prefixColor").toString();
-        }
-        if (map.containsKey("playerNameColor")) {
-            playernameColor = map.get("playerNameColor").toString();
-        }
-        if (map.containsKey("playerNames")) {
-            playerNames = (ArrayList<String>) map.get("playerNames");
-        }
-        if (map.containsKey("ID")) {
-            ID = (int) map.get("ID");
-        }
-        return new ModeratorsEntry(ID, groupName, playerNames, prefixColor, playernameColor);
     }
 }

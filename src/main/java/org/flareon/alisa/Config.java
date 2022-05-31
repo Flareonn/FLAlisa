@@ -11,10 +11,10 @@ import java.util.List;
 import java.util.Set;
 
 public class Config {
+    protected static File rulesFile;
     private FLAlisa ALISA;
     private FileConfiguration config;
     private File file;
-    protected static File rulesFile;
 
     public Config(final FLAlisa ALISA) {
         this.ALISA = ALISA;
