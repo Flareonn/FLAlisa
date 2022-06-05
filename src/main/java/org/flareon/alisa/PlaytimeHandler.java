@@ -1,6 +1,5 @@
 package org.flareon.alisa;
 
-import org.bukkit.Bukkit;
 import org.flareon.alisa.utils.TimeUtil;
 
 import java.util.*;
@@ -22,6 +21,7 @@ public class PlaytimeHandler {
         // Start playtime for online mods
         ALISA.moderatorsHandler.getOnlineModsUUID().forEach(this::startPlaytime);
     }
+
     private HashMap<String, Long> getMapPlaytimes(final String path) {
         final HashMap<String, Long> hm = new HashMap<>();
         List<PlaytimeReport> list = (List<PlaytimeReport>) config.getObject(path);
@@ -45,10 +45,10 @@ public class PlaytimeHandler {
         if (!config.exists("playtimes")) {
             config.setCustom("playtimes", new ArrayList<PlaytimeReport>());
         }
-        if(!config.exists("globalPlaytimes")) {
+        if (!config.exists("globalPlaytimes")) {
             config.setCustom("globalPlaytimes", new ArrayList<PlaytimeReport>());
         }
-        if(!config.exists("created") || new TimeUtil(currentTime - config.getLong("created")).getDays() > 7L) {
+        if (!config.exists("created") || new TimeUtil(currentTime - config.getLong("created")).getDays() > 7L) {
             config.setCustom("created", currentTime);
             final List<PlaytimeReport> onlineUUID = new ArrayList<>();
             ALISA.moderatorsHandler.getOnlineModsUUID().forEach(uuid -> onlineUUID.add(new PlaytimeReport(0L, uuid)));
@@ -62,7 +62,7 @@ public class PlaytimeHandler {
 
     public void newPlaytime(final UUID uuid) {
         playtimes.put(uuid.toString(), 0L);
-        if(!globalPlaytimes.containsKey(uuid.toString())) {
+        if (!globalPlaytimes.containsKey(uuid.toString())) {
             globalPlaytimes.put(uuid.toString(), 0L);
         }
         startPlaytime(uuid);

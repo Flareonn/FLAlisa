@@ -1,7 +1,7 @@
 name: Alisa
 main: org.flareon.alisa.FLAlisa
 author: Flareon
-version: 0.4
+version: 0.5
 api-version: '1.16'
 description: The best in the world plugin
 depend: [ LuckPerms ]
@@ -10,7 +10,7 @@ loadbefore: [ LuckPerms ]
 
 commands:
   ahelp:
-    description: Список доступных комманд
+    description: Список доступных команд
     usage: "/ahelp [Number]"
     default: true
   #  colors:
@@ -55,7 +55,7 @@ commands:
     usage: "/ashare [Type] [Name] [Action]"
     default: true
   alisa:
-    description: Все комманды администратора
+    description: Все команды администратора
     usage: "/alisa [Number]"
     default: op
     permission: op
@@ -65,7 +65,7 @@ commands:
     default: op
     permission: op
   alisa tospawn:
-    description: Отправить игрока на спавн
+    description: Отправить игрока на спаун
     usage: "/alisa read [Key]"
     default: op
     permission: op

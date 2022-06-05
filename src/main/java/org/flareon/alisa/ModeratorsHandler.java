@@ -10,7 +10,6 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.flareon.alisa.utils.ColorUtil;
 import org.flareon.alisa.utils.TimeUtil;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -167,17 +166,16 @@ public class ModeratorsHandler {
                 if (uuid != null && !set.contains(playerName)) {
                     set.add(playerName);
                     sb.append("\n")
-                        .append(moderatorsEntry.getFormattedModerator(playerName)).append(ColorUtil.wrap(" : ", ChatColor.GOLD))
-                        .append(new TimeUtil(ALISA.playtimeHandler.getPlaytime(uuid)).getShortLog())
-                        .append("— ")
-                        .append(new TimeUtil(ALISA.playtimeHandler.getGlobalPlaytime(uuid)).getShortLog());
+                            .append(moderatorsEntry.getFormattedModerator(playerName)).append(ColorUtil.wrap(" : ", ChatColor.GOLD))
+                            .append(new TimeUtil(ALISA.playtimeHandler.getPlaytime(uuid)).getShortLog())
+                            .append("— ")
+                            .append(new TimeUtil(ALISA.playtimeHandler.getGlobalPlaytime(uuid)).getShortLog());
                 }
             }
         }
         return sb.toString();
     }
 
-    @Nullable
     private UUID getUUID(final String playerName) {
         final OfflinePlayer op = Bukkit.getOfflinePlayer(playerName);
         if (op != null) {

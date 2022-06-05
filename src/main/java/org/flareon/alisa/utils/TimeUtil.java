@@ -46,7 +46,7 @@ public class TimeUtil {
     }
 
     public String getShortLog() {
-        return formatLogBuilder("д. ","ч. ","м. ","с. ");
+        return formatLogBuilder("д. ", "ч. ", "м. ", "с. ");
     }
 
     public long getDays() {

@@ -144,8 +144,8 @@ public class ModeratorsEntry implements Comparable<ModeratorsEntry>, Configurati
 
     public ArrayList<UUID> getOnlinePlayersUUID() {
         ArrayList<UUID> arrayList = new ArrayList<>();
-        for(String playerName : this.playerNames) {
-            if(this.isPlayerNameOnline(playerName)) {
+        for (String playerName : this.playerNames) {
+            if (this.isPlayerNameOnline(playerName)) {
                 arrayList.add(Bukkit.getPlayer(playerName).getUniqueId());
             }
         }
