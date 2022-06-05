@@ -8,10 +8,7 @@ import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.entity.Player;
 import org.flareon.alisa.utils.ColorUtil;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @SerializableAs("ModeratorsEntry")
@@ -67,7 +64,7 @@ public class ModeratorsEntry implements Comparable<ModeratorsEntry>, Configurati
         return o.ID - this.ID;
     }
 
-    private String getPlayerListString() {
+    public String getPlayerListString() {
         final ArrayList<String> coloredMods = new ArrayList<>();
         for (final String name : this.playerNames) {
             coloredMods.add(String.format("%s", ColorUtil.wrap(name, this.playerNameColor)));
@@ -115,6 +112,10 @@ public class ModeratorsEntry implements Comparable<ModeratorsEntry>, Configurati
         return false;
     }
 
+    public ArrayList<String> getPlayers() {
+        return playerNames;
+    }
+
     private boolean isPlayerNameOnline(final String playerName) {
         final Player p = Bukkit.getPlayer(playerName);
         return (p != null && p.isOnline());
@@ -122,6 +123,11 @@ public class ModeratorsEntry implements Comparable<ModeratorsEntry>, Configurati
 
     public String getFormattedGroupName() {
         return String.format("%s[%s]", ColorUtil.text, ColorUtil.wrap(this.groupName, this.prefixColor));
+    }
+
+    public String getFormattedModerator(final String playerName) {
+        final StringBuilder sb = new StringBuilder();
+        return sb.append(getFormattedGroupName()).append(" ").append(String.format("%s", ColorUtil.wrap(playerName, this.playerNameColor))).toString();
     }
 
     public String getOnlinePlayersString() {
@@ -134,6 +140,16 @@ public class ModeratorsEntry implements Comparable<ModeratorsEntry>, Configurati
         }
         sb.append(String.join("\n", response));
         return sb.toString();
+    }
+
+    public ArrayList<UUID> getOnlinePlayersUUID() {
+        ArrayList<UUID> arrayList = new ArrayList<>();
+        for(String playerName : this.playerNames) {
+            if(this.isPlayerNameOnline(playerName)) {
+                arrayList.add(Bukkit.getPlayer(playerName).getUniqueId());
+            }
+        }
+        return arrayList;
     }
 
     @Override

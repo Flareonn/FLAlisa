@@ -129,6 +129,7 @@ class CommandBot implements CommandExecutor, TabCompleter {
         add("getname");
         add("tospawn");
         add("stats");
+        add("playtimereport");
     }};
     private static final ArrayList<String> modsSubCommands = new ArrayList<String>() {{
         add("add");
@@ -200,6 +201,9 @@ class CommandBot implements CommandExecutor, TabCompleter {
                         break;
                     case "stats":
                         commandStats(commandSender);
+                        break;
+                    case "playtimereport":
+                        ALISA.say(ALISA.moderatorsHandler.getStatsModsString(), commandSender);
                         break;
                     default:
                         ALISA.say("Такой команды не существует. Список моих возможностей: -> /alisa", commandSender);

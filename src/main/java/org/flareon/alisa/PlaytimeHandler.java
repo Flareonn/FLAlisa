@@ -1,70 +1,120 @@
 package org.flareon.alisa;
 
-//import me.PCPSells.PlayTimeMain;
-
+import org.bukkit.Bukkit;
 import org.flareon.alisa.utils.TimeUtil;
 
-import java.util.HashMap;
-import java.util.logging.Logger;
+import java.util.*;
 
-@Deprecated
 public class PlaytimeHandler {
+    private final FLAlisa ALISA = FLAlisa.getInstance();
     private final Config config;
-    private final Logger logger;
-    private final FLAlisa ALISA;
+    public HashMap<String, Long> playtimes;
+    public HashMap<String, Long> globalPlaytimes;
+    public HashMap<String, Long> firstPlaytimes = new HashMap<>();
 
-    //    private final PlayTimeMain pluginPlayTime;
     public PlaytimeHandler(Config config) {
         this.config = config;
-        this.ALISA = FLAlisa.getInstance();
-        this.logger = ALISA.getLogger();
-        if (needNewPlaytimeReport()) {
-            pushNewPlaytimeReport();
-            this.logger.info("A new Playtime log has been generated");
+        setDefaultConfig();
+
+        playtimes = getMapPlaytimes("playtimes");
+        globalPlaytimes = getMapPlaytimes("globalPlaytimes");
+
+        // Start playtime for online mods
+        ALISA.moderatorsHandler.getOnlineModsUUID().forEach(this::startPlaytime);
+    }
+    private HashMap<String, Long> getMapPlaytimes(final String path) {
+        final HashMap<String, Long> hm = new HashMap<>();
+        List<PlaytimeReport> list = (List<PlaytimeReport>) config.getObject(path);
+        for (PlaytimeReport report : list) {
+            hm.put(report.uuid.toString(), report.time);
         }
-//        this.pluginPlayTime = (PlayTimeMain) Bukkit.getPluginManager().getPlugin("PlayTime");
+        return hm;
     }
 
-//    public long getPlayTime(final UUID uuid) {
-//        return this.pluginPlayTime.playerJoinTime.get(uuid);
-//    }
-
-    private void pushNewPlaytimeReport() {
-        final PlaytimeReport oldReport = (PlaytimeReport) this.config.getObject("report2");
-        this.config.set("report1", oldReport);
-        this.config.set("report2", this.newPlaytimeReport());
+    private List<PlaytimeReport> getListFromMap(final HashMap<String, Long> hm) {
+        List<PlaytimeReport> list = new ArrayList<>();
+        for (Map.Entry<String, Long> entry : hm.entrySet()) {
+            list.add(new PlaytimeReport(entry.getValue(), UUID.fromString(entry.getKey())));
+        }
+        return list;
     }
 
-    private PlaytimeReport newPlaytimeReport() {
-        final HashMap<String, Long> entries = new HashMap<>();
-        for (final ModeratorsEntry me : this.ALISA.moderatorsHandler.groups) {
-            for (final String playerName : me.playerNames) {
-//                final long tempPlaytime = getPlayTime(Bukkit.getPlayer(playerName).getUniqueId());
-//                entries.put(playerName, tempPlaytime);
+
+    private void setDefaultConfig() {
+        final long currentTime = System.currentTimeMillis();
+        if (!config.exists("playtimes")) {
+            config.setCustom("playtimes", new ArrayList<PlaytimeReport>());
+        }
+        if(!config.exists("globalPlaytimes")) {
+            config.setCustom("globalPlaytimes", new ArrayList<PlaytimeReport>());
+        }
+        if(!config.exists("created") || new TimeUtil(currentTime - config.getLong("created")).getDays() > 7L) {
+            config.setCustom("created", currentTime);
+            final List<PlaytimeReport> onlineUUID = new ArrayList<>();
+            ALISA.moderatorsHandler.getOnlineModsUUID().forEach(uuid -> onlineUUID.add(new PlaytimeReport(0L, uuid)));
+            config.setCustom("playtimes", onlineUUID);
+        }
+    }
+
+    public void startPlaytime(final UUID uuid) {
+        firstPlaytimes.put(uuid.toString(), System.currentTimeMillis());
+    }
+
+    public void newPlaytime(final UUID uuid) {
+        playtimes.put(uuid.toString(), 0L);
+        if(!globalPlaytimes.containsKey(uuid.toString())) {
+            globalPlaytimes.put(uuid.toString(), 0L);
+        }
+        startPlaytime(uuid);
+    }
+
+    public boolean hasPlaytime(final UUID uuid) {
+        return playtimes.containsKey(uuid.toString()) && globalPlaytimes.containsKey(uuid.toString());
+    }
+
+    public long getPlaytime(final UUID uuid) {
+        final String uuidString = uuid.toString();
+        if (hasPlaytime(uuid)) {
+            savePlayTime(uuid);
+            return playtimes.get(uuidString);
+        }
+        return 0L;
+    }
+
+    public long getGlobalPlaytime(final UUID uuid) {
+        final String uuidString = uuid.toString();
+        if (hasPlaytime(uuid)) {
+            savePlayTime(uuid);
+            return globalPlaytimes.get(uuidString);
+        }
+        return 0L;
+    }
+
+    public void savePlayTime(final UUID uuid) {
+        final String uuidString = uuid.toString();
+        if (firstPlaytimes.containsKey(uuidString) && hasPlaytime(uuid)) {
+            final long time = System.currentTimeMillis() - firstPlaytimes.get(uuidString);
+            playtimes.put(uuidString, playtimes.get(uuidString) + time);
+            globalPlaytimes.put(uuidString, globalPlaytimes.get(uuidString) + time);
+            startPlaytime(uuid);
+        }
+    }
+
+    private void saveAllPlayTimes() {
+        ALISA.moderatorsHandler.getOnlineModsUUID().forEach(uuid -> {
+            final String uuidString = uuid.toString();
+            if (firstPlaytimes.containsKey(uuidString) && hasPlaytime(uuid)) {
+                final long time = System.currentTimeMillis() - firstPlaytimes.get(uuidString);
+                playtimes.put(uuidString, playtimes.get(uuidString) + time);
+                globalPlaytimes.put(uuidString, globalPlaytimes.get(uuidString) + time);
             }
-        }
-        return new PlaytimeReport(System.currentTimeMillis(), entries);
+        });
     }
 
-    private boolean needNewPlaytimeReport() {
-        final PlaytimeReport oldReport = (PlaytimeReport) this.config.getObject("report2");
-        if (TimeUtil.getDayOfWeek() != 2) {
-            // Не тот день для обновления PlayTime логов, не создаём
-            this.logger.info("Not the day to update the PlayTime logs, we do not create");
-            return false;
-        }
-        if (oldReport == null) {
-            // Старый лог не найден - создаём
-            this.logger.info("The old log was not found - we create");
-            return true;
-        }
-        if (System.currentTimeMillis() - oldReport.time > 172800000L) {
-            // Логи устарели, пересоздаём
-            this.logger.info("The logs are outdated, we will recreate them");
-            return true;
-        }
-        // Последний раз логи были созданы 2 дня назад, не создаём.
-        this.logger.info("The logs were last created 2 days ago, we are not creating them.");
-        return false;
+    public void save() {
+        saveAllPlayTimes();
+
+        config.setCustom("playtimes", getListFromMap(playtimes));
+        config.setCustom("globalPlaytimes", getListFromMap(globalPlaytimes));
     }
 }

@@ -35,13 +35,14 @@ public class FLAlisa extends JavaPlugin {
     static {
         ConfigurationSerialization.registerClass(ModeratorsEntry.class, "ModeratorsEntry");
         ConfigurationSerialization.registerClass(Statistics.class, "Statistics");
-//        ConfigurationSerialization.registerClass(PlaytimeReport.class, "PlaytimeReport");
+        ConfigurationSerialization.registerClass(PlaytimeReport.class, "PlaytimeReport");
     }
 
     public Config config;
     public Config moderators;
     public Config stats;
     public Config advertisments;
+    public Config playtimes;
     public CooldownsHandler cooldownsHandler;
     public ModeratorsHandler moderatorsHandler;
     public ModeratorsUtil moderatorsUtil;
@@ -51,7 +52,7 @@ public class FLAlisa extends JavaPlugin {
     public LuckPerms LuckAPI = null;
     public Answer answer;
     public Advertisment advertisment;
-    //    public PlaytimeHandler playtimeHandler;
+    public PlaytimeHandler playtimeHandler;
     public Statistics statistics;
 
     public static FLAlisa getInstance() {
@@ -79,6 +80,7 @@ public class FLAlisa extends JavaPlugin {
     @Override
     public void onDisable() {
         saveStats();
+        playtimeHandler.save();
     }
 
     private void saveStats() {
@@ -108,13 +110,14 @@ public class FLAlisa extends JavaPlugin {
         this.moderators = new Config("moderators.yml");
         this.stats = new Config("stats.yml");
         this.advertisments = new Config("advertisment.yml");
+        this.playtimes = new Config("playtimes.yml");
 
         initUtils();
 
         this.cooldownsHandler = new CooldownsHandler(config);
-//        this.playtimeHandler = new PlaytimeHandler(config);
         this.moderatorsHandler = new ModeratorsHandler(instance);
         this.moderatorsUtil = new ModeratorsUtil(instance);
+        this.playtimeHandler = new PlaytimeHandler(playtimes);
 
         // Chat modules
         this.messageHandler = new MessageHandler(instance);

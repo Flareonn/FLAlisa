@@ -15,6 +15,7 @@ public class Answer {
     private final ArrayList<String> byeAnswers;
     private final FLAlisa ALISA;
     public HashMap<AnswerReason, AnswerChunk> answers = new HashMap<>();
+
     public Answer() {
         ALISA = FLAlisa.getInstance();
         rand = new Random();

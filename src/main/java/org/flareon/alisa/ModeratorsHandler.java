@@ -9,10 +9,10 @@ import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.flareon.alisa.utils.ColorUtil;
+import org.flareon.alisa.utils.TimeUtil;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
@@ -145,6 +145,45 @@ public class ModeratorsHandler {
             }
         }
         return sb.toString();
+    }
+
+    public Set<UUID> getOnlineModsUUID() {
+        Set<UUID> uuids = new HashSet<>();
+        for (ModeratorsEntry group : this.groups) {
+            uuids.addAll(group.getOnlinePlayersUUID());
+        }
+        return uuids;
+    }
+
+    public String getStatsModsString() {
+        final HashSet<String> set = new HashSet<>();
+        final StringBuilder sb = new StringBuilder("Отчёт по онлайну состава\n");
+        sb.append(ColorUtil.wrap("[Должность] Ник : Общее — За всё время", ChatColor.GRAY));
+        for (ModeratorsEntry group : this.groups) {
+            final ArrayList<String> playerList = group.getPlayers();
+            final ModeratorsEntry moderatorsEntry = getGroupByID(group.ID);
+            for (String playerName : playerList) {
+                final UUID uuid = getUUID(playerName);
+                if (uuid != null && !set.contains(playerName)) {
+                    set.add(playerName);
+                    sb.append("\n")
+                        .append(moderatorsEntry.getFormattedModerator(playerName)).append(ColorUtil.wrap(" : ", ChatColor.GOLD))
+                        .append(new TimeUtil(ALISA.playtimeHandler.getPlaytime(uuid)).getShortLog())
+                        .append("— ")
+                        .append(new TimeUtil(ALISA.playtimeHandler.getGlobalPlaytime(uuid)).getShortLog());
+                }
+            }
+        }
+        return sb.toString();
+    }
+
+    @Nullable
+    private UUID getUUID(final String playerName) {
+        final OfflinePlayer op = Bukkit.getOfflinePlayer(playerName);
+        if (op != null) {
+            return op.getUniqueId();
+        }
+        return null;
     }
 
     public boolean isModeratorHidden(final String name) {

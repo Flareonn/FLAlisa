@@ -24,21 +24,29 @@ public class TimeUtil {
         return c.get(Calendar.DAY_OF_WEEK);
     }
 
-    public String getLog() {
+    public String formatLogBuilder(final String day, final String hour, final String minute, final String second) {
         final StringBuilder sb = new StringBuilder("");
         if (days > 0) {
-            sb.append(String.format(" %s дней", days));
+            sb.append(String.format(" %s%s", days, day));
         }
         if (hours > 0) {
-            sb.append(String.format(" %s час(а)", hours));
+            sb.append(String.format("%s%s", hours, hour));
         }
         if (minutes > 0) {
-            sb.append(String.format(" %s минут", minutes));
+            sb.append(String.format("%s%s", minutes, minute));
         }
         if (seconds > 0) {
-            sb.append(String.format(" %s секунд", seconds));
+            sb.append(String.format("%s%s", seconds, second));
         }
         return sb.toString();
+    }
+
+    public String getLog() {
+        return formatLogBuilder(" дней ", " час(а) ", " минут ", " секунд");
+    }
+
+    public String getShortLog() {
+        return formatLogBuilder("д. ","ч. ","м. ","с. ");
     }
 
     public long getDays() {

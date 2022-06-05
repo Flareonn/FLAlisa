@@ -5,12 +5,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1de31ea9-2181-4c88-89bd-6738d2887b46" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/FLAlisa.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/flareon/alisa/chat/MessageHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/flareon/alisa/chat/MessageHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/flareon/alisa/listeners/ChatEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/flareon/alisa/listeners/ChatEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Alisa.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Alisa.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/flareon/alisa/CommandKit.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/flareon/alisa/CommandKit.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/flareon/alisa/FLAlisa.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/flareon/alisa/FLAlisa.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/flareon/alisa/ModeratorsEntry.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/flareon/alisa/ModeratorsEntry.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/flareon/alisa/ModeratorsHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/flareon/alisa/ModeratorsHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/flareon/alisa/PlaytimeHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/flareon/alisa/PlaytimeHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/flareon/alisa/PlaytimeReport.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/flareon/alisa/PlaytimeReport.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/flareon/alisa/chat/Answer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/flareon/alisa/chat/Answer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/flareon/alisa/listeners/JoinEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/flareon/alisa/listeners/JoinEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/flareon/alisa/utils/TimeUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/flareon/alisa/utils/TimeUtil.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -39,14 +46,17 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "last_opened_file_path": "D:/code.lang/Mine/Plugins/FLAlisa",
-    "settings.editor.selected.configurable": "reference.settings.project.maven.runner"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/code.lang/Mine/Plugins/FLAlisa&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.3658751&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settings.project.maven.runner&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="FLAlisa [package]" type="MavenRunConfiguration" factoryName="Maven" nameIsGenerated="true">
       <MavenSettings>
